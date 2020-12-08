@@ -1,4 +1,4 @@
-import { v4, validate } from "uuid";
+import { v4, validate } from 'uuid'
 
 /**
  * To allow users to play without creating an account we need to generate unique identifiers for them.
@@ -7,21 +7,21 @@ import { v4, validate } from "uuid";
  * "Assuming perfect randomness, you can expect the first collision at around 2^61 generated UUIDs"
  */
 class UniqueIdentifier {
-  private id: string;
+  private id: string
 
   constructor(id?: string) {
     if (id === undefined) {
-      this.id = v4();
+      this.id = v4()
     } else if (validate(id)) {
-      this.id = id;
+      this.id = id
     } else {
-      throw Error(`Id: "${id}" is not a valid UniqueIdentifier`);
+      throw Error(`Id: "${id}" is not a valid UniqueIdentifier`)
     }
   }
 
   public getId(): string {
-    return this.id;
+    return this.id
   }
 }
 
-export default UniqueIdentifier;
+export default UniqueIdentifier
