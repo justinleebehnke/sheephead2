@@ -18,6 +18,7 @@ class Round implements IRoundState {
   private cardRanker: ICardRanker
   private currentTrick: Trick
   private pickerIndex: number
+  private _isOver: boolean
 
   constructor(
     players: Player[],
@@ -35,6 +36,7 @@ class Round implements IRoundState {
     this.cardRanker = cardRanker
     this.context = new FindingPickerState(this)
     this.currentTrick = new Trick(-1)
+    this._isOver = false
     this.deal()
   }
 
@@ -95,7 +97,15 @@ class Round implements IRoundState {
   }
 
   public getCurrentTurnPlayer(): Player {
-    return this.players[this.getIndexOfCurrentTurn()]
+    return this.players[this.getIndexOfCurrentTurn()] || null
+  }
+
+  public isOver(): boolean {
+    return this._isOver
+  }
+
+  public markAsOver(): void {
+    this._isOver = true
   }
 
   public setBury(bury: Card[]): void {

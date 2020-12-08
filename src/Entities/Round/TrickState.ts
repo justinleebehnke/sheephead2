@@ -24,9 +24,13 @@ class TrickState implements IRoundState {
     throw new Error(`Cannot bury "${cardA.getCardId()}" & "${cardB.getCardId()}" in TrickState`)
   }
 
-  public play(card: Card): void {
+  public async play(card: Card): Promise<void> {
     this.round.getCurrentTrick().addCardToTrick(card, this.round.getCurrentTurnPlayer())
     if (this.isCompleteTrick()) {
+      const indexOfCurrentTurn = this.round.getIndexOfCurrentTurn()
+      this.round.setIndexOfCurrentTurn(-1)
+      await new Promise((r) => setTimeout(r, 5000))
+      this.round.setIndexOfCurrentTurn(indexOfCurrentTurn)
       this.round.getCurrentTrick().giveToHighestRankingCardPlayer()
       if (this.thereAreMoreTricksLeftToPlay()) {
         this.round.setIndexOfCurrentTurn(
@@ -37,6 +41,8 @@ class TrickState implements IRoundState {
         this.round.setCurrentTrick(new Trick(this.round.getCurrentTrick().getTrickOrder() + 1))
         this.round.setContext(new TrickState(this.round))
       } else {
+        this.round.setIndexOfCurrentTurn(-1)
+        this.round.markAsOver()
         this.round.setContext(new EndOfRoundState(this.round))
       }
     } else {

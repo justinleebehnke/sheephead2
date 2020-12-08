@@ -13,8 +13,7 @@ class CPUPlayer extends Player {
 
   private setCheckTurnInterval(): NodeJS.Timeout {
     return setInterval(async () => {
-      if (this.game.getCurrentRound()?.getCurrentTurnPlayer().getId() === this.getId()) {
-        console.log(this.game.getCurrentRound()?.getCurrentTurnPlayer().getPlayableCardIds())
+      if (this.game.getCurrentRound()?.getCurrentTurnPlayer()?.getId() === this.getId()) {
         if (this.getName() === 'Jake' || this.getName() === 'Jesse') {
           const round = this.game.getCurrentRound()
           if (round) {
@@ -39,10 +38,9 @@ class CPUPlayer extends Player {
                   player.removeCardFromHand(playableCards[1])
                 )
                 round.play(player.removeCardFromHand(playableCards[0]))
-                await new Promise((r) => setTimeout(r, 2000))
               }
             } catch (err) {
-              console.log(round.getCurrentTurnPlayer().getName())
+              // console.log(round.getCurrentTurnPlayer().getName())
               try {
                 const player = round.getCurrentTurnPlayer()
                 if (player) {
@@ -51,7 +49,6 @@ class CPUPlayer extends Player {
                   )
                   console.log('John', playableCards.length)
                   round.play(player.removeCardFromHand(playableCards[0]))
-                  await new Promise((r) => setTimeout(r, 2000))
                 }
               } catch (err) {
                 console.log(round.getEndOfRoundReport())
@@ -61,7 +58,7 @@ class CPUPlayer extends Player {
           }
         }
       }
-    }, 1000)
+    }, 250)
   }
 }
 
