@@ -1,0 +1,21 @@
+#hand {
+  width: 50%;
+  margin: auto;
+}
+
+#hand .playing-card {
+  margin: auto;
+  display: inline;
+  width: 110px;
+  margin-left: -75px;
+  z-index: 1;
+}
+#hand .playing-card:first-child {
+  margin-left: 0px;
+}
+
+#hand .playing-card:hover {
+  position: relative;
+  top: -10px;
+  cursor: pointer;
+}
