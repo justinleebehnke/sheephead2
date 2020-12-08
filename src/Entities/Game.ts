@@ -14,8 +14,8 @@ class Game {
     this.currentRound = null
   }
 
-  public addPlayer(name: string, id: UniqueIdentifier) {
-    this.players.push(new Player(name, id))
+  public addPlayer(player: Player): void {
+    this.players.push(player)
     if (this.players.length === 4) {
       this.playRound()
     }

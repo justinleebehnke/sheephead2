@@ -27,6 +27,14 @@ class Trick {
     return this.trickOrder
   }
 
+  public getLeadCard(): Card | undefined {
+    if (this.cardsInTrick.length === 0) {
+      return undefined
+    } else {
+      return this.cardsInTrick[0]
+    }
+  }
+
   public getTrickData(): TrickData {
     return {
       cards: this.getCardPlayedByData(),

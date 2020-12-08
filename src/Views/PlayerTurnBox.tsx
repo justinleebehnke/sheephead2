@@ -19,7 +19,7 @@ class PlayerTurnBox extends Component<Props, {}> {
           {this.props.isDealer && <Badge variant='secondary'>Dealer</Badge>}
           {this.props.isPicker && <Badge variant='secondary'>Picker</Badge>}
           {this.props.chosenCard === 'turn' && <Badge variant='warning'>Turn</Badge>}
-          <Card card={this.props.chosenCard} />
+          <Card isPlayable={false} card={this.props.chosenCard} play={() => {}} />
         </h3>
       </div>
     )

@@ -2,3 +2,8 @@
   margin-top: 5px;
   width: 110px;
 }
+
+.playing-card .playable {
+  box-sizing: content-box;
+  border: green solid 5px;
+}
