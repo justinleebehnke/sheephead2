@@ -2,6 +2,43 @@ import Game from './Game'
 import Player from './Player'
 import UniqueIdentifier from '../Utilities/UniqueIdentifier'
 
+/*
+Some ideas:
+When deciding whether to pick:
+-> The two high Queens and are leading or on the end.
+-> Any two Queens plus another trump, plus some points to bury.
+-> Any Queen plus another 3 trump, plus some points to bury.
+-> Any 5 trump.
+
+When deciding what to bury:
+  -> Bury as many points as possible
+
+Are you leading?
+Are you the picker/partner? -> Lead With Trump
+ELSE -> Lead with lowest point cards 
+
+When deciding what to play:
+1. Has anyone from my team played yet? Yes / No / Not Sure
+  Yes -> Go to 1a
+  No or Not Sure -> go to 2.
+  1a. Will my any of my team probably win the trick? Yes / No
+    Yes -> Play the highest point value card you can
+    No -> Continue
+  1b. Will my team probably lose the trick? Yes / No
+    Yes -> Play the lowest point value card you can
+    No -> Continue
+
+4. Can I probably win the trick? Yes / No
+  Yes -> Play the highest ranking card
+  No -> Continue
+
+6. Will I probably lose the trick? Yes / No
+  Yes -> Play the lowest point value card that you can
+  No -> Continue
+
+7. Schmeer, 60% of the time it's the right move
+
+*/
 class CPUPlayer extends Player {
   private game: Game
   private interval: NodeJS.Timeout

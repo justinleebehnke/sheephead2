@@ -32,12 +32,15 @@ class TrickState implements IRoundState {
       await new Promise((r) => setTimeout(r, 5000))
       this.round.setIndexOfCurrentTurn(indexOfCurrentTurn)
       this.round.getCurrentTrick().giveToHighestRankingCardPlayer()
+
       if (this.thereAreMoreTricksLeftToPlay()) {
         this.round.setIndexOfCurrentTurn(
           this.round.getIndexOfNextPlayer(
             this.round.getIndexOfNextPlayer(this.round.getIndexOfCurrentTurn())
           )
         )
+        // TODO whoever won the trick
+        // TODO they are going to lead on this next trick
         this.round.setCurrentTrick(new Trick(this.round.getCurrentTrick().getTrickOrder() + 1))
         this.round.setContext(new TrickState(this.round))
       } else {
