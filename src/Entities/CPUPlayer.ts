@@ -77,7 +77,6 @@ class CPUPlayer extends Player {
                 round.play(player.removeCardFromHand(playableCards[0]))
               }
             } catch (err) {
-              // console.log(round.getCurrentTurnPlayer().getName())
               try {
                 const player = round.getCurrentTurnPlayer()
                 if (player) {

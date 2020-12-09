@@ -56,6 +56,10 @@ class Round implements IRoundState {
     this.context.play(card)
   }
 
+  public getIndexOfPlayerById(id: string): number {
+    return this.players.findIndex((player) => player.getId() === id)
+  }
+
   getEndOfRoundReport(): EndOfRoundData {
     return this.context.getEndOfRoundReport()
   }

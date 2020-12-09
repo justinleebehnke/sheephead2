@@ -35,12 +35,8 @@ class TrickState implements IRoundState {
 
       if (this.thereAreMoreTricksLeftToPlay()) {
         this.round.setIndexOfCurrentTurn(
-          this.round.getIndexOfNextPlayer(
-            this.round.getIndexOfNextPlayer(this.round.getIndexOfCurrentTurn())
-          )
+          this.round.getIndexOfPlayerById(this.round.getCurrentTrick().getWinnerOfTrick().getId())
         )
-        // TODO whoever won the trick
-        // TODO they are going to lead on this next trick
         this.round.setCurrentTrick(new Trick(this.round.getCurrentTrick().getTrickOrder() + 1))
         this.round.setContext(new TrickState(this.round))
       } else {
