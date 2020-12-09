@@ -5,6 +5,8 @@ import IRoundState from './IRoundState'
 import Round from './Round'
 import Trick from '../Trick'
 
+export const PAUSE_DURATION_AFTER_TRICK = 100
+
 class TrickState implements IRoundState {
   private round: Round
 
@@ -29,7 +31,7 @@ class TrickState implements IRoundState {
     if (this.isCompleteTrick()) {
       const indexOfCurrentTurn = this.round.getIndexOfCurrentTurn()
       this.round.setIndexOfCurrentTurn(-1)
-      await new Promise((r) => setTimeout(r, 5000))
+      await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK))
       this.round.setIndexOfCurrentTurn(indexOfCurrentTurn)
       this.round.getCurrentTrick().giveToHighestRankingCardPlayer()
 
