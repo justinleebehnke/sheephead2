@@ -23,7 +23,7 @@ class EndOfRoundReport extends Component {
               <Modal.Header closeButton>
                 <Modal.Title>End Of Game Report</Modal.Title>
               </Modal.Header>
-              <Modal.Body>
+              <Modal.Body className='report'>
                 <Card>
                   <Card.Title>
                     {report.bury.cards[0].pointValue + report.bury.cards[1].pointValue} points in
