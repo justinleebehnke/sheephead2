@@ -1,0 +1,27 @@
+img {
+  max-width: 100px;
+  margin-right: 10px;
+}
+.modal-body {
+  max-width: 1000px;
+}
+.flex {
+  display: flex;
+}
+
+.bury-box {
+  margin: auto;
+}
+
+.card-title {
+  margin: auto;
+  margin-top: 10px;
+}
+
+.bury-box img {
+  margin: auto;
+}
+
+.winner {
+  background-color: green;
+}

@@ -22,7 +22,7 @@ class Hand extends Component<Props, {}> {
     if (game) {
       const round = game.getCurrentRound()
       if (round) {
-        if (round.getCurrentTurnPlayer()?.getId() === '4d2f43c3-224d-46ba-bb76-0e383d9ceb5c') {
+        if (round.getCurrentTurnPlayer()?.getId() === '79dbc191-2b0e-4dc3-83d7-7696c4abcb61') {
           const playAbleCards = new Set(
             round.getCurrentTurnPlayer().getPlayableCardIds(round.getCurrentTrick().getLeadCard())
           )

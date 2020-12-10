@@ -17,9 +17,12 @@ class GameBoard extends Component {
   }
   render() {
     const game = GameManager.getPlayersCurrentGame()
-    const localPlayerId = '4d2f43c3-224d-46ba-bb76-0e383d9ceb5c'
+    const localPlayerId = '79dbc191-2b0e-4dc3-83d7-7696c4abcb61'
     const localPlayer = game.getPlayerById(new UniqueIdentifier(localPlayerId))
     const round = game.getCurrentRound()
+    if (round && round.isOver()) {
+      this.interval && clearInterval(this.interval)
+    }
     return (
       <div>
         <PlayerLayout />
