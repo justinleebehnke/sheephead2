@@ -184,26 +184,29 @@ describe('Round', () => {
     expect(player2.getPlayableCardIds()).toEqual(['ah', 'tc'])
     expect(player3.getPlayableCardIds()).toEqual(['js', 'jh'])
     expect(player4.getPlayableCardIds()).toEqual(['ts', 'th'])
-    /*
-    expect(round.getCurrentTurnPlayer()).toBe(player2)
-    const round5LeadCard = player2.removeCardFromHand('ah')
-    round.play(round5LeadCard)
+
     expect(round.getCurrentTurnPlayer()).toBe(player3)
-    expect(player3.getPlayableCardIds(round5LeadCard)).toEqual(['js', 'jh'])
-    round.play(player3.removeCardFromHand('jh'))
+    expect(player3.getPlayableCardIds()).toEqual(['js', 'jh'])
+    const round5LeadCard = player3.removeCardFromHand('jh')
+    round.play(round5LeadCard)
+
     expect(round.getCurrentTurnPlayer()).toBe(player4)
-    expect(player4.getPlayableCardIds(round5LeadCard)).toEqual(['th'])
+    expect(player4.getPlayableCardIds(round5LeadCard)).toEqual(['ts', 'th'])
     round.play(player4.removeCardFromHand('th'))
     expect(round.getCurrentTurnPlayer()).toBe(player1)
-    expect(player1.getPlayableCardIds(round5LeadCard)).toEqual(['9d', '9s'])
+    expect(player1.getPlayableCardIds(round5LeadCard)).toEqual(['qh', '9d'])
     round.play(player1.removeCardFromHand('9d'))
 
-    expect(player1.getTricksWon().length).toBe(2)
+    expect(round.getCurrentTurnPlayer()).toBe(player2)
+    round.play(player2.removeCardFromHand('ah'))
+    await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK + 100))
+
+    expect(player1.getTricksWon().length).toBe(1)
     expect(player2.getTricksWon().length).toBe(0)
-    expect(player3.getTricksWon().length).toBe(1)
+    expect(player3.getTricksWon().length).toBe(2)
     expect(player4.getTricksWon().length).toBe(2)
 
-    expect(player1.getPlayableCardIds()).toEqual(['9s'])
+    expect(player1.getPlayableCardIds()).toEqual(['qh'])
     expect(player2.getPlayableCardIds()).toEqual(['tc'])
     expect(player3.getPlayableCardIds()).toEqual(['js'])
     expect(player4.getPlayableCardIds()).toEqual(['ts'])
@@ -214,10 +217,11 @@ describe('Round', () => {
     expect(round.getCurrentTurnPlayer()).toBe(player4)
     round.play(player4.removeCardFromHand('ts'))
     expect(round.getCurrentTurnPlayer()).toBe(player1)
-    round.play(player1.removeCardFromHand('9s'))
+    round.play(player1.removeCardFromHand('qh'))
     expect(round.getCurrentTurnPlayer()).toBe(player2)
     round.play(player2.removeCardFromHand('tc'))
 
+    await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK + 100))
     expect(() => round.pick()).toThrow('Cannot pick in EndOfRoundState')
 
     const player1CardData = [
@@ -237,8 +241,8 @@ describe('Round', () => {
         playedByPlayerId: player1Id,
       },
       {
-        cardId: 'qh',
-        pointValue: 3,
+        cardId: '9s',
+        pointValue: 0,
         playedByPlayerId: player1Id,
       },
       {
@@ -247,8 +251,8 @@ describe('Round', () => {
         playedByPlayerId: player1Id,
       },
       {
-        cardId: '9s',
-        pointValue: 0,
+        cardId: 'qh',
+        pointValue: 3,
         playedByPlayerId: player1Id,
       },
     ]
@@ -285,6 +289,7 @@ describe('Round', () => {
         playedByPlayerId: player2Id,
       },
     ]
+
     const player3CardData = [
       {
         cardId: 'jd',
@@ -317,6 +322,7 @@ describe('Round', () => {
         playedByPlayerId: player3Id,
       },
     ]
+
     const player4CardData = [
       {
         cardId: 'qc',
@@ -362,31 +368,30 @@ describe('Round', () => {
     expect(actualEndOfRoundReport.tricks[0].cards[2]).toEqual(player4CardData[0])
     expect(actualEndOfRoundReport.tricks[0].cards[3]).toEqual(player1CardData[0])
 
-    expect(actualEndOfRoundReport.tricks[1].cards[0]).toEqual(player3CardData[1])
-    expect(actualEndOfRoundReport.tricks[1].cards[1]).toEqual(player4CardData[1])
-    expect(actualEndOfRoundReport.tricks[1].cards[2]).toEqual(player1CardData[1])
-    expect(actualEndOfRoundReport.tricks[1].cards[3]).toEqual(player2CardData[1])
+    expect(actualEndOfRoundReport.tricks[1].cards[0]).toEqual(player4CardData[1])
+    expect(actualEndOfRoundReport.tricks[1].cards[1]).toEqual(player1CardData[1])
+    expect(actualEndOfRoundReport.tricks[1].cards[2]).toEqual(player2CardData[1])
+    expect(actualEndOfRoundReport.tricks[1].cards[3]).toEqual(player3CardData[1])
 
-    expect(actualEndOfRoundReport.tricks[2].cards[0]).toEqual(player4CardData[2])
-    expect(actualEndOfRoundReport.tricks[2].cards[1]).toEqual(player1CardData[2])
-    expect(actualEndOfRoundReport.tricks[2].cards[2]).toEqual(player2CardData[2])
-    expect(actualEndOfRoundReport.tricks[2].cards[3]).toEqual(player3CardData[2])
+    expect(actualEndOfRoundReport.tricks[2].cards[0]).toEqual(player1CardData[2])
+    expect(actualEndOfRoundReport.tricks[2].cards[1]).toEqual(player2CardData[2])
+    expect(actualEndOfRoundReport.tricks[2].cards[2]).toEqual(player3CardData[2])
+    expect(actualEndOfRoundReport.tricks[2].cards[3]).toEqual(player4CardData[2])
 
-    expect(actualEndOfRoundReport.tricks[3].cards[0]).toEqual(player1CardData[3])
-    expect(actualEndOfRoundReport.tricks[3].cards[1]).toEqual(player2CardData[3])
-    expect(actualEndOfRoundReport.tricks[3].cards[2]).toEqual(player3CardData[3])
-    expect(actualEndOfRoundReport.tricks[3].cards[3]).toEqual(player4CardData[3])
+    expect(actualEndOfRoundReport.tricks[3].cards[0]).toEqual(player4CardData[3])
+    expect(actualEndOfRoundReport.tricks[3].cards[1]).toEqual(player1CardData[3])
+    expect(actualEndOfRoundReport.tricks[3].cards[2]).toEqual(player2CardData[3])
+    expect(actualEndOfRoundReport.tricks[3].cards[3]).toEqual(player3CardData[3])
 
-    expect(actualEndOfRoundReport.tricks[4].cards[0]).toEqual(player2CardData[4])
-    expect(actualEndOfRoundReport.tricks[4].cards[1]).toEqual(player3CardData[4])
-    expect(actualEndOfRoundReport.tricks[4].cards[2]).toEqual(player4CardData[4])
-    expect(actualEndOfRoundReport.tricks[4].cards[3]).toEqual(player1CardData[4])
+    expect(actualEndOfRoundReport.tricks[4].cards[0]).toEqual(player3CardData[4])
+    expect(actualEndOfRoundReport.tricks[4].cards[1]).toEqual(player4CardData[4])
+    expect(actualEndOfRoundReport.tricks[4].cards[2]).toEqual(player1CardData[4])
+    expect(actualEndOfRoundReport.tricks[4].cards[3]).toEqual(player2CardData[4])
 
     expect(actualEndOfRoundReport.tricks[5].cards[0]).toEqual(player3CardData[5])
     expect(actualEndOfRoundReport.tricks[5].cards[1]).toEqual(player4CardData[5])
     expect(actualEndOfRoundReport.tricks[5].cards[2]).toEqual(player1CardData[5])
     expect(actualEndOfRoundReport.tricks[5].cards[3]).toEqual(player2CardData[5])
-    */
   })
 
   it('Should shuffle and re deal if no one picks', () => {
