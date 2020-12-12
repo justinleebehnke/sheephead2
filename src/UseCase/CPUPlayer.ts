@@ -75,7 +75,31 @@ class CPUPlayer extends Player implements ISubscriber {
   }
 
   private shouldPick(): boolean {
-    return true
+    const round = this.game.getCurrentRound()
+    if (round) {
+      const player = round.getCurrentTurnPlayer()
+      const playableCards = player.getPlayableCardIds()
+
+      const pointsForHavingCardsInTop3 =
+        playableCards.filter((cardId) => this.cardRanker.getRank(cardId) <= 3).length * 2
+      const pointsForHavingCardsInTop6 =
+        playableCards.filter((cardId) => this.cardRanker.getRank(cardId) <= 6).length * 1
+
+      const pointsForHavingTrumpCards = playableCards.filter((cardId) =>
+        this.cardRanker.isTrump(cardId)
+      ).length
+
+      const pointsForHighValueCards =
+        playableCards.filter((cardId) => this.cardRanker.getPointValue(cardId) >= 10).length * 0.5
+
+      const scoreForHand =
+        pointsForHavingCardsInTop3 +
+        pointsForHavingCardsInTop6 +
+        pointsForHavingTrumpCards +
+        (pointsForHighValueCards > 1 ? 1 : pointsForHighValueCards)
+      return scoreForHand >= 8
+    }
+    return false
   }
 
   private pick(): void {
