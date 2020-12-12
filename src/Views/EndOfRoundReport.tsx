@@ -18,7 +18,7 @@ class EndOfRoundReport extends Component {
         const players = round.getPlayers()
 
         return (
-          <Modal size='xl' show={true}>
+          <Modal size='xl' show={true} onHide={() => {}}>
             <Modal.Dialog>
               <Modal.Header closeButton>
                 <Modal.Title>End Of Game Report</Modal.Title>
@@ -70,11 +70,11 @@ class EndOfRoundReport extends Component {
                         playerIdToCard.get(players[3].getId()),
                       ]
                       return (
-                        <tr>
+                        <tr key={index + 1}>
                           <td>{index + 1}</td>
                           {cardsToDisplay.map((cardId) => {
                             return (
-                              <td className={winningCardId === cardId ? 'winner' : ''}>
+                              <td key={cardId} className={winningCardId === cardId ? 'winner' : ''}>
                                 <img
                                   // @ts-ignore
                                   src={cards[cardId]}

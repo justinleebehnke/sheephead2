@@ -30,6 +30,7 @@ class Hand extends Component<Props, {}> {
             <div id='hand'>
               {this.props.cardsInHand.map((cardName) => (
                 <Card
+                  key={cardName}
                   isPlayable={playAbleCards.has(cardName)}
                   card={cardName}
                   play={
@@ -60,7 +61,7 @@ class Hand extends Component<Props, {}> {
     return (
       <div id='hand'>
         {this.props.cardsInHand.map((cardName) => (
-          <Card isPlayable={false} card={cardName} play={() => {}} />
+          <Card key={cardName} isPlayable={false} card={cardName} play={() => {}} />
         ))}
       </div>
     )
