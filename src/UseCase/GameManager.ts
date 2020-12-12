@@ -8,7 +8,9 @@ class GameManager {
 
   public static getPlayersCurrentGame(): Game {
     if (!this.playersCurrentGame) {
-      this.playersCurrentGame = new Game([], 0)
+      const numPlayers = 4
+      const firstDealerIndex = Math.floor(Math.random() * numPlayers)
+      this.playersCurrentGame = new Game([], firstDealerIndex)
       this.playersCurrentGame.addPlayer(
         new CPUPlayer(
           'Jesse',
