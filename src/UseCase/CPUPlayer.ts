@@ -1,5 +1,5 @@
-import Game from './Game'
-import Player from './Player'
+import Game from '../Entities/Game'
+import Player from '../Entities/Player'
 import UniqueIdentifier from '../Utilities/UniqueIdentifier'
 
 /*

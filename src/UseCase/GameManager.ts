@@ -1,7 +1,7 @@
 import UniqueIdentifier from '../Utilities/UniqueIdentifier'
 import Game from '../Entities/Game'
 import Player from '../Entities/Player'
-import CPUPlayer from '../Entities/CPUPlayer'
+import CPUPlayer from './CPUPlayer'
 
 class GameManager {
   private static playersCurrentGame: Game
