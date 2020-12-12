@@ -60,7 +60,7 @@ class CPUPlayer extends Player implements ISubscriber {
 
   private takeTurn(): void {
     if (this.isPickerState()) {
-      this.pick()
+      Math.random() < 0.5 ? this.pass() : this.pick()
     } else {
       this.play()
     }
@@ -89,6 +89,13 @@ class CPUPlayer extends Player implements ISubscriber {
         )
         round.play(player.removeCardFromHand(playableCards[2]))
       }
+    }
+  }
+
+  private pass(): void {
+    const round = this.game.getCurrentRound()
+    if (round) {
+      round.pass()
     }
   }
 

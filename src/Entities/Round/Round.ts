@@ -43,6 +43,10 @@ class Round implements IRoundState {
     this.deal()
   }
 
+  public isFindingPickerState(): boolean {
+    return this.context instanceof FindingPickerState
+  }
+
   public addSubscriber(newSubscriber: ISubscriber): void {
     this.subscribers.push(newSubscriber)
   }
@@ -149,6 +153,7 @@ class Round implements IRoundState {
 
   public nextTurn(): void {
     this.indexOfCurrentTurn = this.getIndexOfNextPlayer(this.indexOfCurrentTurn)
+    this.notifySubscribers()
   }
 
   public reDeal(): void {

@@ -4,6 +4,7 @@ import Hand from './Hand'
 import PlayerLayout from './PlayerLayout'
 import GameManager from '../UseCase/GameManager'
 import EndOfRoundReport from './EndOfRoundReport'
+import PassOrPick from './PassOrPick'
 
 class GameBoard extends Component {
   private interval: NodeJS.Timeout | undefined
@@ -25,6 +26,7 @@ class GameBoard extends Component {
     }
     return (
       <div>
+        {round && round.isFindingPickerState() && <PassOrPick />}
         <PlayerLayout />
         {!!localPlayer && <Hand cardsInHand={localPlayer.getPlayableCardIds()} />}
         {round && round.isOver() && <EndOfRoundReport />}
