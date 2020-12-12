@@ -5,7 +5,7 @@ import IRoundState from './IRoundState'
 import Round from './Round'
 import Trick from '../Trick'
 
-export const PAUSE_DURATION_AFTER_TRICK = 3500
+export const PAUSE_DURATION_AFTER_TRICK = 100
 
 class TrickState implements IRoundState {
   private round: Round

@@ -21,6 +21,15 @@ class PassOrPick extends Component<{}, State> {
     this.setState({ isShow: false })
   }
 
+  componentDidUpdate() {
+    const game = GameManager.getPlayersCurrentGame()
+    if (game.getCurrentRound()?.getCurrentTurnPlayer().getId() === localPlayerId) {
+      if (this.state.isShow !== game.getCurrentRound()?.isFindingPickerState() || false) {
+        this.setState({ isShow: game.getCurrentRound()?.isFindingPickerState() || false })
+      }
+    }
+  }
+
   render() {
     return (
       <Modal show={this.state.isShow}>

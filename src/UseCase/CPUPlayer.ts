@@ -60,35 +60,27 @@ class CPUPlayer extends Player implements ISubscriber {
 
   private takeTurn(): void {
     if (this.isPickerState()) {
-      Math.random() < 0.5 ? this.pass() : this.pick()
+      Math.random() > 0.25 ? this.pass() : this.pick()
     } else {
       this.play()
     }
   }
 
   private isPickerState(): boolean {
-    try {
-      const round = this.game.getCurrentRound()
-      round?.getEndOfRoundReport()
-    } catch (err) {
-      return String(err).includes('FindingPickerState')
-    }
-    return false
+    return this.game.getCurrentRound()?.isFindingPickerState() || false
   }
 
   private pick(): void {
     const round = this.game.getCurrentRound()
     if (round) {
-      round.pick()
       const player = round.getCurrentTurnPlayer()
-      if (player) {
-        const playableCards = player?.getPlayableCardIds()
-        round.bury(
-          player.removeCardFromHand(playableCards[0]),
-          player.removeCardFromHand(playableCards[1])
-        )
-        round.play(player.removeCardFromHand(playableCards[2]))
-      }
+      round.pick()
+      const playableCards = player.getPlayableCardIds()
+      round.bury(
+        player.removeCardFromHand(playableCards[0]),
+        player.removeCardFromHand(playableCards[1])
+      )
+      round.play(player.removeCardFromHand(playableCards[2]))
     }
   }
 
