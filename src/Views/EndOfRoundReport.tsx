@@ -28,7 +28,7 @@ class EndOfRoundReport extends Component {
         return (
           <Modal size='lg' show={true} onHide={() => {}} backdrop='static'>
             <Modal.Header closeButton>
-              <Modal.Title>End Of Game Report</Modal.Title>
+              <Modal.Title>End Of Round Report</Modal.Title>
             </Modal.Header>
             <Modal.Body className='report'>
               <Table bordered hover variant='dark'>

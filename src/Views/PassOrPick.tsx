@@ -46,9 +46,12 @@ class PassOrPick extends Component<{}, State> {
             <Modal.Title>Pass or Pick</Modal.Title>
           </Modal.Header>
           <Modal.Body>
+            <p>Sorry you can't pick yet :( </p>
             <div>
               <Button onClick={this.pass}>Pass</Button>
-              <Button onClick={this.pass}>Pick</Button>
+              <Button onClick={this.pass} disabled>
+                Pick
+              </Button>
             </div>
           </Modal.Body>
         </Modal.Dialog>
