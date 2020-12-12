@@ -16,6 +16,7 @@ class EndOfRoundReport extends Component {
       if (round) {
         const report = round.getEndOfRoundReport()
         const players = round.getPlayers()
+        const indexOfPicker = round.getPickerIndex()
 
         return (
           <Modal size='xl' show={true} onHide={() => {}}>
@@ -48,15 +49,28 @@ class EndOfRoundReport extends Component {
                   <thead>
                     <tr>
                       <th>#</th>
-                      <th>{players[0].getName()}</th>
-                      <th>{players[1].getName()}</th>
-                      <th>{players[2].getName()}</th>
-                      <th>{players[3].getName()}</th>
+                      <th>
+                        {players[0].getName()}
+                        {indexOfPicker === 0 && <p>(Picker)</p>}
+                      </th>
+                      <th>
+                        {players[1].getName()}
+                        {indexOfPicker === 1 && <p>(Picker)</p>}
+                      </th>
+                      <th>
+                        {players[2].getName()}
+                        {indexOfPicker === 2 && <p>(Picker)</p>}
+                      </th>
+                      <th>
+                        {players[3].getName()}
+                        {indexOfPicker === 3 && <p>(Picker)</p>}
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     {report.tricks.map((trick, index) => {
                       const winningCardId = trick.cards[trick.winningCardIndex].cardId
+                      const leadingCardId = trick.cards[0].cardId
                       const playerIdToCard: Map<string, string> = trick.cards.reduce(
                         (map: Map<string, string>, card: CardPlayedByData) => {
                           return map.set(card.playedByPlayerId, card.cardId)
@@ -75,11 +89,15 @@ class EndOfRoundReport extends Component {
                           {cardsToDisplay.map((cardId) => {
                             return (
                               <td key={cardId} className={winningCardId === cardId ? 'winner' : ''}>
-                                <img
-                                  // @ts-ignore
-                                  src={cards[cardId]}
-                                  alt={`playing-card-${cardId}`}
-                                />
+                                {winningCardId === cardId && <span>Won</span>}
+                                <div>
+                                  <img
+                                    // @ts-ignore
+                                    src={cards[cardId]}
+                                    alt={`playing-card-${cardId}`}
+                                  />
+                                </div>
+                                {leadingCardId === cardId && <span>Lead</span>}
                               </td>
                             )
                           })}
