@@ -80,7 +80,6 @@ class CPUPlayer extends Player implements ISubscriber {
         player.removeCardFromHand(playableCards[0]),
         player.removeCardFromHand(playableCards[1])
       )
-      round.play(player.removeCardFromHand(playableCards[2]))
     }
   }
 

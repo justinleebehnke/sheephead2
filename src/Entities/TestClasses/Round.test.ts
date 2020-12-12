@@ -51,23 +51,25 @@ describe('Round', () => {
     expect(() => round.play(new Card('qc', cardRanker))).toThrow(
       'Cannot play "qc" in FindingPickerState'
     )
+    round.pass()
+    expect(round.getCurrentTurnPlayer()).toBe(player3)
 
     expect(round.getPickerIndex()).toBe(-1)
     round.pick()
-    expect(round.getPickerIndex()).toBe(1)
+    expect(round.getPickerIndex()).toBe(2)
 
     expect(round.getBlind().length).toBe(0)
-    expect(player2.getPlayableCardIds()).toEqual(['qd', 'jh', 'td', 'kd', 'ah', 'tc', 'ks', '9c'])
+    expect(player3.getPlayableCardIds()).toEqual(['qs', 'jc', 'js', 'jh', 'jd', 'ad', 'ks', '9h'])
     expect(() => round.play(new Card('qc', cardRanker))).toThrow(
       'Cannot play "qc" in PickerHasNotBuriedState'
     )
-    expect(round.getCurrentTurnPlayer()).toBe(player2)
+    expect(round.getCurrentTurnPlayer()).toBe(player3)
 
-    round.bury(player2.removeCardFromHand('jh'), player2.removeCardFromHand('ks'))
-    expect(player2.getPlayableCardIds()).toEqual(['qd', 'td', 'kd', 'ah', 'tc', '9c'])
+    round.bury(player3.removeCardFromHand('ad'), player3.removeCardFromHand('ks'))
+    expect(player3.getPlayableCardIds()).toEqual(['qs', 'jc', 'js', 'jh', 'jd', '9h'])
 
     expect(round.getBlind().length).toBe(0)
-    expect(round.getBury().some((card) => card.getCardId() === 'jh')).toBeTruthy()
+    expect(round.getBury().some((card) => card.getCardId() === 'ad')).toBeTruthy()
     expect(round.getBury().some((card) => card.getCardId() === 'ks')).toBeTruthy()
     expect(round.getBury().length).toBe(2)
 
@@ -82,7 +84,7 @@ describe('Round', () => {
     // @ts-ignore
     expect(round.getCurrentTrick().getNumCardsPlayed()).toBe(1)
     expect(round.getCurrentTurnPlayer()).toBe(player3)
-    expect(player3.getPlayableCardIds(round1LeadCard)).toEqual(['qs', 'jc', 'js', 'jd', 'ad'])
+    expect(player3.getPlayableCardIds(round1LeadCard)).toEqual(['qs', 'jc', 'js', 'jh', 'jd'])
     round.play(player3.removeCardFromHand('jd'))
     // @ts-ignore
     expect(round.getCurrentTrick().getNumCardsPlayed()).toBe(2)
@@ -118,7 +120,7 @@ describe('Round', () => {
     round.play(player2.removeCardFromHand('td'))
 
     expect(round.getCurrentTurnPlayer()).toBe(player3)
-    expect(player3.getPlayableCardIds()).toEqual(['qs', 'jc', 'js', 'ad', '9h'])
+    expect(player3.getPlayableCardIds()).toEqual(['qs', 'jc', 'js', 'jh', '9h'])
     round.play(player3.removeCardFromHand('qs'))
 
     await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK + 100))
@@ -130,7 +132,7 @@ describe('Round', () => {
 
     expect(player1.getPlayableCardIds()).toEqual(['qh', '9d', 'kc', '9s'])
     expect(player2.getPlayableCardIds()).toEqual(['kd', 'ah', 'tc', '9c'])
-    expect(player3.getPlayableCardIds()).toEqual(['jc', 'js', 'ad', '9h'])
+    expect(player3.getPlayableCardIds()).toEqual(['jc', 'js', 'jh', '9h'])
     expect(player4.getPlayableCardIds()).toEqual(['ac', 'as', 'ts', 'th'])
 
     expect(round.getCurrentTurnPlayer()).toBe(player1)
@@ -141,7 +143,7 @@ describe('Round', () => {
     expect(player2.getPlayableCardIds(round3LeadCard)).toEqual(['tc', '9c'])
     round.play(player2.removeCardFromHand('9c'))
     expect(round.getCurrentTurnPlayer()).toBe(player3)
-    expect(player3.getPlayableCardIds(round3LeadCard)).toEqual(['jc', 'js', 'ad', '9h'])
+    expect(player3.getPlayableCardIds(round3LeadCard)).toEqual(['jc', 'js', 'jh', '9h'])
     round.play(player3.removeCardFromHand('9h'))
 
     expect(round.getCurrentTurnPlayer()).toBe(player4)
@@ -156,7 +158,7 @@ describe('Round', () => {
 
     expect(player1.getPlayableCardIds()).toEqual(['qh', '9d', '9s'])
     expect(player2.getPlayableCardIds()).toEqual(['kd', 'ah', 'tc'])
-    expect(player3.getPlayableCardIds()).toEqual(['jc', 'js', 'ad'])
+    expect(player3.getPlayableCardIds()).toEqual(['jc', 'js', 'jh'])
     expect(player4.getPlayableCardIds()).toEqual(['as', 'ts', 'th'])
 
     expect(player4.getPlayableCardIds()).toEqual(['as', 'ts', 'th'])
@@ -168,7 +170,7 @@ describe('Round', () => {
     expect(player2.getPlayableCardIds(round4LeadCard)).toEqual(['kd', 'ah', 'tc'])
     round.play(player2.removeCardFromHand('kd'))
     expect(round.getCurrentTurnPlayer()).toBe(player3)
-    expect(player3.getPlayableCardIds(round4LeadCard)).toEqual(['jc', 'js', 'ad'])
+    expect(player3.getPlayableCardIds(round4LeadCard)).toEqual(['jc', 'js', 'jh'])
     round.play(player3.removeCardFromHand('jc'))
 
     await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK + 100))
@@ -180,12 +182,12 @@ describe('Round', () => {
 
     expect(player1.getPlayableCardIds()).toEqual(['qh', '9d'])
     expect(player2.getPlayableCardIds()).toEqual(['ah', 'tc'])
-    expect(player3.getPlayableCardIds()).toEqual(['js', 'ad'])
+    expect(player3.getPlayableCardIds()).toEqual(['js', 'jh'])
     expect(player4.getPlayableCardIds()).toEqual(['ts', 'th'])
 
     expect(round.getCurrentTurnPlayer()).toBe(player3)
-    expect(player3.getPlayableCardIds()).toEqual(['js', 'ad'])
-    const round5LeadCard = player3.removeCardFromHand('ad')
+    expect(player3.getPlayableCardIds()).toEqual(['js', 'jh'])
+    const round5LeadCard = player3.removeCardFromHand('jh')
     round.play(round5LeadCard)
 
     expect(round.getCurrentTurnPlayer()).toBe(player4)
@@ -310,8 +312,8 @@ describe('Round', () => {
         playedByPlayerId: player3Id,
       },
       {
-        cardId: 'ad',
-        pointValue: 11,
+        cardId: 'jh',
+        pointValue: 2,
         playedByPlayerId: player3Id,
       },
       {
@@ -357,7 +359,7 @@ describe('Round', () => {
     const actualEndOfRoundReport = round.getEndOfRoundReport()
     expect(actualEndOfRoundReport.bury).toEqual({
       cards: [
-        { cardId: 'jh', pointValue: 2 },
+        { cardId: 'ad', pointValue: 11 },
         { cardId: 'ks', pointValue: 4 },
       ],
     })

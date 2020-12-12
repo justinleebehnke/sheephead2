@@ -22,7 +22,9 @@ class PickerHasNotBuriedState implements IRoundState {
   public bury(cardA: Card, cardB: Card): void {
     this.round.setBury([cardA, cardB])
     this.round.setCurrentTrick(new Trick(1))
+    this.round.setIndexOfCurrentTurn(this.round.getIndexOfNextPlayer(this.round.getIndexOfDealer()))
     this.round.setContext(new TrickState(this.round))
+    this.round.notifySubscribers()
   }
 
   public play(card: Card): void {
