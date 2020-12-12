@@ -80,16 +80,19 @@ class CPUPlayer extends Player implements ISubscriber {
       const player = round.getCurrentTurnPlayer()
       const playableCards = player.getPlayableCardIds()
 
-      const pointsForHavingCardsInTop3 =
-        playableCards.filter((cardId) => this.cardRanker.getRank(cardId) <= 3).length * 2
-      const pointsForHavingCardsInTop6 =
-        playableCards.filter((cardId) => this.cardRanker.getRank(cardId) <= 6).length * 1
-
+      const pointsForHavingCardsInTop3 = playableCards.filter(
+        // worth 3 each
+        (cardId) => this.cardRanker.getRank(cardId) <= 3
+      ).length
+      const pointsForHavingCardsInTop6 = playableCards.filter(
+        // worth 2 each
+        (cardId) => this.cardRanker.getRank(cardId) <= 6
+      ).length
       const pointsForHavingTrumpCards = playableCards.filter((cardId) =>
         this.cardRanker.isTrump(cardId)
-      ).length
+      ).length // worth 1 each
 
-      const pointsForHighValueCards =
+      const pointsForHighValueCards = // worth 0.5 each
         playableCards.filter((cardId) => this.cardRanker.getPointValue(cardId) >= 10).length * 0.5
 
       const scoreForHand =
@@ -97,7 +100,7 @@ class CPUPlayer extends Player implements ISubscriber {
         pointsForHavingCardsInTop6 +
         pointsForHavingTrumpCards +
         (pointsForHighValueCards > 1 ? 1 : pointsForHighValueCards)
-      return scoreForHand >= 8
+      return scoreForHand >= 7.5
     }
     return false
   }
@@ -135,8 +138,16 @@ class CPUPlayer extends Player implements ISubscriber {
     if (round) {
       const player = round.getCurrentTurnPlayer()
       if (player) {
-        const playableCards = player.getPlayableCardIds()
-        round.play(player.removeCardFromHand(playableCards[0]))
+        const leadCard = round.getCurrentTrick().getLeadCard()
+        if (leadCard) {
+          round.play(
+            player.removeCardFromHand(
+              this.getHighestValueCardId(player.getPlayableCardIds(leadCard))
+            )
+          )
+        } else {
+          round.play(player.removeCardFromHand(player.getPlayableCardIds()[0]))
+        }
       }
     }
   }
