@@ -58,8 +58,8 @@ class Game implements ISubscriber {
       Date.now(),
       new BellePlaineRulesCardRanker()
     )
-    this.notifySubscribers()
     this.currentRound.addSubscriber(this)
+    this.notifySubscribers()
   }
 
   public playAnotherRound(): void {

@@ -10,7 +10,7 @@ type State = {
 
 class PassOrPick extends Component<{}, State> {
   state = {
-    isShow: true,
+    isShow: false,
   }
 
   pass = (): void => {
@@ -21,7 +21,15 @@ class PassOrPick extends Component<{}, State> {
     this.setState({ isShow: false })
   }
 
+  componentDidMount() {
+    this.checkIfTurnAndUpdate()
+  }
+
   componentDidUpdate() {
+    this.checkIfTurnAndUpdate()
+  }
+
+  checkIfTurnAndUpdate() {
     const game = GameManager.getPlayersCurrentGame()
     if (game.getCurrentRound()?.getCurrentTurnPlayer().getId() === localPlayerId) {
       if (this.state.isShow !== game.getCurrentRound()?.isFindingPickerState() || false) {

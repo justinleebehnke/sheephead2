@@ -129,7 +129,6 @@ class Round implements IRoundState {
 
   public markAsOver(): void {
     this._isOver = true
-    this.notifySubscribers()
   }
 
   public setBury(bury: Card[]): void {

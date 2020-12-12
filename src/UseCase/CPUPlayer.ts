@@ -64,7 +64,7 @@ class CPUPlayer extends Player implements ISubscriber {
 
   private takeTurn(): void {
     if (this.isPickerState()) {
-      this.shouldPass() ? this.pass() : this.pick()
+      this.shouldPick() ? this.pick() : this.pass()
     } else {
       this.play()
     }
@@ -74,8 +74,8 @@ class CPUPlayer extends Player implements ISubscriber {
     return this.game.getCurrentRound()?.isFindingPickerState() || false
   }
 
-  private shouldPass(): boolean {
-    return Math.random() > 0.25
+  private shouldPick(): boolean {
+    return true
   }
 
   private pick(): void {
