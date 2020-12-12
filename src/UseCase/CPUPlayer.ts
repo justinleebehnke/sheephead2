@@ -1,7 +1,9 @@
 import Game from '../Entities/Game'
+import ICardRanker from '../Entities/ICardRanker'
 import Player from '../Entities/Player'
 import UniqueIdentifier from '../Utilities/UniqueIdentifier'
 import ISubscriber from './ISubscriber'
+import Round from '../Entities/Round/Round'
 
 /*
 Some ideas:
@@ -42,10 +44,12 @@ When deciding what to play:
 */
 class CPUPlayer extends Player implements ISubscriber {
   private game: Game
-  constructor(name: string, id: UniqueIdentifier, game: Game) {
+  private cardRanker: ICardRanker
+  constructor(name: string, id: UniqueIdentifier, game: Game, cardRanker: ICardRanker) {
     super(name, id)
     this.game = game
     this.game.addSubscriber(this)
+    this.cardRanker = cardRanker
   }
 
   public update(): void {
@@ -60,7 +64,7 @@ class CPUPlayer extends Player implements ISubscriber {
 
   private takeTurn(): void {
     if (this.isPickerState()) {
-      Math.random() > 0.25 ? this.pass() : this.pick()
+      this.shouldPass() ? this.pass() : this.pick()
     } else {
       this.play()
     }
@@ -70,17 +74,29 @@ class CPUPlayer extends Player implements ISubscriber {
     return this.game.getCurrentRound()?.isFindingPickerState() || false
   }
 
+  private shouldPass(): boolean {
+    return Math.random() > 0.25
+  }
+
   private pick(): void {
     const round = this.game.getCurrentRound()
     if (round) {
-      const player = round.getCurrentTurnPlayer()
       round.pick()
-      const playableCards = player.getPlayableCardIds()
-      round.bury(
-        player.removeCardFromHand(playableCards[0]),
-        player.removeCardFromHand(playableCards[1])
-      )
+      this.bury(round)
     }
+  }
+
+  private bury(round: Round): void {
+    const player = round.getCurrentTurnPlayer()
+    const playableCards = player.getPlayableCardIds()
+    const highestValueCardId = this.getHighestValueCardId(playableCards)
+    const secondHighestValueCardId = this.getHighestValueCardId(
+      playableCards.filter((cardId: string) => cardId !== highestValueCardId)
+    )
+    round.bury(
+      player.removeCardFromHand(highestValueCardId),
+      player.removeCardFromHand(secondHighestValueCardId)
+    )
   }
 
   private pass(): void {
@@ -99,6 +115,19 @@ class CPUPlayer extends Player implements ISubscriber {
         round.play(player.removeCardFromHand(playableCards[0]))
       }
     }
+  }
+
+  private getHighestValueCardId(cardIds: string[]): string {
+    const highestPointValue = Math.max(
+      ...cardIds.map((cardId) => this.cardRanker.getPointValue(cardId))
+    )
+    const result = cardIds.find(
+      (cardId) => this.cardRanker.getPointValue(cardId) === highestPointValue
+    )
+    if (result) {
+      return result
+    }
+    throw Error(`Could not find card with value: "${highestPointValue}"`)
   }
 }
 

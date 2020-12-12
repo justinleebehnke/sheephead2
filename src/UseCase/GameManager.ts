@@ -2,6 +2,7 @@ import UniqueIdentifier from '../Utilities/UniqueIdentifier'
 import Game from '../Entities/Game'
 import Player from '../Entities/Player'
 import CPUPlayer from './CPUPlayer'
+import BellePlaineRulesCardRanker from '../Entities/BellePlaineRulesCardRanker'
 
 const randomNames = [
   'Liam',
@@ -139,6 +140,7 @@ class GameManager {
 
   public static getPlayersCurrentGame(): Game {
     if (!this.playersCurrentGame) {
+      const ranker = new BellePlaineRulesCardRanker()
       const numPlayers = 4
       const firstDealerIndex = this.getRandomNumberBetweenZeroAndMax(numPlayers)
       this.playersCurrentGame = new Game([], firstDealerIndex)
@@ -146,14 +148,16 @@ class GameManager {
         new CPUPlayer(
           randomNames[this.getRandomNumberBetweenZeroAndMax(randomNames.length)],
           new UniqueIdentifier('4d2f43c3-224d-46ba-bb76-0e383d9ceb5c'),
-          this.playersCurrentGame
+          this.playersCurrentGame,
+          ranker
         )
       )
       this.playersCurrentGame.addPlayer(
         new CPUPlayer(
           randomNames[this.getRandomNumberBetweenZeroAndMax(randomNames.length)],
           new UniqueIdentifier('32b62508-4e72-4028-8794-fd075b0393b5'),
-          this.playersCurrentGame
+          this.playersCurrentGame,
+          ranker
         )
       )
       this.playersCurrentGame.addPlayer(
@@ -163,7 +167,8 @@ class GameManager {
         new CPUPlayer(
           randomNames[this.getRandomNumberBetweenZeroAndMax(randomNames.length)],
           new UniqueIdentifier('81756fd4-3f61-4833-b012-43fbc407b688'),
-          this.playersCurrentGame
+          this.playersCurrentGame,
+          ranker
         )
       )
     }
