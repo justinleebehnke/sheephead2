@@ -2,16 +2,35 @@ import BellePlaineRulesCardRanker from './BellePlaineRulesCardRanker'
 import Player from './Player'
 import Round from './Round/Round'
 import UniqueIdentifier from '../Utilities/UniqueIdentifier'
+import ISubscriber from '../UseCase/ISubscriber'
 
-class Game {
+class Game implements ISubscriber {
   private players: Player[]
   private currentDealer: number
   private currentRound: Round | null
+  private subscribers: ISubscriber[]
+
+  public addSubscriber(newSubscriber: ISubscriber): void {
+    this.subscribers.push(newSubscriber)
+  }
+
+  public removeSubscriber(subscriberToRemove: ISubscriber): void {
+    this.subscribers = this.subscribers.filter((subscriber) => subscriber !== subscriberToRemove)
+  }
+
+  private notifySubscribers(): void {
+    this.subscribers.forEach((subscriber) => subscriber.update())
+  }
+
+  public update(): void {
+    this.notifySubscribers()
+  }
 
   public constructor(players: Player[], dealerIndex: number) {
     this.players = players
     this.currentDealer = dealerIndex
     this.currentRound = null
+    this.subscribers = []
   }
 
   public addPlayer(player: Player): void {
@@ -39,9 +58,12 @@ class Game {
       Date.now(),
       new BellePlaineRulesCardRanker()
     )
+    this.notifySubscribers()
+    this.currentRound.addSubscriber(this)
   }
 
   public playAnotherRound(): void {
+    this.currentRound?.removeSubscriber(this)
     this.setNextDealer()
     this.playRound()
   }

@@ -1,6 +1,7 @@
 import Game from '../Entities/Game'
 import Player from '../Entities/Player'
 import UniqueIdentifier from '../Utilities/UniqueIdentifier'
+import ISubscriber from './ISubscriber'
 
 /*
 Some ideas:
@@ -39,62 +40,67 @@ When deciding what to play:
 7. Schmeer, 60% of the time it's the right move
 
 */
-class CPUPlayer extends Player {
+class CPUPlayer extends Player implements ISubscriber {
   private game: Game
-  private interval: NodeJS.Timeout
   constructor(name: string, id: UniqueIdentifier, game: Game) {
     super(name, id)
     this.game = game
-    this.interval = this.setCheckTurnInterval()
+    this.game.addSubscriber(this)
   }
 
-  private setCheckTurnInterval(): NodeJS.Timeout {
-    return setInterval(async () => {
-      if (this.game.getCurrentRound()?.getCurrentTurnPlayer()?.getId() === this.getId()) {
-        if (this.getName() === 'Jake' || this.getName() === 'Jesse') {
-          const round = this.game.getCurrentRound()
-          if (round) {
-            const player = round.getCurrentTurnPlayer()
-            if (player) {
-              const playableCards = player.getPlayableCardIds()
-              round.play(player.removeCardFromHand(playableCards[0]))
-            }
-          }
-        }
-        if (this.getName() === 'John') {
-          const round = this.game.getCurrentRound()
-          if (round) {
-            try {
-              round.pick()
+  public update(): void {
+    if (this.isTurn()) {
+      this.takeTurn()
+    }
+  }
 
-              const player = round.getCurrentTurnPlayer()
-              if (player) {
-                const playableCards = player?.getPlayableCardIds()
-                round.bury(
-                  player.removeCardFromHand(playableCards[0]),
-                  player.removeCardFromHand(playableCards[1])
-                )
-                round.play(player.removeCardFromHand(playableCards[0]))
-              }
-            } catch (err) {
-              try {
-                const player = round.getCurrentTurnPlayer()
-                if (player) {
-                  const playableCards = player.getPlayableCardIds(
-                    round.getCurrentTrick().getLeadCard()
-                  )
-                  console.log('John', playableCards.length)
-                  round.play(player.removeCardFromHand(playableCards[0]))
-                }
-              } catch (err) {
-                console.log(round.getEndOfRoundReport())
-                clearInterval(this.interval)
-              }
-            }
-          }
-        }
+  private isTurn(): boolean {
+    return this.game.getCurrentRound()?.getCurrentTurnPlayer()?.getId() === this.getId()
+  }
+
+  private takeTurn(): void {
+    if (this.isPickerState()) {
+      this.pick()
+    } else {
+      this.play()
+    }
+  }
+
+  private isPickerState(): boolean {
+    try {
+      const round = this.game.getCurrentRound()
+      round?.getEndOfRoundReport()
+    } catch (err) {
+      return String(err).includes('FindingPickerState')
+    }
+    return false
+  }
+
+  private pick(): void {
+    const round = this.game.getCurrentRound()
+    if (round) {
+      round.pick()
+      const player = round.getCurrentTurnPlayer()
+      if (player) {
+        const playableCards = player?.getPlayableCardIds()
+        round.bury(
+          player.removeCardFromHand(playableCards[0]),
+          player.removeCardFromHand(playableCards[1])
+        )
+        round.play(player.removeCardFromHand(playableCards[2]))
       }
-    }, 250)
+    }
+  }
+
+  private play(): void {
+    const round = this.game.getCurrentRound()
+    if (round) {
+      const player = round.getCurrentTurnPlayer()
+      if (player) {
+        const playableCards = player.getPlayableCardIds()
+        round.play(player.removeCardFromHand(playableCards[0]))
+      }
+    }
   }
 }
 

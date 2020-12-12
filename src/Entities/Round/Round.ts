@@ -6,6 +6,7 @@ import ICardRanker from '../ICardRanker'
 import IRoundState from './IRoundState'
 import Player from '../Player'
 import Trick from '../Trick'
+import ISubscriber from '../../UseCase/ISubscriber'
 
 class Round implements IRoundState {
   private players: Player[]
@@ -19,6 +20,7 @@ class Round implements IRoundState {
   private currentTrick: Trick
   private pickerIndex: number
   private _isOver: boolean
+  private subscribers: ISubscriber[]
 
   constructor(
     players: Player[],
@@ -37,7 +39,20 @@ class Round implements IRoundState {
     this.context = new FindingPickerState(this)
     this.currentTrick = new Trick(-1)
     this._isOver = false
+    this.subscribers = []
     this.deal()
+  }
+
+  public addSubscriber(newSubscriber: ISubscriber): void {
+    this.subscribers.push(newSubscriber)
+  }
+
+  public removeSubscriber(subscriberToRemove: ISubscriber): void {
+    this.subscribers = this.subscribers.filter((subscriber) => subscriber !== subscriberToRemove)
+  }
+
+  public notifySubscribers(): void {
+    this.subscribers.forEach((subscriber) => subscriber.update())
   }
 
   pass(): void {
@@ -158,6 +173,7 @@ class Round implements IRoundState {
     this.giveEachPlayerThreeCards(deck)
     this.indexOfCurrentTurn = this.getIndexOfNextPlayer(this.indexOfDealer)
     this.context = new FindingPickerState(this)
+    this.notifySubscribers()
   }
 
   private giveEachPlayerThreeCards(deck: Deck): void {

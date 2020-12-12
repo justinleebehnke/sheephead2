@@ -5,7 +5,7 @@ import IRoundState from './IRoundState'
 import Round from './Round'
 import Trick from '../Trick'
 
-export const PAUSE_DURATION_AFTER_TRICK = 100
+export const PAUSE_DURATION_AFTER_TRICK = 3500
 
 class TrickState implements IRoundState {
   private round: Round
@@ -51,6 +51,7 @@ class TrickState implements IRoundState {
         this.round.getIndexOfNextPlayer(this.round.getIndexOfCurrentTurn())
       )
     }
+    this.round.notifySubscribers()
   }
 
   private isCompleteTrick(): boolean {
