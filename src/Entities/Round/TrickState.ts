@@ -5,7 +5,8 @@ import IRoundState from './IRoundState'
 import Round from './Round'
 import Trick from '../Trick'
 
-export const PAUSE_DURATION_AFTER_TRICK = 4000
+export const PAUSE_DURATION_AFTER_TRICK = 1000
+const NUM_TRICKS_IN_GAME = 6
 
 class TrickState implements IRoundState {
   private round: Round
@@ -27,31 +28,40 @@ class TrickState implements IRoundState {
   }
 
   public async play(card: Card): Promise<void> {
-    this.round.getCurrentTrick().addCardToTrick(card, this.round.getCurrentTurnPlayer())
-    if (this.isCompleteTrick()) {
-      const indexOfCurrentTurn = this.round.getIndexOfCurrentTurn()
-      this.round.setIndexOfCurrentTurn(-1)
-      await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK))
-      this.round.setIndexOfCurrentTurn(indexOfCurrentTurn)
-      this.round.getCurrentTrick().giveToHighestRankingCardPlayer()
+    const currentTurnPlayer = this.round.getCurrentTurnPlayer()
+    if (currentTurnPlayer) {
+      this.round.getCurrentTrick().addCardToTrick(card, currentTurnPlayer)
+      if (this.isCompleteTrick()) {
+        await this.pause()
+        this.round.getCurrentTrick().giveToHighestRankingCardPlayer()
 
-      if (this.thereAreMoreTricksLeftToPlay()) {
-        this.round.setIndexOfCurrentTurn(
-          this.round.getIndexOfPlayerById(this.round.getCurrentTrick().getWinnerOfTrick().getId())
-        )
-        this.round.setCurrentTrick(new Trick(this.round.getCurrentTrick().getTrickOrder() + 1))
-        this.round.setContext(new TrickState(this.round))
+        if (this.thereAreMoreTricksLeftToPlay()) {
+          this.round.setIndexOfCurrentTurn(
+            this.round.getIndexOfPlayerById(this.round.getCurrentTrick().getWinnerOfTrick().getId())
+          )
+          this.round.setCurrentTrick(new Trick(this.round.getCurrentTrick().getTrickOrder() + 1))
+          this.round.setContext(new TrickState(this.round))
+        } else {
+          this.round.setIndexOfCurrentTurn(-1)
+          this.round.markAsOver()
+          this.round.setContext(new EndOfRoundState(this.round))
+        }
       } else {
-        this.round.setIndexOfCurrentTurn(-1)
-        this.round.markAsOver()
-        this.round.setContext(new EndOfRoundState(this.round))
+        this.round.setIndexOfCurrentTurn(
+          this.round.getIndexOfNextPlayer(this.round.getIndexOfCurrentTurn())
+        )
       }
+      this.round.notifySubscribers()
     } else {
-      this.round.setIndexOfCurrentTurn(
-        this.round.getIndexOfNextPlayer(this.round.getIndexOfCurrentTurn())
-      )
+      throw Error('Cannot pick when it is no one is the current turn player')
     }
-    this.round.notifySubscribers()
+  }
+
+  private async pause(): Promise<void> {
+    const indexOfCurrentTurn = this.round.getIndexOfCurrentTurn()
+    this.round.setIndexOfCurrentTurn(-1)
+    await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK))
+    this.round.setIndexOfCurrentTurn(indexOfCurrentTurn)
   }
 
   private isCompleteTrick(): boolean {
@@ -59,7 +69,7 @@ class TrickState implements IRoundState {
   }
 
   private thereAreMoreTricksLeftToPlay(): boolean {
-    return this.round.getCurrentTurnPlayer().hasCardsInHand()
+    return this.round.getCurrentTrick().getTrickOrder() < NUM_TRICKS_IN_GAME
   }
 
   public getEndOfRoundReport(): EndOfRoundData {

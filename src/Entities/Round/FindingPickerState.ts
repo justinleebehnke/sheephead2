@@ -21,11 +21,16 @@ class FindingPickerState implements IRoundState {
 
   public pick(): void {
     const [blindCardA, blindCardB] = this.round.getBlind()
-    this.round.getCurrentTurnPlayer().giveCard(blindCardA)
-    this.round.getCurrentTurnPlayer().giveCard(blindCardB)
-    this.round.setBlind([])
-    this.round.setPickerIndex(this.round.getIndexOfCurrentTurn())
-    this.round.setContext(new PickerHasNotBuriedState(this.round))
+    const currentTurnPlayer = this.round.getCurrentTurnPlayer()
+    if (!currentTurnPlayer) {
+      throw Error('Cannot pick when it is no one is the current turn player')
+    } else {
+      currentTurnPlayer.giveCard(blindCardA)
+      currentTurnPlayer.giveCard(blindCardB)
+      this.round.setBlind([])
+      this.round.setPickerIndex(this.round.getIndexOfCurrentTurn())
+      this.round.setContext(new PickerHasNotBuriedState(this.round))
+    }
   }
 
   public bury(cardA: Card, cardB: Card): void {

@@ -78,29 +78,30 @@ class CPUPlayer extends Player implements ISubscriber {
     const round = this.game.getCurrentRound()
     if (round) {
       const player = round.getCurrentTurnPlayer()
-      const playableCards = player.getPlayableCardIds()
+      const playableCards = player?.getPlayableCardIds()
+      if (playableCards) {
+        const pointsForHavingCardsInTop3 = playableCards.filter(
+          // worth 3 each
+          (cardId) => this.cardRanker.getRank(cardId) <= 3
+        ).length
+        const pointsForHavingCardsInTop6 = playableCards.filter(
+          // worth 2 each
+          (cardId) => this.cardRanker.getRank(cardId) <= 6
+        ).length
+        const pointsForHavingTrumpCards = playableCards.filter((cardId) =>
+          this.cardRanker.isTrump(cardId)
+        ).length // worth 1 each
 
-      const pointsForHavingCardsInTop3 = playableCards.filter(
-        // worth 3 each
-        (cardId) => this.cardRanker.getRank(cardId) <= 3
-      ).length
-      const pointsForHavingCardsInTop6 = playableCards.filter(
-        // worth 2 each
-        (cardId) => this.cardRanker.getRank(cardId) <= 6
-      ).length
-      const pointsForHavingTrumpCards = playableCards.filter((cardId) =>
-        this.cardRanker.isTrump(cardId)
-      ).length // worth 1 each
+        const pointsForHighValueCards = // worth 0.5 each
+          playableCards.filter((cardId) => this.cardRanker.getPointValue(cardId) >= 10).length * 0.5
 
-      const pointsForHighValueCards = // worth 0.5 each
-        playableCards.filter((cardId) => this.cardRanker.getPointValue(cardId) >= 10).length * 0.5
-
-      const scoreForHand =
-        pointsForHavingCardsInTop3 +
-        pointsForHavingCardsInTop6 +
-        pointsForHavingTrumpCards +
-        (pointsForHighValueCards > 1 ? 1 : pointsForHighValueCards)
-      return scoreForHand >= 7.5
+        const scoreForHand =
+          pointsForHavingCardsInTop3 +
+          pointsForHavingCardsInTop6 +
+          pointsForHavingTrumpCards +
+          (pointsForHighValueCards > 1 ? 1 : pointsForHighValueCards)
+        return scoreForHand >= 7.5
+      }
     }
     return false
   }
@@ -115,6 +116,7 @@ class CPUPlayer extends Player implements ISubscriber {
 
   private bury(round: Round): void {
     const player = round.getCurrentTurnPlayer()
+    if (!player) return
     const playableCards = player.getPlayableCardIds()
     const highestValueCardId = this.getHighestValueCardId(playableCards)
     const secondHighestValueCardId = this.getHighestValueCardId(

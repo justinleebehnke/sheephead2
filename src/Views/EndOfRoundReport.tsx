@@ -27,7 +27,7 @@ class EndOfRoundReport extends Component {
 
         return (
           <Modal size='lg' show={true} onHide={() => {}} backdrop='static'>
-            <Modal.Header closeButton>
+            <Modal.Header>
               <Modal.Title>End Of Round Report</Modal.Title>
             </Modal.Header>
             <Modal.Body className='report'>

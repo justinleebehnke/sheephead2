@@ -15,10 +15,14 @@ class PassOrPick extends Component<{}, State> {
 
   pass = (): void => {
     const game = GameManager.getPlayersCurrentGame()
-    if (game.getCurrentRound()?.getCurrentTurnPlayer().getId() === localPlayerId) {
-      game.getCurrentRound()?.pass()
+    const round = game.getCurrentRound()
+    if (!round) return
+    const currentTurnPlayer = round.getCurrentTurnPlayer()
+    if (!currentTurnPlayer) return
+    if (currentTurnPlayer.getId() === localPlayerId) {
+      round.pass()
+      this.setState({ isShow: false })
     }
-    this.setState({ isShow: false })
   }
 
   componentDidMount() {
@@ -31,7 +35,7 @@ class PassOrPick extends Component<{}, State> {
 
   checkIfTurnAndUpdate() {
     const game = GameManager.getPlayersCurrentGame()
-    if (game.getCurrentRound()?.getCurrentTurnPlayer().getId() === localPlayerId) {
+    if (game.getCurrentRound()?.getCurrentTurnPlayer()?.getId() === localPlayerId) {
       if (this.state.isShow !== game.getCurrentRound()?.isFindingPickerState() || false) {
         this.setState({ isShow: game.getCurrentRound()?.isFindingPickerState() || false })
       }
