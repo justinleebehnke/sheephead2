@@ -5,7 +5,7 @@ import IRoundState from './IRoundState'
 import Round from './Round'
 import Trick from '../Trick'
 
-export const PAUSE_DURATION_AFTER_TRICK = 1000
+export const PAUSE_DURATION_AFTER_TRICK = 3500
 const NUM_TRICKS_IN_GAME = 6
 
 class TrickState implements IRoundState {
