@@ -3,10 +3,10 @@ import './EndOfRoundReport.css'
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import Table from 'react-bootstrap/Table'
-import cards from './CardResourceMap'
 import GameManager from '../UseCase/GameManager'
 import CardPlayedByData from '../Entities/DataStructures/CardPlayedByData'
 import TrickData from '../Entities/DataStructures/TrickData'
+import AbbreviatedCard from './AbbreviatedCard'
 
 class EndOfRoundReport extends Component {
   private playAgain(): void {
@@ -26,29 +26,29 @@ class EndOfRoundReport extends Component {
         const indexOfPicker = round.getPickerIndex()
 
         return (
-          <Modal size='lg' show={true} onHide={() => {}} backdrop='static'>
+          <Modal show={true} onHide={() => {}} backdrop='static'>
             <Modal.Header>
               <Modal.Title>End Of Round Report</Modal.Title>
             </Modal.Header>
             <Modal.Body className='report'>
               <Table bordered hover variant='dark'>
                 <thead>
-                  <tr>
-                    <th></th>
-                    <th>Trick: 1</th>
-                    <th>Trick: 2</th>
-                    <th>Trick: 3</th>
-                    <th>Trick: 4</th>
-                    <th>Trick: 5</th>
-                    <th>Trick: 6</th>
-                    <th>Points Won</th>
+                  <tr className='short'>
+                    <th className='short'></th>
+                    <th className='short'>Trick: 1</th>
+                    <th className='short'>Trick: 2</th>
+                    <th className='short'>Trick: 3</th>
+                    <th className='short'>Trick: 4</th>
+                    <th className='short'>Trick: 5</th>
+                    <th className='short'>Trick: 6</th>
+                    <th className='short'>Points Won</th>
                   </tr>
                 </thead>
                 <tbody>
                   {players.map((player, index) => {
                     return (
                       <tr>
-                        <td>
+                        <td className='short'>
                           {player.getName()}
                           {indexOfPicker === index && <p>(Picker)</p>}
                         </td>
@@ -61,18 +61,12 @@ class EndOfRoundReport extends Component {
                           return (
                             <td key={cardId} className={winningCardId === cardId ? 'winner' : ''}>
                               {winningCardId === cardId && <span>Won</span>}
-                              <div>
-                                <img
-                                  // @ts-ignore
-                                  src={cards[cardId]}
-                                  alt={`playing-card-${cardId}`}
-                                />
-                              </div>
+                              <div>{cardId && <AbbreviatedCard card={cardId} />}</div>
                               {leadingCardId === cardId && <span>Lead</span>}
                             </td>
                           )
                         })}
-                        <td>
+                        <td className='short'>
                           {report.tricks.reduce((total: number, trick: TrickData) => {
                             const winningCardId = trick.cards[trick.winningCardIndex].cardId
                             const cardPlayedByPlayer:
@@ -95,47 +89,41 @@ class EndOfRoundReport extends Component {
                     )
                   })}
                   <tr>
-                    <td>Trick Value</td>
+                    <td className='short'>Trick Value</td>
                     {report.tricks.map((trick: TrickData) => {
                       return (
-                        <td>
+                        <td className='short'>
                           {trick.cards.reduce((trickValue: number, card: CardPlayedByData) => {
                             return trickValue + card.pointValue
                           }, 0)}
                         </td>
                       )
                     })}
-                    <td></td>
+                    <td className='short'></td>
                   </tr>
                 </tbody>
               </Table>
               <Table bordered hover variant='dark'>
                 <thead>
                   <tr>
-                    <th>Bury</th>
-                    <th></th>
-                    <th></th>
-                    <th>Value</th>
+                    <th className='short'>Bury</th>
+                    <th className='short'></th>
+                    <th className='short'></th>
+                    <th className='short'>Value</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td></td>
-                    <td>
-                      <img
-                        // @ts-ignore
-                        src={cards[report.bury.cards[0].cardId]}
-                        alt={`playing-card-${report.bury.cards[0].cardId}`}
-                      />
+                    <td className='short'></td>
+                    <td className='short'>
+                      <AbbreviatedCard card={report.bury.cards[0].cardId} />
                     </td>
-                    <td>
-                      <img
-                        // @ts-ignore
-                        src={cards[report.bury.cards[1].cardId]}
-                        alt={`playing-card-${report.bury.cards[1].cardId}`}
-                      />
+                    <td className='short'>
+                      <AbbreviatedCard card={report.bury.cards[1].cardId} />
                     </td>
-                    <td>{report.bury.cards[0].pointValue + report.bury.cards[1].pointValue}</td>
+                    <td className='short'>
+                      {report.bury.cards[0].pointValue + report.bury.cards[1].pointValue}
+                    </td>
                   </tr>
                 </tbody>
               </Table>

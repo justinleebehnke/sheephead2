@@ -3,8 +3,13 @@
   margin-right: 10px;
 }
 .modal-body {
-  max-width: 1000px;
+  font-size: 12px;
 }
+
+.short {
+  padding: 0.3rem !important;
+}
+
 .flex {
   display: flex;
 }

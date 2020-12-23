@@ -1,0 +1,20 @@
+.cardBox {
+  background-color: white;
+  border: 1px solid black;
+  max-width: 50px;
+  border-radius: 3px;
+}
+
+.abbreviated-card {
+  margin: auto;
+  text-align: center;
+  font-size: 22px;
+}
+
+.red {
+  color: red;
+}
+
+.black {
+  color: black;
+}
