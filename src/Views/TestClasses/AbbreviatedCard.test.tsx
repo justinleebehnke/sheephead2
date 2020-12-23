@@ -51,6 +51,13 @@ describe('Abbreviated Card', () => {
     })
     expect(container?.innerHTML).toMatch('red')
   })
+
+  it('Should make the Jack of Diamonds Yellow', () => {
+    act(() => {
+      render(<AbbreviatedCard card='jd' />, container)
+    })
+    expect(container?.innerHTML).toMatch('yellow')
+  })
 })
 
 export {}

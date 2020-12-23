@@ -10,7 +10,7 @@ class AbbreviatedCard extends Component<Props> {
     const [firstPart, secondPart] = this.props.card.split('')
 
     return (
-      <div className='cardBox'>
+      <div className={`cardBox ${this.props.card === 'jd' ? 'yellow' : ''}`}>
         <div className={`abbreviated-card ${this.getColor(secondPart)}`}>
           {this.getFirstChar(firstPart)}
           {this.getSymbol(secondPart)}

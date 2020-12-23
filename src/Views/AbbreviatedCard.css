@@ -5,6 +5,15 @@
   border-radius: 3px;
 }
 
+.yellow {
+  background-color: black;
+  border: 2px solid yellow;
+}
+
+.yellow > div.red {
+  color: yellow;
+}
+
 .abbreviated-card {
   margin: auto;
   text-align: center;
