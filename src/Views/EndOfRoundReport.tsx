@@ -59,7 +59,10 @@ class EndOfRoundReport extends Component {
                             (card: CardPlayedByData) => card.playedByPlayerId === player.getId()
                           )?.cardId
                           return (
-                            <td key={cardId} className={winningCardId === cardId ? 'winner' : ''}>
+                            <td
+                              key={cardId}
+                              className={`short ${winningCardId === cardId ? 'winner' : ''}`}
+                            >
                               {winningCardId === cardId && <span>Won</span>}
                               <div>{cardId && <AbbreviatedCard card={cardId} />}</div>
                               {leadingCardId === cardId && <span>Lead</span>}
