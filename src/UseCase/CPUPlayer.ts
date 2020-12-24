@@ -4,6 +4,7 @@ import Player from '../Entities/Player'
 import UniqueIdentifier from '../Utilities/UniqueIdentifier'
 import ISubscriber from './ISubscriber'
 import Round from '../Entities/Round/Round'
+import { PAUSE_DURATION_AFTER_TRICK } from '../Entities/Round/TrickState'
 
 /*
 Some ideas:
@@ -54,7 +55,9 @@ class CPUPlayer extends Player implements ISubscriber {
 
   public update(): void {
     if (this.isTurn()) {
-      this.takeTurn()
+      new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK)).then(() => {
+        this.takeTurn()
+      })
     }
   }
 

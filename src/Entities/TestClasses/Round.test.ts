@@ -81,21 +81,25 @@ describe('Round', () => {
     const round1LeadCard = player2.removeCardFromHand('qd')
     expect(player2.getPlayableCardIds()).toEqual(['td', 'kd', 'ah', 'tc', '9c'])
     round.play(round1LeadCard)
+    await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK + 100))
     // @ts-ignore
     expect(round.getCurrentTrick().getNumCardsPlayed()).toBe(1)
     expect(round.getCurrentTurnPlayer()).toBe(player3)
     expect(player3.getPlayableCardIds(round1LeadCard)).toEqual(['qs', 'jc', 'js', 'jh', 'jd'])
     round.play(player3.removeCardFromHand('jd'))
+    await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK + 100))
     // @ts-ignore
     expect(round.getCurrentTrick().getNumCardsPlayed()).toBe(2)
     expect(round.getCurrentTurnPlayer()).toBe(player4)
     expect(player4.getPlayableCardIds(round1LeadCard)).toEqual(['qc'])
     round.play(player4.removeCardFromHand('qc'))
+    await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK + 100))
     // @ts-ignore
     expect(round.getCurrentTrick().getNumCardsPlayed()).toBe(3)
     expect(round.getCurrentTurnPlayer()).toBe(player1)
     expect(player1.getPlayableCardIds(round1LeadCard)).toEqual(['7d', 'qh', '9d', '8d'])
     round.play(player1.removeCardFromHand('8d'))
+    await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK + 100))
 
     await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK + 100))
 
@@ -110,18 +114,22 @@ describe('Round', () => {
     expect(player4.getPlayableCardIds()).toEqual(['ac', 'as', 'ts', 'th', 'kh'])
     const round2LeadCard = player4.removeCardFromHand('kh')
     round.play(round2LeadCard)
+    await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK + 100))
 
     expect(round.getCurrentTurnPlayer()).toBe(player1)
     expect(player1.getPlayableCardIds(round2LeadCard)).toEqual(['7d', 'qh', '9d', 'kc', '9s'])
 
     round.play(player1.removeCardFromHand('7d'))
+    await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK + 100))
     expect(round.getCurrentTurnPlayer()).toBe(player2)
     expect(player2.getPlayableCardIds(round2LeadCard)).toEqual(['ah'])
     round.play(player2.removeCardFromHand('td'))
+    await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK + 100))
 
     expect(round.getCurrentTurnPlayer()).toBe(player3)
     expect(player3.getPlayableCardIds()).toEqual(['qs', 'jc', 'js', 'jh', '9h'])
     round.play(player3.removeCardFromHand('qs'))
+    await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK + 100))
 
     await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK + 100))
 
@@ -139,15 +147,19 @@ describe('Round', () => {
     expect(player1.getPlayableCardIds()).toEqual(['qh', '9d', 'kc', '9s'])
     const round3LeadCard = player1.removeCardFromHand('kc')
     round.play(round3LeadCard)
+    await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK + 100))
     expect(round.getCurrentTurnPlayer()).toBe(player2)
     expect(player2.getPlayableCardIds(round3LeadCard)).toEqual(['tc', '9c'])
     round.play(player2.removeCardFromHand('9c'))
+    await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK + 100))
     expect(round.getCurrentTurnPlayer()).toBe(player3)
     expect(player3.getPlayableCardIds(round3LeadCard)).toEqual(['jc', 'js', 'jh', '9h'])
     round.play(player3.removeCardFromHand('9h'))
+    await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK + 100))
 
     expect(round.getCurrentTurnPlayer()).toBe(player4)
     round.play(player4.removeCardFromHand('ac'))
+    await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK + 100))
 
     await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK + 100))
 
@@ -164,14 +176,18 @@ describe('Round', () => {
     expect(player4.getPlayableCardIds()).toEqual(['as', 'ts', 'th'])
     const round4LeadCard = player4.removeCardFromHand('as')
     round.play(round4LeadCard)
+    await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK + 100))
     expect(round.getCurrentTurnPlayer()).toBe(player1)
     round.play(player1.removeCardFromHand('9s'))
+    await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK + 100))
     expect(round.getCurrentTurnPlayer()).toBe(player2)
     expect(player2.getPlayableCardIds(round4LeadCard)).toEqual(['kd', 'ah', 'tc'])
     round.play(player2.removeCardFromHand('kd'))
+    await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK + 100))
     expect(round.getCurrentTurnPlayer()).toBe(player3)
     expect(player3.getPlayableCardIds(round4LeadCard)).toEqual(['jc', 'js', 'jh'])
     round.play(player3.removeCardFromHand('jc'))
+    await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK + 100))
 
     await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK + 100))
 
@@ -189,16 +205,20 @@ describe('Round', () => {
     expect(player3.getPlayableCardIds()).toEqual(['js', 'jh'])
     const round5LeadCard = player3.removeCardFromHand('jh')
     round.play(round5LeadCard)
+    await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK + 100))
 
     expect(round.getCurrentTurnPlayer()).toBe(player4)
     expect(player4.getPlayableCardIds(round5LeadCard)).toEqual(['ts', 'th'])
     round.play(player4.removeCardFromHand('th'))
+    await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK + 100))
     expect(round.getCurrentTurnPlayer()).toBe(player1)
     expect(player1.getPlayableCardIds(round5LeadCard)).toEqual(['qh', '9d'])
     round.play(player1.removeCardFromHand('9d'))
+    await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK + 100))
 
     expect(round.getCurrentTurnPlayer()).toBe(player2)
     round.play(player2.removeCardFromHand('ah'))
+    await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK + 100))
     await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK + 100))
 
     expect(player1.getTricksWon().length).toBe(1)
@@ -214,12 +234,16 @@ describe('Round', () => {
     expect(round.getCurrentTurnPlayer()).toBe(player3)
     const round6LeadCard = player3.removeCardFromHand('js')
     round.play(round6LeadCard)
+    await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK + 100))
     expect(round.getCurrentTurnPlayer()).toBe(player4)
     round.play(player4.removeCardFromHand('ts'))
+    await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK + 100))
     expect(round.getCurrentTurnPlayer()).toBe(player1)
     round.play(player1.removeCardFromHand('qh'))
+    await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK + 100))
     expect(round.getCurrentTurnPlayer()).toBe(player2)
     round.play(player2.removeCardFromHand('tc'))
+    await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK + 100))
 
     await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK + 100))
     expect(() => round.pick()).toThrow('Cannot pick in EndOfRoundState')
