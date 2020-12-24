@@ -1,7 +1,19 @@
 .selectableCardHand {
   width: 65%;
   margin: auto;
+  box-sizing: border-box;
 }
+
+.selectableCardHand-hand {
+  width: 100%;
+  margin-left: 2em;
+}
+
+.selectableCardHand-hand.short {
+  width: 100%;
+  margin-left: 4.2em;
+}
+
 .selectableCardHand .playing-card {
   margin: auto;
   display: inline;
@@ -13,9 +25,26 @@
   width: 80px;
 }
 
+.selectableCardHand .playing-card img.selected {
+  margin-top: -2.5em;
+}
+
+.select-prompt {
+  margin-top: 0.5em;
+  text-align: center;
+}
+
 .controls {
   margin: auto;
   display: flex;
   width: 50%;
+  justify-content: space-between;
+}
+
+.footer-controls {
+  margin: auto;
+  margin-top: 1em;
+  display: flex;
+  width: 100%;
   justify-content: space-between;
 }
