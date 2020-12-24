@@ -13,3 +13,8 @@ code {
 .center {
   margin: auto;
 }
+
+.split {
+  display: flex;
+  justify-content: space-around;
+}

@@ -5,6 +5,7 @@ import PlayerLayout from './PlayerLayout'
 import GameManager from '../UseCase/GameManager'
 import EndOfRoundReport from './EndOfRoundReport'
 import PassOrPick from './PassOrPick'
+import Rules from './Rules'
 
 class GameBoard extends Component {
   componentDidMount() {
@@ -24,6 +25,7 @@ class GameBoard extends Component {
     const round = game.getCurrentRound()
     return (
       <div>
+        <Rules />
         {round && round.isFindingPickerState() && <PassOrPick />}
         <PlayerLayout />
         {!!localPlayer && <Hand cardsInHand={localPlayer.getPlayableCardIds()} />}
