@@ -1,0 +1,21 @@
+.selectableCardHand {
+  width: 65%;
+  margin: auto;
+}
+.selectableCardHand .playing-card {
+  margin: auto;
+  display: inline;
+  margin-left: -45px;
+  z-index: 1;
+}
+
+.selectableCardHand .playing-card img {
+  width: 80px;
+}
+
+.controls {
+  margin: auto;
+  display: flex;
+  width: 50%;
+  justify-content: space-between;
+}
