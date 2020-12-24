@@ -8,15 +8,6 @@ type Props = {
 }
 
 class Hand extends Component<Props, {}> {
-  private interval: NodeJS.Timeout | undefined
-  componentDidMount() {
-    this.interval = setInterval(() => this.setState({ time: Date.now() }), 1000)
-  }
-  componentWillUnmount() {
-    if (this.interval) {
-      clearInterval(this.interval)
-    }
-  }
   render() {
     const game = GameManager.getPlayersCurrentGame()
     if (game) {

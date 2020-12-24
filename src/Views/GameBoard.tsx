@@ -7,15 +7,16 @@ import EndOfRoundReport from './EndOfRoundReport'
 import PassOrPick from './PassOrPick'
 
 class GameBoard extends Component {
-  private interval: NodeJS.Timeout | undefined
   componentDidMount() {
-    this.interval = setInterval(() => this.setState({ time: Date.now() }), 1000)
+    const game = GameManager.getPlayersCurrentGame()
+    game.addSubscriber(this)
   }
+
   componentWillUnmount() {
-    if (this.interval) {
-      clearInterval(this.interval)
-    }
+    const game = GameManager.getPlayersCurrentGame()
+    game.removeSubscriber(this)
   }
+
   render() {
     const game = GameManager.getPlayersCurrentGame()
     const localPlayerId = '79dbc191-2b0e-4dc3-83d7-7696c4abcb61'
@@ -29,6 +30,10 @@ class GameBoard extends Component {
         {round && round.isOver() && <EndOfRoundReport />}
       </div>
     )
+  }
+
+  update = (): void => {
+    this.setState({})
   }
 }
 

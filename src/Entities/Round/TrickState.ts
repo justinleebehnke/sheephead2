@@ -32,6 +32,7 @@ class TrickState implements IRoundState {
     if (currentTurnPlayer) {
       this.round.getCurrentTrick().addCardToTrick(card, currentTurnPlayer)
       if (this.isCompleteTrick()) {
+        this.round.notifySubscribers()
         await this.pause()
         this.round.getCurrentTrick().giveToHighestRankingCardPlayer()
 
