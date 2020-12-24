@@ -22,6 +22,13 @@ class UniqueIdentifier {
   public getId(): string {
     return this.id
   }
+
+  public equals(compare: any): boolean {
+    if (compare instanceof UniqueIdentifier) {
+      return compare.getId() === this.getId()
+    }
+    return false
+  }
 }
 
 export default UniqueIdentifier
