@@ -161,7 +161,7 @@ class GameManager {
         )
       )
       this.playersCurrentGame.addPlayer(
-        new Player('Me', new UniqueIdentifier('79dbc191-2b0e-4dc3-83d7-7696c4abcb61'))
+        new Player('You', new UniqueIdentifier('79dbc191-2b0e-4dc3-83d7-7696c4abcb61'))
       )
       this.playersCurrentGame.addPlayer(
         new CPUPlayer(
