@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import Button from 'react-bootstrap/esm/Button'
-import GameManager from '../UseCase/GameManager'
-import Player from '../Entities/Player'
+import GameManager from '../../UseCase/GameManager'
+import Player from '../../Entities/Player'
 import SelectAbleCard from './SelectAbleCard'
 import './SelectableCardHand.css'
 

@@ -1,8 +1,8 @@
 import { Component, ReactElement } from 'react'
 import './PlayerLayout.css'
 import PlayerTurnBox from './PlayerTurnBox'
-import GameManager from '../UseCase/GameManager'
-import Round from '../Entities/Round/Round'
+import GameManager from '../../UseCase/GameManager'
+import Round from '../../Entities/Round/Round'
 
 class PlayerLayout extends Component {
   render() {

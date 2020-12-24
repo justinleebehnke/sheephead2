@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import UniqueIdentifier from '../Utilities/UniqueIdentifier'
+import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
 import Hand from './Hand'
 import PlayerLayout from './PlayerLayout'
-import GameManager from '../UseCase/GameManager'
+import GameManager from '../../UseCase/GameManager'
 import EndOfRoundReport from './EndOfRoundReport'
 import PassOrPick from './PassOrPick'
 

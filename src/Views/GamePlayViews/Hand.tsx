@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Card from './Card'
 import './Hand.css'
-import GameManager from '../UseCase/GameManager'
+import GameManager from '../../UseCase/GameManager'
 
 type Props = {
   cardsInHand: string[]

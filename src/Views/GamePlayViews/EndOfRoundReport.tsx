@@ -3,9 +3,9 @@ import './EndOfRoundReport.css'
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import Table from 'react-bootstrap/Table'
-import GameManager from '../UseCase/GameManager'
-import CardPlayedByData from '../Entities/DataStructures/CardPlayedByData'
-import TrickData from '../Entities/DataStructures/TrickData'
+import GameManager from '../../UseCase/GameManager'
+import CardPlayedByData from '../../Entities/DataStructures/CardPlayedByData'
+import TrickData from '../../Entities/DataStructures/TrickData'
 import AbbreviatedCard from './AbbreviatedCard'
 
 class EndOfRoundReport extends Component {

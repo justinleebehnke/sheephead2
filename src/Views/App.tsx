@@ -1,6 +1,5 @@
-import React from 'react'
 import './App.css'
-import GameBoard from './GameBoard'
+import GameBoard from './GamePlayViews/GameBoard'
 
 function App() {
   return (

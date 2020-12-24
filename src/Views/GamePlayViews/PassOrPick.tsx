@@ -3,9 +3,9 @@ import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
 
-import GameManager from '../UseCase/GameManager'
+import GameManager from '../../UseCase/GameManager'
 import SelectableCardHand from './SelectableCardHand'
-import UniqueIdentifier from '../Utilities/UniqueIdentifier'
+import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
 const localPlayerId = '79dbc191-2b0e-4dc3-83d7-7696c4abcb61'
 type State = {
   isPicking: boolean
