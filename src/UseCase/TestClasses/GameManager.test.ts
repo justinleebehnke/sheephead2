@@ -73,10 +73,7 @@ describe('PreGame', () => {
     }).toThrow('Cannot add player to started game')
   })
   it('Should allow a player to be removed from a started game, and bring that game back into a not started state', () => {})
-  it('Should allow the host to leave and in that case it should destroy the created game and the pre game', () => {})
-
-  // if a player is removed, it should pull the Game out of the live games and back into pregame state and show up in the lobby
-  // it a the host leaves while the game is live, it should
+  it('Should allow the host to leave and in that case it should destroy the created game', () => {})
 })
 
 export {}
