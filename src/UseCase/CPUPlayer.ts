@@ -2,7 +2,7 @@ import Game from '../Entities/Game'
 import ICardRanker from '../Entities/ICardRanker'
 import Player from '../Entities/Player'
 import UniqueIdentifier from '../Utilities/UniqueIdentifier'
-import ISubscriber from './ISubscriber'
+import ISubscriber from '../Entities/ISubscriber'
 import Round from '../Entities/Round/Round'
 import { PAUSE_DURATION_AFTER_TRICK } from '../Entities/Round/TrickState'
 

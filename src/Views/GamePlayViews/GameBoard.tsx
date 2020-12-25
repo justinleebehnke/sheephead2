@@ -5,8 +5,9 @@ import PlayerLayout from './PlayerLayout'
 import GameManagerOld from '../../UseCase/GameManagerOld'
 import EndOfRoundReport from './EndOfRoundReport'
 import PassOrPick from './PassOrPick'
+import ISubscriber from '../../Entities/ISubscriber'
 
-class GameBoard extends Component {
+class GameBoard extends Component implements ISubscriber {
   componentDidMount() {
     const game = GameManagerOld.getPlayersCurrentGame()
     game.addSubscriber(this)

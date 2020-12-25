@@ -3,12 +3,13 @@ import Deck from '../Deck'
 import EndOfRoundData from './EndOfRoundReportData'
 import FindingPickerState from './FindingPickerState'
 import ICardRanker from '../ICardRanker'
+import IObservable from '../IObservable'
 import IRoundState from './IRoundState'
+import ISubscriber from '../ISubscriber'
 import Player from '../Player'
 import Trick from '../Trick'
-import ISubscriber from '../../UseCase/ISubscriber'
 
-class Round implements IRoundState {
+class Round implements IRoundState, IObservable {
   private players: Player[]
   private indexOfDealer: number
   private indexOfCurrentTurn: number
