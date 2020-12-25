@@ -9,6 +9,7 @@ class Game implements ISubscriber {
   private currentDealer: number
   private currentRound: Round | null
   private subscribers: ISubscriber[]
+  private shuffleSeed: number
 
   public addSubscriber(newSubscriber: ISubscriber): void {
     this.subscribers.push(newSubscriber)
@@ -26,11 +27,12 @@ class Game implements ISubscriber {
     this.notifySubscribers()
   }
 
-  public constructor(players: Player[], dealerIndex: number) {
+  public constructor(players: Player[], dealerIndex: number, shuffleSeed: number) {
     this.players = players
     this.currentDealer = dealerIndex
     this.currentRound = null
     this.subscribers = []
+    this.shuffleSeed = shuffleSeed
     if (players.length === 4) {
       this.playRound()
     }
@@ -58,7 +60,7 @@ class Game implements ISubscriber {
     this.currentRound = new Round(
       this.players,
       this.currentDealer,
-      Date.now(),
+      this.shuffleSeed++,
       new BellePlaineRulesCardRanker()
     )
     this.currentRound.addSubscriber(this)

@@ -36,10 +36,9 @@
     ],
     "rules": {
       "quotes": [
+        "error",
         "single",
-        {
-          "avoidEscape": true
-        }
+        "avoid-escape"
       ]
     }
   },

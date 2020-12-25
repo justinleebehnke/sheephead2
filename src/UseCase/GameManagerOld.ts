@@ -143,7 +143,7 @@ class GameManagerOld {
       const ranker = new BellePlaineRulesCardRanker()
       const numPlayers = 4
       const firstDealerIndex = this.getRandomNumberBetweenZeroAndMax(numPlayers)
-      this.playersCurrentGame = new Game([], firstDealerIndex)
+      this.playersCurrentGame = new Game([], firstDealerIndex, Date.now())
       this.playersCurrentGame.addPlayer(
         new CPUPlayer(
           randomNames[this.getRandomNumberBetweenZeroAndMax(randomNames.length)],

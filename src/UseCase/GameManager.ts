@@ -71,7 +71,8 @@ class GameManager {
     }
     this.game = new Game(
       this.players.map((playerDto) => new Player(playerDto.getName(), playerDto.getId())),
-      this.firstDealerIndex
+      this.firstDealerIndex,
+      Date.now()
     )
   }
 
