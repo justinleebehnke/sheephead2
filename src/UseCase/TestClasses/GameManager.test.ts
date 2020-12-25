@@ -1,6 +1,7 @@
 import Game from '../../Entities/Game'
-import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
 import GameManager from '../GameManager'
+import Round from '../../Entities/Round/Round'
+import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
 
 describe('PreGame', () => {
   let hostId: UniqueIdentifier
@@ -48,7 +49,19 @@ describe('PreGame', () => {
     expect(gameManager.getGame() instanceof Game).toBe(true)
     expect(gameManager.getGame()?.getPlayerById(hostId).getId()).toEqual(hostId.getId())
   })
-  it("Should start the game with CPU players if there aren't enough", () => {})
+  it('Should throw an error if startGame is called and there is already a game started', () => {
+    const gameManager = new GameManager({ getId: () => hostId, getName: () => 'Host Name' })
+    gameManager.startGame()
+    expect(() => {
+      gameManager.startGame()
+    }).toThrow('Game already started')
+  })
+  it("Should start the game with CPU players if there aren't enough", () => {
+    const gameManager = new GameManager({ getId: () => hostId, getName: () => 'Host Name' })
+    expect(gameManager.getGame()).toBe(undefined)
+    gameManager.startGame()
+    expect(gameManager.getGame()?.getCurrentRound() instanceof Round).toBe(true)
+  })
   it('Should not allow a player to be addeed to a started game', () => {})
   it('Should allow a player to be removed from a started game, and bring that game back into a not started state', () => {})
   it('Should allow the host to leave and in that case it should destroy the created game and the pre game', () => {})

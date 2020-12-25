@@ -31,6 +31,9 @@ class Game implements ISubscriber {
     this.currentDealer = dealerIndex
     this.currentRound = null
     this.subscribers = []
+    if (players.length === 4) {
+      this.playRound()
+    }
   }
 
   public addPlayer(player: Player): void {

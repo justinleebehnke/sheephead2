@@ -47,6 +47,9 @@ class GameManager {
   }
 
   public startGame(): void {
+    if (this.game !== undefined) {
+      throw 'Game already started'
+    }
     while (this.players.length < 4) {
       this.addPlayer({
         getId: () => new UniqueIdentifier(),
