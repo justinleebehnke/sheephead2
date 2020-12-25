@@ -41,7 +41,7 @@ class GameManager {
     this.players.push(player)
   }
 
-  private gameIsStarted(): boolean {
+  public gameIsStarted(): boolean {
     return this.game !== undefined
   }
 
@@ -50,6 +50,12 @@ class GameManager {
   }
 
   public removePlayerById(id: UniqueIdentifier): void {
+    if (this.gameIsStarted()) {
+      this.game = undefined
+    }
+    if (id.equals(this.host.getId())) {
+      this.players = []
+    }
     this.players = this.players.filter((player) => !player.getId().equals(id))
   }
 
