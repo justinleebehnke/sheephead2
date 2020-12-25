@@ -1,3 +1,4 @@
+import Game from '../../Entities/Game'
 import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
 import GameManager from '../GameManager'
 
@@ -7,35 +8,46 @@ describe('PreGame', () => {
     hostId = new UniqueIdentifier()
   })
   it('Should not allow two players with the same id to be added', () => {
-    const game = new GameManager({ getId: () => hostId, getName: () => 'Host Name' })
+    const gameManager = new GameManager({ getId: () => hostId, getName: () => 'Host Name' })
     expect(() => {
-      game.addPlayer({ getId: () => hostId, getName: () => 'Player Name' })
+      gameManager.addPlayer({ getId: () => hostId, getName: () => 'Player Name' })
     }).toThrow('Cannot have two players with same id in game')
   })
   it('Should allow the index of the dealer to be set', () => {
-    const game = new GameManager({ getId: () => hostId, getName: () => 'Host Name' })
-    game.setFirstDealerIndex(0)
-    expect(game.getFirstDealerIndex()).toBe(0)
-    game.setFirstDealerIndex(1)
-    expect(game.getFirstDealerIndex()).toBe(1)
-    game.setFirstDealerIndex(2)
-    expect(game.getFirstDealerIndex()).toBe(2)
-    game.setFirstDealerIndex(3)
-    expect(game.getFirstDealerIndex()).toBe(3)
+    const gameManager = new GameManager({ getId: () => hostId, getName: () => 'Host Name' })
+    gameManager.setFirstDealerIndex(0)
+    expect(gameManager.getFirstDealerIndex()).toBe(0)
+    gameManager.setFirstDealerIndex(1)
+    expect(gameManager.getFirstDealerIndex()).toBe(1)
+    gameManager.setFirstDealerIndex(2)
+    expect(gameManager.getFirstDealerIndex()).toBe(2)
+    gameManager.setFirstDealerIndex(3)
+    expect(gameManager.getFirstDealerIndex()).toBe(3)
     expect(() => {
-      game.setFirstDealerIndex(-1)
+      gameManager.setFirstDealerIndex(-1)
     }).toThrow('First dealer index must be between 0 and 3')
     expect(() => {
-      game.setFirstDealerIndex(4)
+      gameManager.setFirstDealerIndex(4)
     }).toThrow('First dealer index must be between 0 and 3')
     expect(() => {
-      game.setFirstDealerIndex(100000000)
+      gameManager.setFirstDealerIndex(100000000)
     }).toThrow('First dealer index must be between 0 and 3')
     expect(() => {
-      game.setFirstDealerIndex(-10000000)
+      gameManager.setFirstDealerIndex(-10000000)
     }).toThrow('First dealer index must be between 0 and 3')
   })
-  it('Should allow a game to be started', () => {})
+  it('Should allow a game to be started', () => {
+    const gameManager = new GameManager({ getId: () => hostId, getName: () => 'Host Name' })
+    gameManager.startGame()
+  })
+  it('Should be able to get the game object from a game manager if the game has started', () => {
+    const gameManager = new GameManager({ getId: () => hostId, getName: () => 'Host Name' })
+    expect(gameManager.getGame()).toBe(undefined)
+    gameManager.startGame()
+    expect(gameManager.getGame()).not.toBe(undefined)
+    expect(gameManager.getGame() instanceof Game).toBe(true)
+    expect(gameManager.getGame()?.getPlayerById(hostId).getId()).toEqual(hostId.getId())
+  })
   it("Should start the game with CPU players if there aren't enough", () => {})
   it('Should not allow a player to be addeed to a started game', () => {})
   it('Should allow a player to be removed from a started game, and bring that game back into a not started state', () => {})

@@ -1,10 +1,15 @@
+import Game from '../Entities/Game'
+import Player from '../Entities/Player'
 import PlayerDTO from './PlayerDTO'
+import RandomName from './RandomName'
 import UniqueIdentifier from '../Utilities/UniqueIdentifier'
 
 class GameManager {
   private host: PlayerDTO
   private players: PlayerDTO[]
   private firstDealerIndex!: number
+  private game: Game | undefined
+
   constructor(host: PlayerDTO) {
     this.host = host
     this.players = [host]
@@ -39,6 +44,23 @@ class GameManager {
 
   public removePlayerById(id: UniqueIdentifier): void {
     this.players = this.players.filter((player) => !player.getId().equals(id))
+  }
+
+  public startGame(): void {
+    while (this.players.length < 4) {
+      this.addPlayer({
+        getId: () => new UniqueIdentifier(),
+        getName: () => new RandomName().getName(),
+      })
+    }
+    this.game = new Game(
+      this.players.map((playerDto) => new Player(playerDto.getName(), playerDto.getId())),
+      this.firstDealerIndex
+    )
+  }
+
+  public getGame(): undefined | Game {
+    return this.game
   }
 }
 
