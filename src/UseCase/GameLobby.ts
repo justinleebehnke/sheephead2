@@ -3,16 +3,9 @@ import GameManager from './GameManager'
 import UniqueIdentifier from '../Utilities/UniqueIdentifier'
 
 class GameLobby {
-  private static instance: GameLobby
   private games: GameManager[]
-  public static getGameLobby(): GameLobby {
-    if (!this.instance) {
-      this.instance = new GameLobby()
-    }
-    return this.instance
-  }
 
-  private constructor() {
+  constructor() {
     this.games = []
   }
 
