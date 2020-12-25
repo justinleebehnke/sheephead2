@@ -22,7 +22,7 @@ class GameManager {
 
   public setFirstDealerIndex(index: number): void {
     if (index < 0 || index > 3) {
-      throw Error('First dealer index must be between 0 and 3')
+      throw new Error('First dealer index must be between 0 and 3')
     }
     this.firstDealerIndex = index
   }
@@ -33,9 +33,16 @@ class GameManager {
 
   public addPlayer(player: PlayerDTO): void {
     if (this.getPlayerById(player.getId())) {
-      throw Error('Cannot have two players with same id in game')
+      throw new Error('Cannot have two players with same id in game')
+    }
+    if (this.gameIsStarted()) {
+      throw new Error('Cannot add player to started game')
     }
     this.players.push(player)
+  }
+
+  private gameIsStarted(): boolean {
+    return this.game !== undefined
   }
 
   public getPlayerById(id: UniqueIdentifier): PlayerDTO | undefined {
@@ -47,8 +54,8 @@ class GameManager {
   }
 
   public startGame(): void {
-    if (this.game !== undefined) {
-      throw 'Game already started'
+    if (this.gameIsStarted()) {
+      throw new Error('Game already started')
     }
     while (this.players.length < 4) {
       this.addPlayer({
