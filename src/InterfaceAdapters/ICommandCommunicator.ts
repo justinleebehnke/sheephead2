@@ -1,8 +1,8 @@
 import ICommandCommunicatorResponse from './ICommandCommunicatorResponse'
-import ICommandObjectDTO from './ICommandObjectDTO'
+import ICommandObject from './ICommandObject'
 
 interface ICommandCommunicator {
-  giveCommand(command: ICommandObjectDTO): Promise<ICommandCommunicatorResponse>
+  giveCommand(command: ICommandObject): Promise<ICommandCommunicatorResponse>
   getCommands(indexOfNextCommand: number): Promise<ICommandCommunicatorResponse>
 }
 

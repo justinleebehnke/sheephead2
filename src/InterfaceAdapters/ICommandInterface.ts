@@ -1,5 +1,7 @@
+import ICommandObject from './ICommandObject'
+
 interface ICommandInterface {
-  giveCommand(command: ICommandInterface): Promise<void>
+  giveCommand(command: ICommandObject): Promise<void>
 }
 
 export default ICommandInterface
