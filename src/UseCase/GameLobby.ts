@@ -1,10 +1,10 @@
 import PlayerDTO from './PlayerDTO'
-import PreGame from './PreGame'
+import GameManager from './GameManager'
 import UniqueIdentifier from '../Utilities/UniqueIdentifier'
 
 class GameLobby {
   private static instance: GameLobby
-  private games: PreGame[]
+  private games: GameManager[]
   public static getGameLobby(): GameLobby {
     if (!this.instance) {
       this.instance = new GameLobby()
@@ -17,21 +17,20 @@ class GameLobby {
   }
 
   public addNewGame(host: PlayerDTO): void {
-    this.games.push(new PreGame(host))
+    this.games.push(new GameManager(host))
   }
 
-  public getAllGames(): PreGame[] {
+  public getAllGames(): GameManager[] {
     return this.games
   }
 
   public removePlayerFromGame(id: UniqueIdentifier): void {
-    const game = this.games.find((game: PreGame) => game.getPlayerById(id))
+    const game = this.games.find((game: GameManager) => game.getPlayerById(id))
     if (game) {
       if (game.getHost().getId().equals(id)) {
         this.games = this.games.filter((game) => !game.getHost().getId().equals(id))
-      } else {
-        game.removePlayerById(id)
       }
+      game.removePlayerById(id)
     }
   }
 }

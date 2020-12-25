@@ -1,12 +1,12 @@
 import { Component, ReactElement } from 'react'
 import './PlayerLayout.css'
 import PlayerTurnBox from './PlayerTurnBox'
-import GameManager from '../../UseCase/GameManager'
+import GameManagerOld from '../../UseCase/GameManagerOld'
 import Round from '../../Entities/Round/Round'
 
 class PlayerLayout extends Component {
   render() {
-    const round: Round | null = GameManager.getPlayersCurrentGame().getCurrentRound()
+    const round: Round | null = GameManagerOld.getPlayersCurrentGame().getCurrentRound()
     return (
       round && (
         <div id='player-layout'>
@@ -31,7 +31,7 @@ class PlayerLayout extends Component {
   }
 
   renderPlayerAtIndex = (index: number): ReactElement => {
-    const round: Round | null = GameManager.getPlayersCurrentGame().getCurrentRound()
+    const round: Round | null = GameManagerOld.getPlayersCurrentGame().getCurrentRound()
     if (round) {
       const players = round.getPlayers()
       const chosenCard = round

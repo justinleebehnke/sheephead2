@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import Button from 'react-bootstrap/esm/Button'
-import GameManager from '../../UseCase/GameManager'
+import GameManagerOld from '../../UseCase/GameManagerOld'
 import Player from '../../Entities/Player'
 import SelectAbleCard from './SelectAbleCard'
 import './SelectableCardHand.css'
@@ -66,7 +66,7 @@ class SelectableCardHand extends Component<Props, State> {
   }
 
   burySelectedCards = (): void => {
-    const round = GameManager.getPlayersCurrentGame().getCurrentRound()
+    const round = GameManagerOld.getPlayersCurrentGame().getCurrentRound()
     if (round) {
       const player: Player = round.getCurrentTurnPlayer()
       const card1 = player.removeCardFromHand(this.state.selectedCardIds[0])

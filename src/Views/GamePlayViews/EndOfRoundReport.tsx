@@ -3,21 +3,21 @@ import './EndOfRoundReport.css'
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import Table from 'react-bootstrap/Table'
-import GameManager from '../../UseCase/GameManager'
+import GameManagerOld from '../../UseCase/GameManagerOld'
 import CardPlayedByData from '../../Entities/DataStructures/CardPlayedByData'
 import TrickData from '../../Entities/DataStructures/TrickData'
 import AbbreviatedCard from './AbbreviatedCard'
 
 class EndOfRoundReport extends Component {
   private playAgain(): void {
-    const game = GameManager.getPlayersCurrentGame()
+    const game = GameManagerOld.getPlayersCurrentGame()
     if (game) {
       game.playAnotherRound()
     }
   }
 
   render() {
-    const game = GameManager.getPlayersCurrentGame()
+    const game = GameManagerOld.getPlayersCurrentGame()
     if (game) {
       const round = game.getCurrentRound()
       if (round) {

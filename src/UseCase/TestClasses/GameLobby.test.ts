@@ -39,6 +39,14 @@ describe('Game Lobby', () => {
     const allGames = GameLobby.getGameLobby().getAllGames()
     expect(allGames.length).toBe(1)
   })
+
+  describe('Managing an already started game', () => {
+    // a game is identified by it's host
+    // if a host leaves, the game is destroyed and everyone goes back to the lobby
+    // so we have the list of pregames
+    // and the pregame knows the real game
+    // so you
+  })
 })
 
 export {}

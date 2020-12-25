@@ -3,7 +3,7 @@ import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
 
-import GameManager from '../../UseCase/GameManager'
+import GameManagerOld from '../../UseCase/GameManagerOld'
 import SelectableCardHand from './SelectableCardHand'
 import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
 const localPlayerId = '79dbc191-2b0e-4dc3-83d7-7696c4abcb61'
@@ -27,7 +27,7 @@ class PassOrPick extends Component<{}, State> {
   }
 
   checkIfTurnAndUpdate() {
-    const game = GameManager.getPlayersCurrentGame()
+    const game = GameManagerOld.getPlayersCurrentGame()
     if (game.getCurrentRound()?.getCurrentTurnPlayer()?.getId() === localPlayerId) {
       if (this.state.isPicking) {
         if (!this.state.isShow) {
@@ -82,7 +82,7 @@ class PassOrPick extends Component<{}, State> {
   }
 
   pick = (): void => {
-    const game = GameManager.getPlayersCurrentGame()
+    const game = GameManagerOld.getPlayersCurrentGame()
     const round = game.getCurrentRound()
     if (!round) return
     const currentTurnPlayer = round.getCurrentTurnPlayer()
@@ -94,7 +94,7 @@ class PassOrPick extends Component<{}, State> {
   }
 
   pass = (): void => {
-    const game = GameManager.getPlayersCurrentGame()
+    const game = GameManagerOld.getPlayersCurrentGame()
     const round = game.getCurrentRound()
     if (!round) return
     const currentTurnPlayer = round.getCurrentTurnPlayer()
@@ -106,7 +106,7 @@ class PassOrPick extends Component<{}, State> {
   }
 
   renderHand = (): ReactElement => {
-    const game = GameManager.getPlayersCurrentGame()
+    const game = GameManagerOld.getPlayersCurrentGame()
     const localPlayer = game.getPlayerById(new UniqueIdentifier(localPlayerId))
     return (
       <SelectableCardHand

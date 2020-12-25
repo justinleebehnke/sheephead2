@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Card from './Card'
 import './Hand.css'
-import GameManager from '../../UseCase/GameManager'
+import GameManagerOld from '../../UseCase/GameManagerOld'
 
 type Props = {
   cardsInHand: string[]
@@ -9,7 +9,7 @@ type Props = {
 
 class Hand extends Component<Props, {}> {
   render() {
-    const game = GameManager.getPlayersCurrentGame()
+    const game = GameManagerOld.getPlayersCurrentGame()
     if (game) {
       const round = game.getCurrentRound()
       if (round) {
