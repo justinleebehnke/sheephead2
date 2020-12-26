@@ -106,6 +106,43 @@ class GamePresenter implements ISubscriber {
     return this.getDataForPlayer(this.game.getNextIndex(indexOfPlayerToTheLeft))
   }
 
+  public getDataForLocalPlayer(): PlayerLayoutData {
+    return this.getDataForPlayer(this.game.getIndexOfPlayerById(this.localPlayerId))
+  }
+
+  public isShowingPassOrPickForm(): boolean {
+    return this.isChoosingWhetherToPassOrPick()
+  }
+
+  private isChoosingWhetherToPassOrPick(): boolean {
+    const round = this.game.getCurrentRound()
+    if (round) {
+      return (
+        this.isLocalPlayersTurn() &&
+        (round.isFindingPickerState() || round.isPickerHasNotBuriedState())
+      )
+    }
+    return false
+  }
+
+  public isPicking(): boolean {
+    return (
+      (this.isLocalPlayersTurn() && this.game.getCurrentRound()?.isPickerHasNotBuriedState()) ||
+      false
+    )
+  }
+
+  public isShowEndOfRoundReport(): boolean {
+    const round = this.game.getCurrentRound()
+    return round?.isOver() || false
+  }
+
+  private isLocalPlayersTurn(): boolean {
+    return (
+      this.localPlayerId.getId() === this.game.getCurrentRound()?.getCurrentTurnPlayer()?.getId()
+    )
+  }
+
   private getDataForPlayer(index: number): PlayerLayoutData {
     const player = this.game.getPlayerByIndex(index)
     const round: IReadOnlyRound | null = this.game.getCurrentRound()

@@ -24,8 +24,9 @@ describe('Game Presenter', () => {
   let round: IReadOnlyRound
   let trick: IReadOnlyTrick
   let trickData: TrickData
-  let cardPlayedByDataP2: CardPlayedByData
+  let cardPlayedByDataP3: CardPlayedByData
   let cardPlayedByDataP4: CardPlayedByData
+  let cardPlayedByDataLocal: CardPlayedByData
 
   let player2Id: UniqueIdentifier
   let player3Id: UniqueIdentifier
@@ -57,7 +58,7 @@ describe('Game Presenter', () => {
     mockPlayer3 = new Player('Jake', player3Id)
     mockPlayer4 = new Player('John', player4Id)
 
-    cardPlayedByDataP2 = {
+    cardPlayedByDataP3 = {
       playedByPlayerId: player3Id.getId(),
       cardId: 'ac',
       pointValue: 1,
@@ -69,8 +70,14 @@ describe('Game Presenter', () => {
       pointValue: 1,
     }
 
+    cardPlayedByDataLocal = {
+      playedByPlayerId: localPlayer.getId(),
+      cardId: 'as',
+      pointValue: 1,
+    }
+
     trickData = {
-      cards: [cardPlayedByDataP2, cardPlayedByDataP4],
+      cards: [cardPlayedByDataP3, cardPlayedByDataP4, cardPlayedByDataLocal],
       winningCardIndex: 0,
     }
 
@@ -83,6 +90,10 @@ describe('Game Presenter', () => {
       getIndexOfDealer: jest.fn().mockReturnValue(2),
       getIndexOfPicker: jest.fn().mockReturnValue(2),
       getCurrentTrick: jest.fn().mockReturnValue(trick),
+      isFindingPickerState: jest.fn(),
+      isOver: jest.fn(),
+      getCurrentTurnPlayer: jest.fn().mockReturnValue(mockPlayer2),
+      isPickerHasNotBuriedState: jest.fn(),
     }
 
     mockReadOnlyGameModel = {
@@ -243,8 +254,14 @@ describe('Game Presenter', () => {
       cardPlayed: 'jd',
     }
     expect(presenter.getDataForPlayerToRight()).toEqual(expectedToRight)
-
-    expect(true).toBe(false) // next test is to get the local player data
+    const expectedLocal: PlayerLayoutData = {
+      name: localPlayer.getName(),
+      isTurn: false,
+      isDealer: false,
+      isPicker: false,
+      cardPlayed: 'as',
+    }
+    expect(presenter.getDataForLocalPlayer()).toEqual(expectedLocal)
   })
 })
 

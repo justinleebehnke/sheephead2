@@ -1,11 +1,12 @@
 import BellePlaineRulesCardRanker from './BellePlaineRulesCardRanker'
+import IObservable from './IObservable'
+import IReadOnlyGameModel from './ReadOnlyEntities/IReadOnlyGameModel'
+import ISubscriber from './ISubscriber'
 import Player from './Player'
 import Round from './Round/Round'
 import UniqueIdentifier from '../Utilities/UniqueIdentifier'
-import ISubscriber from './ISubscriber'
-import IObservable from './IObservable'
 
-class Game implements ISubscriber, IObservable {
+class Game implements ISubscriber, IObservable, IReadOnlyGameModel {
   private players: Player[]
   private currentDealer: number
   private currentRound: Round | null
@@ -37,6 +38,29 @@ class Game implements ISubscriber, IObservable {
     if (players.length === 4) {
       this.playRound()
     }
+  }
+
+  public getIndexOfPlayerById(id: UniqueIdentifier): number {
+    return this.players.findIndex((player) => player.getId() === id.getId())
+  }
+
+  public getNextIndex(index: number): number {
+    if (index === 3) {
+      return 0
+    }
+    return index + 1
+  }
+
+  public getPlayerByIndex(index: number): Player {
+    return this.players[index]
+  }
+
+  public pick(): void {
+    this.getCurrentRound()?.pick()
+  }
+
+  public updateSubscribers(): void {
+    this.notifySubscribers()
   }
 
   public addPlayer(player: Player): void {

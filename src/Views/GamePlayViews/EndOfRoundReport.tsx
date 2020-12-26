@@ -7,13 +7,14 @@ import GameManagerOld from '../../UseCase/GameManagerOld'
 import CardPlayedByData from '../../Entities/DataStructures/CardPlayedByData'
 import TrickData from '../../Entities/DataStructures/TrickData'
 import AbbreviatedCard from './AbbreviatedCard'
+import GamePresenter from '../../InterfaceAdapters/GamePresenter/GamePresenter'
 
-class EndOfRoundReport extends Component {
+type Props = {
+  presenter: GamePresenter
+}
+class EndOfRoundReport extends Component<Props> {
   private playAgain(): void {
-    const game = GameManagerOld.getPlayersCurrentGame()
-    if (game) {
-      game.playAnotherRound()
-    }
+    this.props.presenter.playAgain()
   }
 
   render() {

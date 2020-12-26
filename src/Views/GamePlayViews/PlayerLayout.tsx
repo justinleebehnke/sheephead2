@@ -1,28 +1,32 @@
 import { Component, ReactElement } from 'react'
-import './PlayerLayout.css'
+import GamePresenter from '../../InterfaceAdapters/GamePresenter/GamePresenter'
+import PlayerLayoutData from '../../InterfaceAdapters/GamePresenter/PlayerLayoutData'
 import PlayerTurnBox from './PlayerTurnBox'
-import GameManagerOld from '../../UseCase/GameManagerOld'
-import Round from '../../Entities/Round/Round'
+import './PlayerLayout.css'
 
-class PlayerLayout extends Component {
+type Props = {
+  presenter: GamePresenter
+}
+
+class PlayerLayout extends Component<Props> {
   render() {
-    const round: Round | null = GameManagerOld.getPlayersCurrentGame().getCurrentRound()
+    const { presenter } = this.props
     return (
-      round && (
+      presenter.getHand().length && (
         <div id='player-layout'>
           <div></div>
           <div></div>
-          {this.renderPlayerAtIndex(0)}
+          {this.renderPlayerTurnBox(presenter.getDataForPlayerAcross())}
           <div></div>
           <div></div>
           <div></div>
-          {this.renderPlayerAtIndex(3)}
+          {this.renderPlayerTurnBox(presenter.getDataForPlayerToLeft())}
           <div></div>
-          {this.renderPlayerAtIndex(1)}
+          {this.renderPlayerTurnBox(presenter.getDataForPlayerToRight())}
           <div></div>
           <div></div>
           <div></div>
-          {this.renderPlayerAtIndex(2)}
+          {this.renderPlayerTurnBox(presenter.getDataForLocalPlayer())}
           <div></div>
           <div></div>
         </div>
@@ -30,29 +34,15 @@ class PlayerLayout extends Component {
     )
   }
 
-  renderPlayerAtIndex = (index: number): ReactElement => {
-    const round: Round | null = GameManagerOld.getPlayersCurrentGame().getCurrentRound()
-    if (round) {
-      const players = round.getPlayers()
-      const chosenCard = round
-        .getCurrentTrick()
-        .getTrickData()
-        .cards.find((card) => card.playedByPlayerId === players[index].getId())?.cardId
-
-      return (
-        round && (
-          <PlayerTurnBox
-            isDealer={round.getIndexOfDealer() === index}
-            isPicker={round.getPickerIndex() === index}
-            chosenCard={
-              chosenCard ? chosenCard : round.getIndexOfCurrentTurn() === index ? 'turn' : 'none'
-            }
-            playerName={players[index].getName()}
-          />
-        )
-      )
-    }
-    return <div></div>
+  private renderPlayerTurnBox = (playerData: PlayerLayoutData): ReactElement => {
+    return (
+      <PlayerTurnBox
+        isDealer={playerData.isDealer}
+        isPicker={playerData.isPicker}
+        chosenCard={playerData.cardPlayed}
+        playerName={playerData.name}
+      />
+    )
   }
 }
 

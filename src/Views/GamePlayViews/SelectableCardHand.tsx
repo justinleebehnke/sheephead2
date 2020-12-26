@@ -1,13 +1,11 @@
 import React, { Component, Fragment } from 'react'
 import Button from 'react-bootstrap/esm/Button'
-import GameManagerOld from '../../UseCase/GameManagerOld'
-import Player from '../../Entities/Player'
+import GamePresenter from '../../InterfaceAdapters/GamePresenter/GamePresenter'
 import SelectAbleCard from './SelectAbleCard'
 import './SelectableCardHand.css'
 
 type Props = {
-  cardIds: string[]
-  isShowBury: boolean
+  presenter: GamePresenter
 }
 
 type State = {
@@ -20,22 +18,24 @@ class SelectableCardHand extends Component<Props, State> {
 
   render() {
     const setOfSelectedCardIds: Set<string> = new Set(this.state.selectedCardIds)
+    const { presenter } = this.props
+    const isShowBury = presenter.isPicking()
 
     return (
       <Fragment>
         <div className='selectableCardHand'>
-          <div className={`selectableCardHand-hand ${this.props.isShowBury ? '' : 'short'}`}>
-            {this.props.cardIds.map((cardId) => (
+          <div className={`selectableCardHand-hand ${isShowBury ? '' : 'short'}`}>
+            {presenter.getHand().map((cardId) => (
               <SelectAbleCard
                 key={cardId}
                 isSelected={setOfSelectedCardIds.has(cardId)}
                 cardId={cardId}
-                toggleSelected={!this.props.isShowBury ? () => {} : this.toggleSelected}
+                toggleSelected={!isShowBury ? () => {} : this.toggleSelected}
               />
             ))}
           </div>
         </div>
-        {this.props.isShowBury && (
+        {isShowBury && (
           <div className='footer-controls'>
             <div></div>
             <Button
@@ -66,13 +66,9 @@ class SelectableCardHand extends Component<Props, State> {
   }
 
   burySelectedCards = (): void => {
-    const round = GameManagerOld.getPlayersCurrentGame().getCurrentRound()
-    if (round) {
-      const player: Player = round.getCurrentTurnPlayer()
-      const card1 = player.removeCardFromHand(this.state.selectedCardIds[0])
-      const card2 = player.removeCardFromHand(this.state.selectedCardIds[1])
-      round.bury(card1, card2)
-    }
+    const { presenter } = this.props
+    const { selectedCardIds } = this.state
+    presenter.bury(selectedCardIds)
   }
 }
 

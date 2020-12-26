@@ -4,12 +4,14 @@ import EndOfRoundData from './EndOfRoundReportData'
 import FindingPickerState from './FindingPickerState'
 import ICardRanker from '../ICardRanker'
 import IObservable from '../IObservable'
+import IReadOnlyRound from '../ReadOnlyEntities/IReadOnlyRound'
 import IRoundState from './IRoundState'
 import ISubscriber from '../ISubscriber'
+import PickerHasNotBuriedState from './PickerHasNotBuriedState'
 import Player from '../Player'
 import Trick from '../Trick'
 
-class Round implements IRoundState, IObservable {
+class Round implements IRoundState, IObservable, IReadOnlyRound {
   private players: Player[]
   private indexOfDealer: number
   private indexOfCurrentTurn: number
@@ -42,6 +44,14 @@ class Round implements IRoundState, IObservable {
     this._isOver = false
     this.subscribers = []
     this.deal()
+  }
+
+  public getIndexOfPicker(): number {
+    return this.getPickerIndex()
+  }
+
+  public isPickerHasNotBuriedState(): boolean {
+    return this.context instanceof PickerHasNotBuriedState
   }
 
   public isFindingPickerState(): boolean {
