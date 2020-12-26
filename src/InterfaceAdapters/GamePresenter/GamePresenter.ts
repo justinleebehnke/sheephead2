@@ -57,6 +57,15 @@ class GamePresenter implements ISubscriber {
     })
   }
 
+  public playAgain(): void {
+    this.commandInterface.giveCommand({
+      name: 'playAgain',
+      params: {
+        playerId: this.localPlayerId,
+      },
+    })
+  }
+
   public getHand(): string[] {
     const localPlayer: Player | undefined = this.game.getPlayerById(this.localPlayerId)
     if (localPlayer) {

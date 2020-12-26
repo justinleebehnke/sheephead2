@@ -121,6 +121,17 @@ describe('Game Presenter', () => {
     }
     expect(mockCommandInterface.giveCommand).toHaveBeenCalledWith(playCommand)
   })
+
+  it('Should send a playAgain command for the local player if the decide to do so', () => {
+    presenter.playAgain()
+    const playAgain: ICommandObject = {
+      name: 'playAgain',
+      params: {
+        playerId: localPlayerId,
+      },
+    }
+    expect(mockCommandInterface.giveCommand).toHaveBeenCalledWith(playAgain)
+  })
 })
 
 export {}
