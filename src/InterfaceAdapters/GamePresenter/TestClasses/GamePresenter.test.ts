@@ -110,6 +110,17 @@ describe('Game Presenter', () => {
     mockReadOnlyGameModel.updateSubscribers()
     expect(mockGameView.update).toHaveBeenCalledTimes(3)
   })
+
+  it('Should send a play command when the user plays a card', () => {
+    presenter.play('qc')
+    const playCommand: ICommandObject = {
+      name: 'play',
+      params: {
+        card: 'qc',
+      },
+    }
+    expect(mockCommandInterface.giveCommand).toHaveBeenCalledWith(playCommand)
+  })
 })
 
 export {}

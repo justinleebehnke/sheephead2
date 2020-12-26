@@ -23,7 +23,7 @@ class GamePresenter implements ISubscriber {
     this.game.addSubscriber(this)
   }
 
-  update(): void {
+  public update(): void {
     this.view.update()
   }
 
@@ -44,6 +44,15 @@ class GamePresenter implements ISubscriber {
       name: 'bury',
       params: {
         cards,
+      },
+    })
+  }
+
+  public play(card: string): void {
+    this.commandInterface.giveCommand({
+      name: 'play',
+      params: {
+        card,
       },
     })
   }
