@@ -24,7 +24,8 @@ describe('Game Presenter', () => {
   let round: IReadOnlyRound
   let trick: IReadOnlyTrick
   let trickData: TrickData
-  let cardPlayedByData: CardPlayedByData
+  let cardPlayedByDataP2: CardPlayedByData
+  let cardPlayedByDataP4: CardPlayedByData
 
   let player2Id: UniqueIdentifier
   let player3Id: UniqueIdentifier
@@ -56,14 +57,20 @@ describe('Game Presenter', () => {
     mockPlayer3 = new Player('Jake', player3Id)
     mockPlayer4 = new Player('John', player4Id)
 
-    cardPlayedByData = {
+    cardPlayedByDataP2 = {
       playedByPlayerId: player3Id.getId(),
       cardId: 'ac',
       pointValue: 1,
     }
 
+    cardPlayedByDataP4 = {
+      playedByPlayerId: player4Id.getId(),
+      cardId: 'jd',
+      pointValue: 1,
+    }
+
     trickData = {
-      cards: [cardPlayedByData],
+      cards: [cardPlayedByDataP2, cardPlayedByDataP4],
       winningCardIndex: 0,
     }
 
@@ -218,14 +225,26 @@ describe('Game Presenter', () => {
       cardPlayed: 'ac',
     }
     expect(presenter.getDataForPlayerAcross()).toEqual(expectedAcross)
-    // const expectedToLeft: PlayerLayoutData = {
-    //   name: mockPlayer2.getName(),
-    //   isTurn: false,
-    //   isDealer: false,
-    //   isPicker: false,
-    //   cardPlayed: 'ac',
-    // }
-    // expect(presenter.getDataForPlayerToLeft()).toEqual(expectedAcross)
+
+    const expectedToLeft: PlayerLayoutData = {
+      name: mockPlayer2.getName(),
+      isTurn: true,
+      isDealer: false,
+      isPicker: false,
+      cardPlayed: 'turn',
+    }
+    expect(presenter.getDataForPlayerToLeft()).toEqual(expectedToLeft)
+
+    const expectedToRight: PlayerLayoutData = {
+      name: mockPlayer4.getName(),
+      isTurn: false,
+      isDealer: false,
+      isPicker: false,
+      cardPlayed: 'jd',
+    }
+    expect(presenter.getDataForPlayerToRight()).toEqual(expectedToRight)
+
+    expect(true).toBe(false) // next test is to get the local player data
   })
 })
 

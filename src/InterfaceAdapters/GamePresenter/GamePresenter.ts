@@ -88,11 +88,22 @@ class GamePresenter implements ISubscriber {
     return []
   }
 
-  public getDataForPlayerAcross(): PlayerLayoutData {
+  public getDataForPlayerToLeft(): PlayerLayoutData {
+    const localPlayerIndex = this.game.getIndexOfPlayerById(this.localPlayerId)
+    return this.getDataForPlayer(this.game.getNextIndex(localPlayerIndex))
+  }
+
+  public getDataForPlayerToRight(): PlayerLayoutData {
     const localPlayerIndex = this.game.getIndexOfPlayerById(this.localPlayerId)
     const indexOfPlayerToTheLeft = this.game.getNextIndex(localPlayerIndex)
     const indexOfPlayerAcross = this.game.getNextIndex(indexOfPlayerToTheLeft)
-    return this.getDataForPlayer(indexOfPlayerAcross)
+    return this.getDataForPlayer(this.game.getNextIndex(indexOfPlayerAcross))
+  }
+
+  public getDataForPlayerAcross(): PlayerLayoutData {
+    const localPlayerIndex = this.game.getIndexOfPlayerById(this.localPlayerId)
+    const indexOfPlayerToTheLeft = this.game.getNextIndex(localPlayerIndex)
+    return this.getDataForPlayer(this.game.getNextIndex(indexOfPlayerToTheLeft))
   }
 
   private getDataForPlayer(index: number): PlayerLayoutData {
