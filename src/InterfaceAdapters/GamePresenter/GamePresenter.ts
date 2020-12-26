@@ -10,6 +10,8 @@ class GamePresenter implements ISubscriber {
   private view: ISubscriber
   private game: IReadOnlyGameModel
 
+  private _isLoading: boolean
+
   constructor(
     commandInterface: ICommandInterface,
     localPlayerId: UniqueIdentifier,
@@ -21,13 +23,20 @@ class GamePresenter implements ISubscriber {
     this.view = view
     this.game = game
     this.game.addSubscriber(this)
+    this._isLoading = false
+  }
+
+  public isLoading(): boolean {
+    return this._isLoading
   }
 
   public update(): void {
+    this._isLoading = false
     this.view.update()
   }
 
   public pass(): void {
+    this._isLoading = true
     this.commandInterface.giveCommand({
       name: 'pass',
       params: null,
@@ -40,6 +49,7 @@ class GamePresenter implements ISubscriber {
   }
 
   public bury(cards: string[]): void {
+    this._isLoading = true
     this.commandInterface.giveCommand({
       name: 'bury',
       params: {
@@ -49,6 +59,7 @@ class GamePresenter implements ISubscriber {
   }
 
   public play(card: string): void {
+    this._isLoading = true
     this.commandInterface.giveCommand({
       name: 'play',
       params: {
@@ -58,6 +69,7 @@ class GamePresenter implements ISubscriber {
   }
 
   public playAgain(): void {
+    this._isLoading = true
     this.commandInterface.giveCommand({
       name: 'playAgain',
       params: {
