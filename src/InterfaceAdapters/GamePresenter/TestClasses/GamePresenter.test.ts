@@ -15,6 +15,7 @@ describe('Game Presenter', () => {
   let localPlayerId: UniqueIdentifier
   let mockGameView: ISubscriber
   let mockReadOnlyGameModel: IReadOnlyGameModel
+  let presenter: GamePresenter
 
   let player2Id: UniqueIdentifier
   let player3Id: UniqueIdentifier
@@ -57,16 +58,20 @@ describe('Game Presenter', () => {
           : mockPlayer4
       }),
       pick: jest.fn(),
+      addSubscriber: jest.fn(),
+      removeSubscriber: jest.fn(),
+      updateSubscribers: jest.fn().mockImplementation(() => presenter.update()),
     }
-  })
 
-  it('Should send a pass command if someone clicks the pass button', () => {
-    const presenter = new GamePresenter(
+    presenter = new GamePresenter(
       mockCommandInterface,
       localPlayerId,
       mockGameView,
       mockReadOnlyGameModel
     )
+  })
+
+  it('Should send a pass command if someone clicks the pass button', () => {
     presenter.pass()
     const passCommand: ICommandObject = {
       name: 'pass',
@@ -76,35 +81,17 @@ describe('Game Presenter', () => {
   })
 
   it('Should update the view whenever something interesting happens', () => {
-    const presenter = new GamePresenter(
-      mockCommandInterface,
-      localPlayerId,
-      mockGameView,
-      mockReadOnlyGameModel
-    )
     presenter.pick()
     expect(mockReadOnlyGameModel.pick).toHaveBeenCalled()
     expect(mockGameView.update).toHaveBeenCalled()
   })
 
   it("Should have the ability to get the local player's hand", () => {
-    const presenter = new GamePresenter(
-      mockCommandInterface,
-      localPlayerId,
-      mockGameView,
-      mockReadOnlyGameModel
-    )
     const cardsInHand: string[] = presenter.getHand()
     expect(cardsInHand).toEqual(['qc', '7d', 'qs', 'qh', 'qd', 'jc'])
   })
 
   it('Should send a command when the player buries', () => {
-    const presenter = new GamePresenter(
-      mockCommandInterface,
-      localPlayerId,
-      mockGameView,
-      mockReadOnlyGameModel
-    )
     presenter.pick()
     presenter.bury(['qc', '7d'])
     const buryCommand: ICommandObject = {
@@ -114,6 +101,14 @@ describe('Game Presenter', () => {
       },
     }
     expect(mockCommandInterface.giveCommand).toHaveBeenCalledWith(buryCommand)
+  })
+
+  it('Should update the view whenever the model updates the presenter', () => {
+    expect(mockReadOnlyGameModel.addSubscriber).toHaveBeenCalledTimes(1)
+    mockReadOnlyGameModel.updateSubscribers()
+    mockReadOnlyGameModel.updateSubscribers()
+    mockReadOnlyGameModel.updateSubscribers()
+    expect(mockGameView.update).toHaveBeenCalledTimes(3)
   })
 })
 

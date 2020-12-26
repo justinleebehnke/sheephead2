@@ -4,7 +4,7 @@ import ICommandInterface from '../ICommandInterface'
 import IReadOnlyGameModel from '../../Entities/IReadOnlyGameModel'
 import Player from '../../Entities/Player'
 
-class GamePresenter {
+class GamePresenter implements ISubscriber {
   private commandInterface: ICommandInterface
   private localPlayerId: UniqueIdentifier
   private view: ISubscriber
@@ -20,6 +20,11 @@ class GamePresenter {
     this.localPlayerId = localPlayerId
     this.view = view
     this.game = game
+    this.game.addSubscriber(this)
+  }
+
+  update(): void {
+    this.view.update()
   }
 
   public pass(): void {
