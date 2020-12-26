@@ -25,13 +25,22 @@ class GamePresenter {
   public pass(): void {
     this.commandInterface.giveCommand({
       name: 'pass',
-      params: { playerId: this.localPlayerId.getId() },
+      params: null,
     })
   }
 
   public pick(): void {
     this.game.pick()
     this.view.update()
+  }
+
+  public bury(cards: string[]): void {
+    this.commandInterface.giveCommand({
+      name: 'bury',
+      params: {
+        cards,
+      },
+    })
   }
 
   public getHand(): string[] {

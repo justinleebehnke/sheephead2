@@ -70,9 +70,7 @@ describe('Game Presenter', () => {
     presenter.pass()
     const passCommand: ICommandObject = {
       name: 'pass',
-      params: {
-        playerId: localPlayerId.getId(),
-      },
+      params: null,
     }
     expect(mockCommandInterface.giveCommand).toHaveBeenCalledWith(passCommand)
   })
@@ -98,6 +96,24 @@ describe('Game Presenter', () => {
     )
     const cardsInHand: string[] = presenter.getHand()
     expect(cardsInHand).toEqual(['qc', '7d', 'qs', 'qh', 'qd', 'jc'])
+  })
+
+  it('Should send a command when the player buries', () => {
+    const presenter = new GamePresenter(
+      mockCommandInterface,
+      localPlayerId,
+      mockGameView,
+      mockReadOnlyGameModel
+    )
+    presenter.pick()
+    presenter.bury(['qc', '7d'])
+    const buryCommand: ICommandObject = {
+      name: 'bury',
+      params: {
+        cards: ['qc', '7d'],
+      },
+    }
+    expect(mockCommandInterface.giveCommand).toHaveBeenCalledWith(buryCommand)
   })
 })
 

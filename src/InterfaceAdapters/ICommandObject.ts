@@ -1,6 +1,6 @@
 interface ICommandObject {
   name: string
-  params: object
+  params: object | null
 }
 
 export default ICommandObject
