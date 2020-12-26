@@ -1,8 +1,10 @@
 import ISubscriber from '../../Entities/ISubscriber'
 import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
 import ICommandInterface from '../ICommandInterface'
-import IReadOnlyGameModel from '../../Entities/IReadOnlyGameModel'
+import IReadOnlyGameModel from '../../Entities/ReadOnlyEntities/IReadOnlyGameModel'
+import IReadOnlyRound from '../../Entities/ReadOnlyEntities/IReadOnlyRound'
 import Player from '../../Entities/Player'
+import PlayerLayoutData from './PlayerLayoutData'
 
 class GamePresenter implements ISubscriber {
   private commandInterface: ICommandInterface
@@ -84,6 +86,44 @@ class GamePresenter implements ISubscriber {
       return localPlayer.getPlayableCardIds()
     }
     return []
+  }
+
+  public getDataForPlayerAcross(): PlayerLayoutData {
+    const localPlayerIndex = this.game.getIndexOfPlayerById(this.localPlayerId)
+    const indexOfPlayerToTheLeft = this.game.getNextIndex(localPlayerIndex)
+    const indexOfPlayerAcross = this.game.getNextIndex(indexOfPlayerToTheLeft)
+    return this.getDataForPlayer(indexOfPlayerAcross)
+  }
+
+  private getDataForPlayer(index: number): PlayerLayoutData {
+    const player = this.game.getPlayerByIndex(index)
+    const round: IReadOnlyRound | null = this.game.getCurrentRound()
+
+    if (round) {
+      const chosenCard = round
+        .getCurrentTrick()
+        .getTrickData()
+        .cards.find((card) => card.playedByPlayerId === player.getId())?.cardId
+
+      return {
+        name: player.getName(),
+        isTurn: round.getIndexOfCurrentTurn() === index,
+        isDealer: round.getIndexOfDealer() === index,
+        isPicker: round.getIndexOfPicker() === index,
+        cardPlayed: chosenCard
+          ? chosenCard
+          : round.getIndexOfCurrentTurn() === index
+          ? 'turn'
+          : 'none',
+      }
+    }
+    return {
+      name: player.getName(),
+      isTurn: false,
+      isDealer: false,
+      isPicker: false,
+      cardPlayed: 'none',
+    }
   }
 }
 

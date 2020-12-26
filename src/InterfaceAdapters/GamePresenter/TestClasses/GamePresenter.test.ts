@@ -1,12 +1,17 @@
-import ISubscriber from '../../../Entities/ISubscriber'
-import Player from '../../../Entities/Player'
-import UniqueIdentifier from '../../../Utilities/UniqueIdentifier'
+import BellePlaineRulesCardRanker from '../../../Entities/BellePlaineRulesCardRanker'
 import Card from '../../../Entities/Card'
-import IReadOnlyGameModel from '../../../Entities/IReadOnlyGameModel'
+import CardPlayedByData from '../../../Entities/DataStructures/CardPlayedByData'
+import GamePresenter from '../GamePresenter'
 import ICommandInterface from '../../ICommandInterface'
 import ICommandObject from '../../ICommandObject'
-import GamePresenter from '../GamePresenter'
-import BellePlaineRulesCardRanker from '../../../Entities/BellePlaineRulesCardRanker'
+import IReadOnlyGameModel from '../../../Entities/ReadOnlyEntities/IReadOnlyGameModel'
+import IReadOnlyRound from '../../../Entities/ReadOnlyEntities/IReadOnlyRound'
+import IReadOnlyTrick from '../../../Entities/ReadOnlyEntities/IReadOnlyTrick'
+import ISubscriber from '../../../Entities/ISubscriber'
+import Player from '../../../Entities/Player'
+import PlayerLayoutData from '../PlayerLayoutData'
+import TrickData from '../../../Entities/DataStructures/TrickData'
+import UniqueIdentifier from '../../../Utilities/UniqueIdentifier'
 
 const cardRanker = new BellePlaineRulesCardRanker()
 
@@ -16,6 +21,10 @@ describe('Game Presenter', () => {
   let mockGameView: ISubscriber
   let mockReadOnlyGameModel: IReadOnlyGameModel
   let presenter: GamePresenter
+  let round: IReadOnlyRound
+  let trick: IReadOnlyTrick
+  let trickData: TrickData
+  let cardPlayedByData: CardPlayedByData
 
   let player2Id: UniqueIdentifier
   let player3Id: UniqueIdentifier
@@ -47,6 +56,28 @@ describe('Game Presenter', () => {
     mockPlayer3 = new Player('Jake', player3Id)
     mockPlayer4 = new Player('John', player4Id)
 
+    cardPlayedByData = {
+      playedByPlayerId: player3Id.getId(),
+      cardId: 'ac',
+      pointValue: 1,
+    }
+
+    trickData = {
+      cards: [cardPlayedByData],
+      winningCardIndex: 0,
+    }
+
+    trick = {
+      getTrickData: jest.fn().mockReturnValue(trickData),
+    }
+
+    round = {
+      getIndexOfCurrentTurn: jest.fn().mockReturnValue(1),
+      getIndexOfDealer: jest.fn().mockReturnValue(2),
+      getIndexOfPicker: jest.fn().mockReturnValue(2),
+      getCurrentTrick: jest.fn().mockReturnValue(trick),
+    }
+
     mockReadOnlyGameModel = {
       getPlayerById: jest.fn().mockImplementation((id: UniqueIdentifier) => {
         return localPlayerId.equals(id)
@@ -61,6 +92,42 @@ describe('Game Presenter', () => {
       addSubscriber: jest.fn(),
       removeSubscriber: jest.fn(),
       updateSubscribers: jest.fn().mockImplementation(() => presenter.update()),
+      getIndexOfPlayerById: jest.fn().mockImplementation((id: UniqueIdentifier) => {
+        if (id.equals(localPlayerId)) {
+          return 0
+        }
+        if (id.equals(player2Id)) {
+          return 1
+        }
+        if (id.equals(player3Id)) {
+          return 2
+        }
+        if (id.equals(player4Id)) {
+          return 3
+        }
+      }),
+      getNextIndex: jest.fn().mockImplementation((index: number) => {
+        if (index === 3) {
+          return 0
+        } else {
+          return index + 1
+        }
+      }),
+      getPlayerByIndex: jest.fn().mockImplementation((index: number) => {
+        if (index === 0) {
+          return localPlayer
+        }
+        if (index === 1) {
+          return mockPlayer2
+        }
+        if (index === 2) {
+          return mockPlayer3
+        }
+        if (index === 3) {
+          return mockPlayer4
+        }
+      }),
+      getCurrentRound: jest.fn().mockReturnValue(round),
     }
 
     presenter = new GamePresenter(
@@ -142,8 +209,24 @@ describe('Game Presenter', () => {
     expect(presenter.isLoading()).toBe(true)
   })
 
-  // the game view needs to know what it should be showing in each of the places on the trick
-  // and it should know which of the playable cards it can display for the user when it's the user's turn
+  it('Should figure out what to display for the player across from the local player', () => {
+    const expectedAcross: PlayerLayoutData = {
+      name: mockPlayer3.getName(),
+      isTurn: false,
+      isDealer: true,
+      isPicker: true,
+      cardPlayed: 'ac',
+    }
+    expect(presenter.getDataForPlayerAcross()).toEqual(expectedAcross)
+    // const expectedToLeft: PlayerLayoutData = {
+    //   name: mockPlayer2.getName(),
+    //   isTurn: false,
+    //   isDealer: false,
+    //   isPicker: false,
+    //   cardPlayed: 'ac',
+    // }
+    // expect(presenter.getDataForPlayerToLeft()).toEqual(expectedAcross)
+  })
 })
 
 export {}
