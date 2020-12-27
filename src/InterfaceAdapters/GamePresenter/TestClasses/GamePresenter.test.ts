@@ -148,12 +148,8 @@ describe('Game Presenter', () => {
       getCurrentRound: jest.fn().mockReturnValue(round),
     }
 
-    presenter = new GamePresenter(
-      mockCommandInterface,
-      localPlayerId,
-      mockGameView,
-      mockReadOnlyGameModel
-    )
+    presenter = new GamePresenter(mockCommandInterface, localPlayerId, mockReadOnlyGameModel)
+    presenter.setView(mockGameView)
   })
 
   it('Should send a pass command if someone clicks the pass button', () => {
@@ -262,6 +258,15 @@ describe('Game Presenter', () => {
       cardPlayed: 'as',
     }
     expect(presenter.getDataForLocalPlayer()).toEqual(expectedLocal)
+  })
+
+  it('Should not update the view if the view has been cleared', () => {
+    expect(mockReadOnlyGameModel.addSubscriber).toHaveBeenCalledTimes(1)
+    mockReadOnlyGameModel.updateSubscribers()
+    mockReadOnlyGameModel.updateSubscribers()
+    presenter.unsetView()
+    mockReadOnlyGameModel.updateSubscribers()
+    expect(mockGameView.update).toHaveBeenCalledTimes(2)
   })
 })
 

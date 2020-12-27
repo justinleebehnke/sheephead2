@@ -9,23 +9,28 @@ import PlayerLayoutData from './PlayerLayoutData'
 class GamePresenter implements ISubscriber {
   private commandInterface: ICommandInterface
   private localPlayerId: UniqueIdentifier
-  private view: ISubscriber
+  private view: ISubscriber | undefined
   private game: IReadOnlyGameModel
-
   private _isLoading: boolean
 
   constructor(
     commandInterface: ICommandInterface,
     localPlayerId: UniqueIdentifier,
-    view: ISubscriber,
     game: IReadOnlyGameModel
   ) {
     this.commandInterface = commandInterface
     this.localPlayerId = localPlayerId
-    this.view = view
     this.game = game
     this.game.addSubscriber(this)
     this._isLoading = false
+  }
+
+  public setView(view: ISubscriber): void {
+    this.view = view
+  }
+
+  public unsetView(): void {
+    this.view = undefined
   }
 
   public isLoading(): boolean {
@@ -34,7 +39,7 @@ class GamePresenter implements ISubscriber {
 
   public update(): void {
     this._isLoading = false
-    this.view.update()
+    this.view?.update()
   }
 
   public pass(): void {
@@ -47,7 +52,7 @@ class GamePresenter implements ISubscriber {
 
   public pick(): void {
     this.game.pick()
-    this.view.update()
+    this.view?.update()
   }
 
   public bury(cards: string[]): void {

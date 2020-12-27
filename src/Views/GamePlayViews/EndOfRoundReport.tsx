@@ -13,10 +13,6 @@ type Props = {
   presenter: GamePresenter
 }
 class EndOfRoundReport extends Component<Props> {
-  private playAgain(): void {
-    this.props.presenter.playAgain()
-  }
-
   render() {
     const game = GameManagerOld.getPlayersCurrentGame()
     if (game) {
@@ -133,7 +129,12 @@ class EndOfRoundReport extends Component<Props> {
               </Table>
             </Modal.Body>
             <Modal.Footer>
-              <Button variant='primary' onClick={this.playAgain}>
+              <Button
+                variant='primary'
+                onClick={() => {
+                  this.props.presenter.playAgain()
+                }}
+              >
                 Play Another Round
               </Button>
             </Modal.Footer>

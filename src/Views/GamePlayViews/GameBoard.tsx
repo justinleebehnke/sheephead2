@@ -2,45 +2,37 @@ import { Component } from 'react'
 import EndOfRoundReport from './EndOfRoundReport'
 import GamePresenter from '../../InterfaceAdapters/GamePresenter/GamePresenter'
 import Hand from './Hand'
-import ICommandInterface from '../../InterfaceAdapters/ICommandInterface'
-import IReadOnlyGameModel from '../../Entities/ReadOnlyEntities/IReadOnlyGameModel'
 import ISubscriber from '../../Entities/ISubscriber'
 import PassOrPick from './PassOrPick'
 import PlayerLayout from './PlayerLayout'
-import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
-
-const localPlayerId = '79dbc191-2b0e-4dc3-83d7-7696c4abcb61'
 
 type Props = {
-  game: IReadOnlyGameModel
+  presenter: GamePresenter
 }
 
 class GameBoard extends Component<Props> implements ISubscriber {
-  private presenter: GamePresenter
+  componentWillMount(): void {
+    this.props.presenter.setView(this)
+  }
 
-  constructor(props: Props) {
-    super(props)
-    const localGameCommandInterface: ICommandInterface = {
-      giveCommand: (): Promise<void> => {
-        return new Promise(() => {})
-      },
-    }
-    this.presenter = new GamePresenter(
-      localGameCommandInterface,
-      new UniqueIdentifier(localPlayerId),
-      this,
-      props.game
-    )
+  componentWillUnmount(): void {
+    this.props.presenter.unsetView()
   }
 
   render() {
     return (
-      <div>
-        {this.presenter.isShowingPassOrPickForm() && <PassOrPick presenter={this.presenter} />}
-        <PlayerLayout presenter={this.presenter} />
-        <Hand cardsInHand={this.presenter.getHand()} />
-        {this.presenter.isShowEndOfRoundReport() && <EndOfRoundReport presenter={this.presenter} />}
-      </div>
+      this.props.presenter && (
+        <div>
+          {this.props.presenter.isShowingPassOrPickForm() && (
+            <PassOrPick presenter={this.props.presenter} />
+          )}
+          <PlayerLayout presenter={this.props.presenter} />
+          <Hand cardsInHand={this.props.presenter.getHand()} />
+          {this.props.presenter.isShowEndOfRoundReport() && (
+            <EndOfRoundReport presenter={this.props.presenter} />
+          )}
+        </div>
+      )
     )
   }
 

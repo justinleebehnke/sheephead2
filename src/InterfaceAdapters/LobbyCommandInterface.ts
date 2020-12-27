@@ -11,6 +11,7 @@ Then the server will give the command right back to him along with any others th
  */
 
 import ICommandInterface from './ICommandInterface'
+import ICommandObject from './ICommandObject'
 
 /*
  If all other players are CPU, then there is no need to go to the server...
@@ -22,8 +23,7 @@ import ICommandInterface from './ICommandInterface'
 Game Command Interface
  */
 class LobbyCommandInterface implements ICommandInterface {
-  // whatever command it is given, it sends to the blue layer
-  public giveCommand(command: ICommandInterface): Promise<void> {
+  giveCommand(command: ICommandObject): Promise<void> {
     throw new Error('Method not implemented.')
   }
 }
