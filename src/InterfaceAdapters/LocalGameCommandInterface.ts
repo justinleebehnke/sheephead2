@@ -11,6 +11,8 @@ class LocalGameCommandInterface implements ICommandInterface {
   public async giveCommand(command: ICommandObject): Promise<void> {
     if (command.name === 'pass') {
       this.game.getCurrentRound()?.pass()
+    } else if (command.name === 'playAgain') {
+      this.game.playAnotherRound()
     } else {
       throw new Error('Method not implemented.')
     }
