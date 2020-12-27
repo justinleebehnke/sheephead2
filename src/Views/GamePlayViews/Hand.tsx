@@ -1,60 +1,45 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import Card from './Card'
 import './Hand.css'
-import GameManagerOld from '../../UseCase/GameManagerOld'
+import GamePresenter from '../../InterfaceAdapters/GamePresenter/GamePresenter'
 
 type Props = {
-  cardsInHand: string[]
+  presenter: GamePresenter
 }
 
-class Hand extends Component<Props, {}> {
+class Hand extends Component<Props> {
   render() {
-    const game = GameManagerOld.getPlayersCurrentGame()
-    if (game) {
-      const round = game.getCurrentRound()
-      if (round) {
-        const currentTurnPlayer = round.getCurrentTurnPlayer()
-        if (currentTurnPlayer) {
-          if (currentTurnPlayer.getId() === '79dbc191-2b0e-4dc3-83d7-7696c4abcb61') {
-            const playAbleCards = new Set(
-              currentTurnPlayer.getPlayableCardIds(round.getCurrentTrick().getLeadCard())
-            )
-            return (
-              <div id='hand'>
-                {this.props.cardsInHand.map((cardName) => (
-                  <Card
-                    key={cardName}
-                    isPlayable={playAbleCards.has(cardName)}
-                    card={cardName}
-                    play={
-                      playAbleCards.has(cardName)
-                        ? (event) => {
-                            if (event) {
-                              if (event.target) {
-                                const target = event.target as HTMLInputElement
-                                if (target.getAttribute('data-id')) {
-                                  round.play(
-                                    currentTurnPlayer.removeCardFromHand(
-                                      target.getAttribute('data-id') as string
-                                    )
-                                  )
-                                }
-                              }
-                            }
+    if (this.props.presenter.getDataForLocalPlayer().isTurn) {
+      const playAbleCards: Set<string> = this.props.presenter.getPlayableCardIds()
+      return (
+        <div id='hand'>
+          {this.props.presenter.getHand().map((cardName) => (
+            <Card
+              key={cardName}
+              isPlayable={playAbleCards.has(cardName)}
+              card={cardName}
+              play={
+                playAbleCards.has(cardName)
+                  ? (event) => {
+                      if (event) {
+                        if (event.target) {
+                          const target = event.target as HTMLInputElement
+                          if (target.getAttribute('data-id')) {
+                            this.props.presenter.play(target.getAttribute('data-id') as string)
                           }
-                        : () => {}
+                        }
+                      }
                     }
-                  />
-                ))}
-              </div>
-            )
-          }
-        }
-      }
+                  : () => {}
+              }
+            />
+          ))}
+        </div>
+      )
     }
     return (
       <div id='hand'>
-        {this.props.cardsInHand.map((cardName) => (
+        {this.props.presenter.getHand().map((cardName) => (
           <Card key={cardName} isPlayable={false} card={cardName} play={() => {}} />
         ))}
       </div>

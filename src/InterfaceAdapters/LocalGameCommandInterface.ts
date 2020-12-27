@@ -11,6 +11,17 @@ interface BuryCommand extends ICommandObject {
   }
 }
 
+interface PlayCommand extends ICommandObject {
+  name: 'play'
+  params: {
+    card: string
+  }
+}
+
+function isPlayCommand(command: ICommandObject): command is PlayCommand {
+  return command.name === 'play'
+}
+
 function isBuryCommand(command: ICommandObject): command is BuryCommand {
   return command.name === 'bury'
 }
@@ -22,16 +33,18 @@ class LocalGameCommandInterface implements ICommandInterface {
   }
 
   public async giveCommand(command: ICommandObject): Promise<void> {
+    const localPlayer = this.game.getPlayerById(new UniqueIdentifier(localPlayerId))
     if (command.name === 'pass') {
       this.game.getCurrentRound()?.pass()
     } else if (command.name === 'playAgain') {
       this.game.playAnotherRound()
     } else if (isBuryCommand(command)) {
-      const localPlayer = this.game.getPlayerById(new UniqueIdentifier(localPlayerId))
       const [cardA, cardB] = command.params.cards
       this.game
         .getCurrentRound()
         ?.bury(localPlayer.removeCardFromHand(cardA), localPlayer.removeCardFromHand(cardB))
+    } else if (isPlayCommand(command)) {
+      this.game.getCurrentRound()?.play(localPlayer.removeCardFromHand(command.params.card))
     } else {
       throw new Error('Method not implemented.')
     }

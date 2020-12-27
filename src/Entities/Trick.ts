@@ -1,9 +1,10 @@
 import Card from './Card'
 import CardPlayedByData from './DataStructures/CardPlayedByData'
-import TrickData from './DataStructures/TrickData'
+import IReadOnlyTrick from './ReadOnlyEntities/IReadOnlyTrick'
 import Player from './Player'
+import TrickData from './DataStructures/TrickData'
 
-class Trick {
+class Trick implements IReadOnlyTrick {
   private cardsInTrick: Card[]
   private playerOfCard: Player[]
   private trickOrder: number

@@ -27,7 +27,7 @@ class GameBoard extends Component<Props> implements ISubscriber {
             <PassOrPick presenter={this.props.presenter} />
           )}
           <PlayerLayout presenter={this.props.presenter} />
-          <Hand cardsInHand={this.props.presenter.getHand()} />
+          <Hand presenter={this.props.presenter} />
           {this.props.presenter.isShowEndOfRoundReport() && (
             <EndOfRoundReport presenter={this.props.presenter} />
           )}

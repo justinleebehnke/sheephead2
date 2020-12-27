@@ -1,3 +1,4 @@
+import Card from '../../Entities/Card'
 import ISubscriber from '../../Entities/ISubscriber'
 import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
 import ICommandInterface from '../ICommandInterface'
@@ -91,6 +92,16 @@ class GamePresenter implements ISubscriber {
       return localPlayer.getPlayableCardIds()
     }
     return []
+  }
+
+  public getPlayableCardIds(): Set<string> {
+    const localPlayer: Player | undefined = this.game.getPlayerById(this.localPlayerId)
+    const leadCard: Card | undefined = this.game.getCurrentRound()?.getCurrentTrick().getLeadCard()
+    if (localPlayer) {
+      return new Set(localPlayer.getPlayableCardIds(leadCard))
+    }
+    let res: Set<string> = new Set()
+    return res
   }
 
   public getDataForPlayerToLeft(): PlayerLayoutData {

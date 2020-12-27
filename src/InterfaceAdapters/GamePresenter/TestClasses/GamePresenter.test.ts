@@ -48,7 +48,7 @@ describe('Game Presenter', () => {
 
     localPlayer = new Player('Justin', localPlayerId)
     localPlayer.giveCard(new Card('qc', cardRanker))
-    localPlayer.giveCard(new Card('qs', cardRanker))
+    localPlayer.giveCard(new Card('as', cardRanker))
     localPlayer.giveCard(new Card('7d', cardRanker))
     localPlayer.giveCard(new Card('qh', cardRanker))
     localPlayer.giveCard(new Card('jc', cardRanker))
@@ -83,6 +83,7 @@ describe('Game Presenter', () => {
 
     trick = {
       getTrickData: jest.fn().mockReturnValue(trickData),
+      getLeadCard: jest.fn().mockReturnValue(new Card('js', cardRanker)),
     }
 
     round = {
@@ -172,7 +173,7 @@ describe('Game Presenter', () => {
 
   it("Should have the ability to get the local player's hand", () => {
     const cardsInHand: string[] = presenter.getHand()
-    expect(cardsInHand).toEqual(['qc', '7d', 'qs', 'qh', 'qd', 'jc'])
+    expect(cardsInHand).toEqual(['qc', '7d', 'qh', 'qd', 'jc', 'as'])
   })
 
   it('Should send a command when the player buries', () => {
@@ -267,6 +268,10 @@ describe('Game Presenter', () => {
     presenter.unsetView()
     mockReadOnlyGameModel.updateSubscribers()
     expect(mockGameView.update).toHaveBeenCalledTimes(2)
+  })
+
+  it('Should return the correct playable cards from a hand based on a lead card', () => {
+    expect(presenter.getPlayableCardIds().size).toBe(5)
   })
 })
 
