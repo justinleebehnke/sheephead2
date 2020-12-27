@@ -95,6 +95,7 @@ describe('Game Presenter', () => {
       isOver: jest.fn(),
       getCurrentTurnPlayer: jest.fn().mockReturnValue(mockPlayer2),
       isPickerHasNotBuriedState: jest.fn(),
+      getEndOfRoundReport: jest.fn().mockReturnValue(null),
     }
 
     mockReadOnlyGameModel = {
@@ -272,6 +273,18 @@ describe('Game Presenter', () => {
 
   it('Should return the correct playable cards from a hand based on a lead card', () => {
     expect(presenter.getPlayableCardIds().size).toBe(5)
+  })
+
+  it('Should give the correct person for the picker index', () => {
+    expect(presenter.getPickerIndex()).toBe(2)
+  })
+
+  it('Should return the players in order', () => {
+    expect(presenter.getPlayers()).toEqual([localPlayer, mockPlayer2, mockPlayer3, mockPlayer4])
+  })
+
+  it('Should return the current rounds end of round report', () => {
+    expect(presenter.getEndOfRoundReport()).toBe(null)
   })
 })
 

@@ -1,11 +1,12 @@
 import Card from '../../Entities/Card'
-import ISubscriber from '../../Entities/ISubscriber'
-import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
+import EndOfRoundData from '../../Entities/Round/EndOfRoundReportData'
 import ICommandInterface from '../ICommandInterface'
 import IReadOnlyGameModel from '../../Entities/ReadOnlyEntities/IReadOnlyGameModel'
 import IReadOnlyRound from '../../Entities/ReadOnlyEntities/IReadOnlyRound'
+import ISubscriber from '../../Entities/ISubscriber'
 import Player from '../../Entities/Player'
 import PlayerLayoutData from './PlayerLayoutData'
+import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
 
 class GamePresenter implements ISubscriber {
   private commandInterface: ICommandInterface
@@ -120,6 +121,23 @@ class GamePresenter implements ISubscriber {
     const localPlayerIndex = this.game.getIndexOfPlayerById(this.localPlayerId)
     const indexOfPlayerToTheLeft = this.game.getNextIndex(localPlayerIndex)
     return this.getDataForPlayer(this.game.getNextIndex(indexOfPlayerToTheLeft))
+  }
+
+  public getPickerIndex(): number | undefined {
+    return this.game.getCurrentRound()?.getIndexOfPicker()
+  }
+
+  public getPlayers(): Player[] {
+    return [
+      this.game.getPlayerByIndex(0),
+      this.game.getPlayerByIndex(1),
+      this.game.getPlayerByIndex(2),
+      this.game.getPlayerByIndex(3),
+    ]
+  }
+
+  public getEndOfRoundReport(): EndOfRoundData | undefined {
+    return this.game.getCurrentRound()?.getEndOfRoundReport()
   }
 
   public getDataForLocalPlayer(): PlayerLayoutData {
