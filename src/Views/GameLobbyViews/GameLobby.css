@@ -1,0 +1,11 @@
+.lobby {
+  background-color: #efefef;
+  margin: auto;
+  padding: 1em;
+  height: 100%;
+}
+
+.split {
+  display: flex;
+  justify-content: space-between;
+}
