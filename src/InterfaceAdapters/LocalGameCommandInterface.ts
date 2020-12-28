@@ -20,12 +20,13 @@ class LocalGameCommandInterface implements ICommandInterface {
 
   public async giveCommand(command: ICommandObject): Promise<void> {
     const currentTurnPlayer = this.game.getCurrentRound()?.getCurrentTurnPlayer()
-    if (currentTurnPlayer) {
-      if (command.name === 'pass') {
-        this.game.getCurrentRound()?.pass()
-      } else if (command.name === 'playAgain') {
-        this.game.playAnotherRound()
-      } else if (isBuryCommand(command)) {
+
+    if (command.name === 'pass') {
+      this.game.getCurrentRound()?.pass()
+    } else if (command.name === 'playAgain') {
+      this.game.playAnotherRound()
+    } else if (isBuryCommand(command)) {
+      if (currentTurnPlayer) {
         const [cardA, cardB] = command.params.cards
         this.game
           .getCurrentRound()
@@ -33,12 +34,15 @@ class LocalGameCommandInterface implements ICommandInterface {
             currentTurnPlayer.removeCardFromHand(cardA),
             currentTurnPlayer.removeCardFromHand(cardB)
           )
-      } else if (isPlayCommand(command)) {
-        this.game.getCurrentRound()?.play(currentTurnPlayer.removeCardFromHand(command.params.card))
-      } else {
-        throw new Error('Method not implemented.')
       }
+    } else if (isPlayCommand(command)) {
+      if (currentTurnPlayer) {
+        this.game.getCurrentRound()?.play(currentTurnPlayer.removeCardFromHand(command.params.card))
+      }
+    } else {
+      throw new Error('Method not implemented.')
     }
+
     return new Promise(() => {}) // this is required to implement the interface
   }
 }
