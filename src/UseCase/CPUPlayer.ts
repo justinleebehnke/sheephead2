@@ -1,9 +1,12 @@
-import Game from '../Entities/Game'
+import BuryCommand from '../InterfaceAdapters/CommandTypes/BuryCommand'
+import IReadOnlyGameModel from '../Entities/ReadOnlyEntities/IReadOnlyGameModel'
+import IReadOnlyRound from '../Entities/ReadOnlyEntities/IReadOnlyRound'
 import ICardRanker from '../Entities/ICardRanker'
+import ICommandInterface from '../InterfaceAdapters/ICommandInterface'
 import Player from '../Entities/Player'
+import PlayCommand from '../InterfaceAdapters/CommandTypes/PlayCommand'
 import UniqueIdentifier from '../Utilities/UniqueIdentifier'
 import ISubscriber from '../Entities/ISubscriber'
-import Round from '../Entities/Round/Round'
 import { PAUSE_DURATION_AFTER_TRICK } from '../Entities/Round/TrickState'
 
 /*
@@ -44,13 +47,22 @@ When deciding what to play:
 
 */
 class CPUPlayer extends Player implements ISubscriber {
-  private game: Game
+  private game: IReadOnlyGameModel
   private cardRanker: ICardRanker
-  constructor(name: string, id: UniqueIdentifier, game: Game, cardRanker: ICardRanker) {
+  private commandInterface: ICommandInterface
+
+  constructor(
+    name: string,
+    id: UniqueIdentifier,
+    game: IReadOnlyGameModel,
+    cardRanker: ICardRanker,
+    commandInterface: ICommandInterface
+  ) {
     super(name, id)
     this.game = game
     this.game.addSubscriber(this)
     this.cardRanker = cardRanker
+    this.commandInterface = commandInterface
   }
 
   public update(): void {
@@ -112,12 +124,12 @@ class CPUPlayer extends Player implements ISubscriber {
   private pick(): void {
     const round = this.game.getCurrentRound()
     if (round) {
-      round.pick()
+      this.game.pick()
       this.bury(round)
     }
   }
 
-  private bury(round: Round): void {
+  private bury(round: IReadOnlyRound): void {
     const player = round.getCurrentTurnPlayer()
     if (!player) return
     const playableCards = player.getPlayableCardIds()
@@ -125,17 +137,17 @@ class CPUPlayer extends Player implements ISubscriber {
     const secondHighestValueCardId = this.getHighestValueCardId(
       playableCards.filter((cardId: string) => cardId !== highestValueCardId)
     )
-    round.bury(
-      player.removeCardFromHand(highestValueCardId),
-      player.removeCardFromHand(secondHighestValueCardId)
-    )
+    const buryCommand: BuryCommand = {
+      name: 'bury',
+      params: {
+        cards: [highestValueCardId, secondHighestValueCardId],
+      },
+    }
+    this.commandInterface.giveCommand(buryCommand)
   }
 
   private pass(): void {
-    const round = this.game.getCurrentRound()
-    if (round) {
-      round.pass()
-    }
+    this.commandInterface.giveCommand({ name: 'pass', params: null })
   }
 
   private play(): void {
@@ -144,15 +156,15 @@ class CPUPlayer extends Player implements ISubscriber {
       const player = round.getCurrentTurnPlayer()
       if (player) {
         const leadCard = round.getCurrentTrick().getLeadCard()
-        if (leadCard) {
-          round.play(
-            player.removeCardFromHand(
-              this.getHighestValueCardId(player.getPlayableCardIds(leadCard))
-            )
-          )
-        } else {
-          round.play(player.removeCardFromHand(player.getPlayableCardIds()[0]))
+        const playCommand: PlayCommand = {
+          name: 'play',
+          params: {
+            card: leadCard
+              ? this.getHighestValueCardId(player.getPlayableCardIds(leadCard))
+              : player.getPlayableCardIds()[0],
+          },
         }
+        this.commandInterface.giveCommand(playCommand)
       }
     }
   }

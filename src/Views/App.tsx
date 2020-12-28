@@ -18,6 +18,7 @@ function getRandomNumberBetweenZeroAndMax(max: number): number {
 function App() {
   const ranker = new BellePlaineRulesCardRanker()
   const game: Game = new Game([], getRandomNumberBetweenZeroAndMax(4), Date.now())
+  const commandInterface = new LocalGameCommandInterface(game)
   const playerNames: string[] = [new RandomName().getName()]
   playerNames.push(new RandomName(playerNames).getName())
   playerNames.push(new RandomName(playerNames).getName())
@@ -27,7 +28,8 @@ function App() {
       playerNames[0],
       new UniqueIdentifier('4d2f43c3-224d-46ba-bb76-0e383d9ceb5c'),
       game,
-      ranker
+      ranker,
+      commandInterface
     )
   )
   game.addPlayer(
@@ -35,7 +37,8 @@ function App() {
       playerNames[1],
       new UniqueIdentifier('32b62508-4e72-4028-8794-fd075b0393b5'),
       game,
-      ranker
+      ranker,
+      commandInterface
     )
   )
   game.addPlayer(new Player('You', new UniqueIdentifier(localPlayerId)))
@@ -44,7 +47,8 @@ function App() {
       playerNames[2],
       new UniqueIdentifier('81756fd4-3f61-4833-b012-43fbc407b688'),
       game,
-      ranker
+      ranker,
+      commandInterface
     )
   )
 
