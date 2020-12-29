@@ -1,7 +1,7 @@
 import { Component } from 'react'
 import Card from './Card'
-import './Hand.css'
 import GamePresenter from '../../InterfaceAdapters/GamePresenter/GamePresenter'
+import './Hand.css'
 
 type Props = {
   presenter: GamePresenter

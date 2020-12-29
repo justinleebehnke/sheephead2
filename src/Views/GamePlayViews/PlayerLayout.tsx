@@ -12,25 +12,23 @@ class PlayerLayout extends Component<Props> {
   render() {
     const { presenter } = this.props
     return (
-      presenter.getHand().length && (
-        <div id='player-layout'>
-          <div></div>
-          <div></div>
-          {this.renderPlayerTurnBox(presenter.getDataForPlayerAcross())}
-          <div></div>
-          <div></div>
-          <div></div>
-          {this.renderPlayerTurnBox(presenter.getDataForPlayerToLeft())}
-          <div></div>
-          {this.renderPlayerTurnBox(presenter.getDataForPlayerToRight())}
-          <div></div>
-          <div></div>
-          <div></div>
-          {this.renderPlayerTurnBox(presenter.getDataForLocalPlayer())}
-          <div></div>
-          <div></div>
-        </div>
-      )
+      <div id='player-layout'>
+        <div></div>
+        <div></div>
+        {this.renderPlayerTurnBox(presenter.getDataForPlayerAcross())}
+        <div></div>
+        <div></div>
+        <div></div>
+        {this.renderPlayerTurnBox(presenter.getDataForPlayerToLeft())}
+        <div></div>
+        {this.renderPlayerTurnBox(presenter.getDataForPlayerToRight())}
+        <div></div>
+        <div></div>
+        <div></div>
+        {this.renderPlayerTurnBox(presenter.getDataForLocalPlayer())}
+        <div></div>
+        <div></div>
+      </div>
     )
   }
 
