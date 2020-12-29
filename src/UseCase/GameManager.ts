@@ -1,178 +1,83 @@
-import UniqueIdentifier from '../Utilities/UniqueIdentifier'
 import Game from '../Entities/Game'
 import Player from '../Entities/Player'
-import CPUPlayer from './CPUPlayer'
-import BellePlaineRulesCardRanker from '../Entities/BellePlaineRulesCardRanker'
+import PlayerDTO from './PlayerDTO'
+import RandomName from './RandomName'
+import UniqueIdentifier from '../Utilities/UniqueIdentifier'
 
-const randomNames = [
-  'Liam',
-  'Noah',
-  'William',
-  'James',
-  'Logan',
-  'Benjamin',
-  'Mason',
-  'Elijah',
-  'Oliver',
-  'Jacob',
-  'Lucas',
-  'Michael',
-  'Alexander',
-  'Ethan',
-  'Daniel',
-  'Matthew',
-  'Aiden',
-  'Henry',
-  'Joseph',
-  'Jackson',
-  'Samuel',
-  'Sebastian',
-  'David',
-  'Carter',
-  'Wyatt',
-  'Jayden',
-  'John',
-  'Owen',
-  'Dylan',
-  'Luke',
-  'Gabriel',
-  'Anthony',
-  'Isaac',
-  'Grayson',
-  'Jack',
-  'Julian',
-  'Levi',
-  'Christopher',
-  'Joshua',
-  'Andrew',
-  'Lincoln',
-  'Mateo',
-  'Ryan',
-  'Jaxon',
-  'Nathan',
-  'Aaron',
-  'Isaiah',
-  'Thomas',
-  'Charles',
-  'Caleb',
-  'Josiah',
-  'Christian',
-  'Hunter',
-  'Eli',
-  'Jonathan',
-  'Connor',
-  'Landon',
-  'Adrian',
-  'Asher',
-  'Cameron',
-  'Leo',
-  'Theodore',
-  'Jeremiah',
-  'Hudson',
-  'Robert',
-  'Easton',
-  'Nolan',
-  'Nicholas',
-  'Ezra',
-  'Colton',
-  'Angel',
-  'Brayden',
-  'Jordan',
-  'Dominic',
-  'Austin',
-  'Emma',
-  'Olivia',
-  'Ava',
-  'Isabella',
-  'Sophia',
-  'Mia',
-  'Charlotte',
-  'Amelia',
-  'Evelyn',
-  'Abigail',
-  'Harper',
-  'Emily',
-  'Elizabeth',
-  'Avery',
-  'Sofia',
-  'Ella',
-  'Madison',
-  'Scarlett',
-  'Victoria',
-  'Aria',
-  'Grace',
-  'Chloe',
-  'Camila',
-  'Penelope',
-  'Riley',
-  'Layla',
-  'Lillian',
-  'Nora',
-  'Zoey',
-  'Mila',
-  'Aubrey',
-  'Hannah',
-  'Lily',
-  'Addison',
-  'Eleanor',
-  'Natalie',
-  'Luna',
-  'Savannah',
-  'Brooklyn',
-  'Leah',
-  'Zoe',
-  'Stella',
-  'Hazel',
-  'Ellie',
-  'Paisley',
-  'Audrey',
-  'Skylar',
-  'Violet',
-  'Claire',
-  'Bella',
-]
 class GameManager {
-  private static playersCurrentGame: Game
+  private host: PlayerDTO
+  private players: PlayerDTO[]
+  private firstDealerIndex!: number
+  private game: Game | undefined
 
-  private static getRandomNumberBetweenZeroAndMax(max: number): number {
-    return Math.floor(Math.random() * max)
+  constructor(host: PlayerDTO) {
+    this.host = host
+    this.players = [host]
+    this.setFirstDealerIndex(0)
   }
 
-  public static getPlayersCurrentGame(): Game {
-    if (!this.playersCurrentGame) {
-      const ranker = new BellePlaineRulesCardRanker()
-      const numPlayers = 4
-      const firstDealerIndex = this.getRandomNumberBetweenZeroAndMax(numPlayers)
-      this.playersCurrentGame = new Game([], firstDealerIndex)
-      this.playersCurrentGame.addPlayer(
-        new CPUPlayer(
-          randomNames[this.getRandomNumberBetweenZeroAndMax(randomNames.length)],
-          new UniqueIdentifier('4d2f43c3-224d-46ba-bb76-0e383d9ceb5c'),
-          this.playersCurrentGame,
-          ranker
-        )
-      )
-      this.playersCurrentGame.addPlayer(
-        new CPUPlayer(
-          randomNames[this.getRandomNumberBetweenZeroAndMax(randomNames.length)],
-          new UniqueIdentifier('32b62508-4e72-4028-8794-fd075b0393b5'),
-          this.playersCurrentGame,
-          ranker
-        )
-      )
-      this.playersCurrentGame.addPlayer(
-        new Player('Me', new UniqueIdentifier('79dbc191-2b0e-4dc3-83d7-7696c4abcb61'))
-      )
-      this.playersCurrentGame.addPlayer(
-        new CPUPlayer(
-          randomNames[this.getRandomNumberBetweenZeroAndMax(randomNames.length)],
-          new UniqueIdentifier('81756fd4-3f61-4833-b012-43fbc407b688'),
-          this.playersCurrentGame,
-          ranker
-        )
-      )
+  public getHost(): PlayerDTO {
+    return this.host
+  }
+
+  public setFirstDealerIndex(index: number): void {
+    if (index < 0 || index > 3) {
+      throw new Error('First dealer index must be between 0 and 3')
     }
-    return this.playersCurrentGame
+    this.firstDealerIndex = index
+  }
+
+  public getFirstDealerIndex(): number {
+    return this.firstDealerIndex
+  }
+
+  public addPlayer(player: PlayerDTO): void {
+    if (this.getPlayerById(player.getId())) {
+      throw new Error('Cannot have two players with same id in game')
+    }
+    if (this.gameIsStarted()) {
+      throw new Error('Cannot add player to started game')
+    }
+    this.players.push(player)
+  }
+
+  public gameIsStarted(): boolean {
+    return this.game !== undefined
+  }
+
+  public getPlayerById(id: UniqueIdentifier): PlayerDTO | undefined {
+    return this.players.find((player) => player.getId().equals(id))
+  }
+
+  public removePlayerById(id: UniqueIdentifier): void {
+    if (this.gameIsStarted()) {
+      this.game = undefined
+    }
+    if (id.equals(this.host.getId())) {
+      this.players = []
+    }
+    this.players = this.players.filter((player) => !player.getId().equals(id))
+  }
+
+  public startGame(): void {
+    if (this.gameIsStarted()) {
+      throw new Error('Game already started')
+    }
+    while (this.players.length < 4) {
+      this.addPlayer({
+        getId: () => new UniqueIdentifier(),
+        getName: () => new RandomName().getName(),
+      })
+    }
+    this.game = new Game(
+      this.players.map((playerDto) => new Player(playerDto.getName(), playerDto.getId())),
+      this.firstDealerIndex,
+      Date.now()
+    )
+  }
+
+  public getGame(): undefined | Game {
+    return this.game
   }
 }
 

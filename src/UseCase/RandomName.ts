@@ -1,0 +1,155 @@
+const randomNames = [
+  'Liam',
+  'Noah',
+  'William',
+  'James',
+  'Logan',
+  'Benjamin',
+  'Mason',
+  'Elijah',
+  'Oliver',
+  'Jacob',
+  'Lucas',
+  'Michael',
+  'Alexander',
+  'Ethan',
+  'Daniel',
+  'Matthew',
+  'Aiden',
+  'Henry',
+  'Joseph',
+  'Jackson',
+  'Samuel',
+  'Sebastian',
+  'David',
+  'Carter',
+  'Wyatt',
+  'Jayden',
+  'John',
+  'Owen',
+  'Dylan',
+  'Luke',
+  'Gabriel',
+  'Anthony',
+  'Isaac',
+  'Grayson',
+  'Jack',
+  'Julian',
+  'Levi',
+  'Christopher',
+  'Joshua',
+  'Andrew',
+  'Lincoln',
+  'Mateo',
+  'Ryan',
+  'Jaxon',
+  'Nathan',
+  'Aaron',
+  'Isaiah',
+  'Thomas',
+  'Charles',
+  'Caleb',
+  'Josiah',
+  'Christian',
+  'Hunter',
+  'Eli',
+  'Jonathan',
+  'Connor',
+  'Landon',
+  'Adrian',
+  'Asher',
+  'Cameron',
+  'Leo',
+  'Theodore',
+  'Jeremiah',
+  'Hudson',
+  'Robert',
+  'Easton',
+  'Nolan',
+  'Nicholas',
+  'Ezra',
+  'Colton',
+  'Angel',
+  'Brayden',
+  'Jordan',
+  'Dominic',
+  'Austin',
+  'Emma',
+  'Olivia',
+  'Ava',
+  'Isabella',
+  'Sophia',
+  'Mia',
+  'Charlotte',
+  'Amelia',
+  'Evelyn',
+  'Abigail',
+  'Harper',
+  'Emily',
+  'Elizabeth',
+  'Avery',
+  'Sofia',
+  'Ella',
+  'Madison',
+  'Scarlett',
+  'Victoria',
+  'Aria',
+  'Grace',
+  'Chloe',
+  'Camila',
+  'Penelope',
+  'Riley',
+  'Layla',
+  'Lillian',
+  'Nora',
+  'Zoey',
+  'Mila',
+  'Aubrey',
+  'Hannah',
+  'Lily',
+  'Addison',
+  'Eleanor',
+  'Natalie',
+  'Luna',
+  'Savannah',
+  'Brooklyn',
+  'Leah',
+  'Zoe',
+  'Stella',
+  'Hazel',
+  'Ellie',
+  'Paisley',
+  'Audrey',
+  'Skylar',
+  'Violet',
+  'Claire',
+  'Bella',
+]
+
+class RandomName {
+  private name: string
+  constructor(ineligibleNames?: string[]) {
+    if (ineligibleNames && ineligibleNames.length) {
+      const setOfIneligibleNames = new Set(ineligibleNames)
+      const eligibleNames = randomNames.filter((name) => !setOfIneligibleNames.has(name))
+      this.name = this.chooseRandomName(eligibleNames)
+    } else {
+      this.name = this.chooseRandomName(randomNames)
+    }
+  }
+
+  public getName(): string {
+    return this.name
+  }
+
+  private chooseRandomName(names: string[]): string {
+    const randomIndex = this.getRandomNumberBetweenZeroAndMaxExcludingMax(names.length)
+    return names[randomIndex]
+  }
+
+  private getRandomNumberBetweenZeroAndMaxExcludingMax(max: number): number {
+    return Math.floor(Math.random() * max)
+  }
+}
+
+export default RandomName

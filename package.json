@@ -37,7 +37,8 @@
     "rules": {
       "quotes": [
         "error",
-        "single"
+        "single",
+        "avoid-escape"
       ]
     }
   },

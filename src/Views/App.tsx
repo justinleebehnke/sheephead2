@@ -1,11 +1,10 @@
-import React from 'react'
 import './App.css'
-import GameBoard from './GameBoard'
+import GameLobby from './GameLobbyViews/GameLobby'
 
 function App() {
   return (
     <section>
-      <GameBoard />
+      <GameLobby />
     </section>
   )
 }

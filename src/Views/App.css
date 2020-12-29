@@ -1,11 +1,13 @@
 body {
-  background: url("./images/background.jpg");
+  background: url('./images/woodGrain.jpg');
   background-size: cover;
 }
 
 section {
+  background: url('./images/background.jpg');
   width: 800px;
   height: 700px;
   margin: 30px auto;
   overflow: hidden;
+  border-radius: 10px;
 }
