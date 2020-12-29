@@ -1,5 +1,6 @@
 import { Component, Fragment, ReactElement } from 'react'
 import Button from 'react-bootstrap/Button'
+import Form from 'react-bootstrap/Form'
 import FormControl from 'react-bootstrap/FormControl'
 import InputGroup from 'react-bootstrap/InputGroup'
 import Table from 'react-bootstrap/Table'
@@ -21,6 +22,7 @@ function getRandomNumberBetweenZeroAndMax(max: number): number {
 localStorage.setItem('localPlayerId', new UniqueIdentifier().getId())
 
 type State = {
+  firstDealerIndex: number
   isHostingGame: boolean
   isInStartedGame: boolean
   localPlayerName: string
@@ -28,14 +30,30 @@ type State = {
 
 class GameLobby extends Component<{}, State> {
   state = {
+    firstDealerIndex: -1,
     isHostingGame: false,
     isInStartedGame: false,
     localPlayerName: localStorage.getItem('localPlayerName') || '',
   }
 
   render() {
+    return (
+      <Fragment>
+        {!this.state.isInStartedGame && !this.state.isHostingGame && this.renderLobby()}
+        {!this.state.isInStartedGame && this.state.isHostingGame && this.renderHostScreen()}
+        {this.state.isInStartedGame && this.renderStartedGame()}
+      </Fragment>
+    )
+  }
+
+  private renderStartedGame = (): ReactElement => {
+    const { firstDealerIndex } = this.state
     const ranker = new BellePlaineRulesCardRanker()
-    const game: Game = new Game([], getRandomNumberBetweenZeroAndMax(4), Date.now())
+    const game: Game = new Game(
+      [],
+      firstDealerIndex === -1 ? getRandomNumberBetweenZeroAndMax(4) : firstDealerIndex,
+      Date.now()
+    )
     const commandInterface = new LocalGameCommandInterface(game)
 
     const playerNames: string[] = [new RandomName().getName()]
@@ -81,16 +99,7 @@ class GameLobby extends Component<{}, State> {
       new UniqueIdentifier(localStorage.getItem('localPlayerId') || undefined),
       game
     )
-
-    return (
-      <Fragment>
-        {!this.state.isInStartedGame && !this.state.isHostingGame && this.renderLobby()}
-        {!this.state.isInStartedGame &&
-          this.state.isHostingGame &&
-          this.renderHostScreen(playerNames)}
-        {this.state.isInStartedGame && <GameBoard presenter={presenter} />}
-      </Fragment>
-    )
+    return <GameBoard presenter={presenter} />
   }
 
   private renderLobby = (): ReactElement => {
@@ -134,10 +143,29 @@ class GameLobby extends Component<{}, State> {
     window.alert('Please fill out "Your Displayed Name"')
   }
 
-  private renderHostScreen = (playerNames: string[]): ReactElement => {
+  private renderHostScreen = (): ReactElement => {
     return (
       <div className='lobby'>
         <h1>Host Game Screen</h1>
+        <Form.Group controlId='firstDealer'>
+          <div className='split'>
+            <div className='split'>
+              <Form.Label>Who should deal first?</Form.Label>
+              <Form.Control
+                as='select'
+                value={this.state.firstDealerIndex}
+                onChange={this.updateFirstDealerIndex}
+              >
+                <option value={-1}>Random</option>
+                <option value={0}>Host (You)</option>
+                <option value={1}>Player 2</option>
+                <option value={2}>Player 3</option>
+                <option value={3}>Player 4</option>
+              </Form.Control>
+            </div>
+            <div></div>
+          </div>
+        </Form.Group>
         <Table bordered hover variant='dark'>
           <thead>
             <tr>
@@ -150,9 +178,9 @@ class GameLobby extends Component<{}, State> {
           <tbody>
             <tr>
               <td>{`${this.state.localPlayerName} (You)`}</td>
-              <td>{`${playerNames[0]} (CPU)`}</td>
-              <td>{`${playerNames[1]} (CPU)`}</td>
-              <td>{`${playerNames[2]} (CPU)`}</td>
+              <td className='light'>{'Computer by default'}</td>
+              <td className='light'>{'Computer by default'}</td>
+              <td className='light'>{'Computer by default'}</td>
             </tr>
           </tbody>
         </Table>
@@ -170,6 +198,11 @@ class GameLobby extends Component<{}, State> {
         </div>
       </div>
     )
+  }
+
+  private updateFirstDealerIndex = (event: React.ChangeEvent): void => {
+    const eventTarget = event.target as HTMLInputElement
+    this.setState({ firstDealerIndex: parseInt(eventTarget.value, 10) })
   }
 
   private updateNameInLocalStorage = (): void => {
