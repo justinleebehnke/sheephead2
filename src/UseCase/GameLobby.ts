@@ -1,12 +1,25 @@
 import PlayerDTO from './PlayerDTO'
 import GameManager from './GameManager'
 import UniqueIdentifier from '../Utilities/UniqueIdentifier'
+import IGameLobbyDataProvider from './IGameLobbyDataProvider'
+import IGameData from './IGameData'
 
-class GameLobby {
+class GameLobby implements IGameLobbyDataProvider {
   private games: GameManager[]
 
   constructor() {
     this.games = []
+  }
+
+  public getJoinableGames(): IGameData[] {
+    return this.getAllGames()
+      .filter(
+        (gameManager: GameManager) =>
+          !gameManager.gameIsStarted() && gameManager.getPlayers().length < 4
+      )
+      .map((gameManager) => {
+        return { players: gameManager.getPlayers() }
+      })
   }
 
   public addNewGame(host: PlayerDTO): void {

@@ -16,6 +16,10 @@ class GameManager {
     this.setFirstDealerIndex(0)
   }
 
+  public getPlayers(): PlayerDTO[] {
+    return this.players.slice()
+  }
+
   public getHost(): PlayerDTO {
     return this.host
   }
