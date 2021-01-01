@@ -69,7 +69,7 @@ class GameManager {
     this.players = this.players.filter((player) => !player.getId().equals(id))
   }
 
-  public startGame(): void {
+  public startGame(seed: number): void {
     if (this.gameIsStarted()) {
       throw new Error('Game already started')
     }
@@ -82,7 +82,7 @@ class GameManager {
     this.game = new Game(
       this.players.map((playerDto) => new Player(playerDto.getName(), playerDto.getId())),
       this.firstDealerIndex,
-      Date.now()
+      seed
     )
   }
 
