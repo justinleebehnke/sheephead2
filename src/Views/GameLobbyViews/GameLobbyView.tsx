@@ -7,8 +7,9 @@ import Table from 'react-bootstrap/Table'
 import BellePlaineRulesCardRanker from '../../Entities/BellePlaineRulesCardRanker'
 import CPUPlayer from '../../UseCase/CPUPlayer'
 import Game from '../../Entities/Game'
-import GameBoard from './../GamePlayViews/GameBoard'
+import GameBoard from '../GamePlayViews/GameBoard'
 import IGameData from '../../UseCase/IGameData'
+import ISubscriber from '../../Entities/ISubscriber'
 import GamePresenter from '../../InterfaceAdapters/GamePresenter/GamePresenter'
 import IGameLobbyPresenter from '../../InterfaceAdapters/IGameLobbyPresenter'
 import LocalGameCommandInterface from '../../InterfaceAdapters/LocalGameCommandInterface'
@@ -35,12 +36,20 @@ type State = {
   localPlayerName: string
 }
 
-class GameLobby extends Component<Props, State> {
+class GameLobbyView extends Component<Props, State> implements ISubscriber {
   state = {
     firstDealerIndex: -1,
     isHostingGame: false,
     isInStartedGame: false,
     localPlayerName: localStorage.getItem('localPlayerName') || '',
+  }
+
+  update(): void {
+    this.setState({})
+  }
+
+  componentDidMount(): void {
+    this.props.presenter.setView(this)
   }
 
   render() {
@@ -170,10 +179,10 @@ class GameLobby extends Component<Props, State> {
                   game.players.push({ getName: () => '', getId: () => new UniqueIdentifier() })
                 }
                 return (
-                  <tr>
+                  <tr key={game.gameNumber}>
                     <td>{game.gameNumber}</td>
                     {game.players.map((player: PlayerDTO) => {
-                      return <td>{`${player.getName()}`}</td>
+                      return <td key={player.getId().getId()}>{`${player.getName()}`}</td>
                     })}
                     <td>
                       <Button variant='primary'>Join</Button>
@@ -264,4 +273,4 @@ class GameLobby extends Component<Props, State> {
   }
 }
 
-export default GameLobby
+export default GameLobbyView

@@ -18,6 +18,14 @@ class LocalGameCommandInterface implements ICommandInterface {
     this.game = game
   }
 
+  stopWatchingForCommands(): void {
+    return
+  }
+
+  watchForCommands(): void {
+    return
+  }
+
   public async giveCommand(command: ICommandObject): Promise<void> {
     const currentTurnPlayer = this.game.getCurrentRound()?.getCurrentTurnPlayer()
 

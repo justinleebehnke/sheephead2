@@ -1,6 +1,7 @@
 import IGameData from './IGameData'
+import IObservable from '../Entities/IObservable'
 
-interface IGameLobbyDataProvider {
+interface IGameLobbyDataProvider extends IObservable {
   getJoinableGames(): IGameData[]
 }
 

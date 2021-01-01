@@ -1,7 +1,7 @@
 import { render, unmountComponentAtNode } from 'react-dom'
 import { act } from 'react-dom/test-utils'
 import IGameLobbyPresenter from '../../InterfaceAdapters/IGameLobbyPresenter'
-import GameLobby from './GameLobby'
+import GameLobbyView from './GameLobbyView'
 
 let container: HTMLElement | null = null
 beforeEach(() => {
@@ -21,9 +21,11 @@ describe('Game Lobby', () => {
   it('Should ask the presenter immediately for the games that can be joined', () => {
     const mockPresenter: IGameLobbyPresenter = {
       getJoinableGames: jest.fn().mockReturnValue([]),
+      setView: jest.fn(),
+      unSetView: jest.fn(),
     }
     act(() => {
-      render(<GameLobby presenter={mockPresenter} />, container)
+      render(<GameLobbyView presenter={mockPresenter} />, container)
     })
     expect(mockPresenter.getJoinableGames).toHaveBeenCalled()
   })

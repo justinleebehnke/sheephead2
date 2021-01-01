@@ -1,9 +1,10 @@
-import ICommandObject from './ICommandObject'
+import ICommandObject from '../ICommandObject'
 
 interface HostNewGameCommand extends ICommandObject {
   name: 'hostNewGame'
   params: {
-    playerId: string
+    hostId: string
+    hostName: string
   }
 }
 

@@ -39,7 +39,11 @@ describe('Game Presenter', () => {
 
   beforeEach(() => {
     localPlayerId = new UniqueIdentifier()
-    mockCommandInterface = { giveCommand: jest.fn() }
+    mockCommandInterface = {
+      giveCommand: jest.fn(),
+      stopWatchingForCommands: jest.fn(),
+      watchForCommands: jest.fn(),
+    }
     mockGameView = { update: jest.fn() }
 
     player2Id = new UniqueIdentifier()
