@@ -9,11 +9,17 @@ class GameManager {
   private players: PlayerDTO[]
   private firstDealerIndex!: number
   private game: Game | undefined
+  private gameId: number
 
-  constructor(host: PlayerDTO) {
+  constructor(host: PlayerDTO, gameId: number) {
     this.host = host
     this.players = [host]
+    this.gameId = gameId
     this.setFirstDealerIndex(0)
+  }
+
+  public getGameId(): number {
+    return this.gameId
   }
 
   public getPlayers(): PlayerDTO[] {

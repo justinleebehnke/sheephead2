@@ -8,9 +8,12 @@ import BellePlaineRulesCardRanker from '../../Entities/BellePlaineRulesCardRanke
 import CPUPlayer from '../../UseCase/CPUPlayer'
 import Game from '../../Entities/Game'
 import GameBoard from './../GamePlayViews/GameBoard'
+import IGameData from '../../UseCase/IGameData'
 import GamePresenter from '../../InterfaceAdapters/GamePresenter/GamePresenter'
+import IGameLobbyPresenter from '../../InterfaceAdapters/IGameLobbyPresenter'
 import LocalGameCommandInterface from '../../InterfaceAdapters/LocalGameCommandInterface'
 import Player from '../../Entities/Player'
+import PlayerDTO from '../../UseCase/PlayerDTO'
 import RandomName from '../../UseCase/RandomName'
 import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
 import './GameLobby.css'
@@ -21,6 +24,10 @@ function getRandomNumberBetweenZeroAndMax(max: number): number {
 
 localStorage.setItem('localPlayerId', new UniqueIdentifier().getId())
 
+type Props = {
+  presenter: IGameLobbyPresenter
+}
+
 type State = {
   firstDealerIndex: number
   isHostingGame: boolean
@@ -28,7 +35,7 @@ type State = {
   localPlayerName: string
 }
 
-class GameLobby extends Component<{}, State> {
+class GameLobby extends Component<Props, State> {
   state = {
     firstDealerIndex: -1,
     isHostingGame: false,
@@ -135,6 +142,48 @@ class GameLobby extends Component<{}, State> {
         >
           Host a new Game
         </Button>
+        {this.renderJoinableGames()}
+      </div>
+    )
+  }
+
+  private renderJoinableGames = (): ReactElement => {
+    const { presenter } = this.props
+    return (
+      <div>
+        <h4 className='joinable-games-header'>Here are the games you can join</h4>
+        <div className='wrap'>
+          <Table bordered hover variant='dark'>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Host</th>
+                <th>Player 2</th>
+                <th>Player 3</th>
+                <th>Player 4</th>
+                <th>Join</th>
+              </tr>
+            </thead>
+            <tbody>
+              {presenter.getJoinableGames().map((game: IGameData) => {
+                while (game.players.length < 4) {
+                  game.players.push({ getName: () => '', getId: () => new UniqueIdentifier() })
+                }
+                return (
+                  <tr>
+                    <td>{game.gameNumber}</td>
+                    {game.players.map((player: PlayerDTO) => {
+                      return <td>{`${player.getName()}`}</td>
+                    })}
+                    <td>
+                      <Button variant='primary'>Join</Button>
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </Table>
+        </div>
       </div>
     )
   }

@@ -15,6 +15,7 @@ describe('Game Lobby', () => {
     lobby.addNewGame({ getName: () => 'Test Name', getId: () => hostId })
     const allGames = lobby.getAllGames()
     expect(allGames.some((game) => game.getPlayerById(hostId))).toBeTruthy()
+    expect(allGames.some((game) => game.getGameId() === 1)).toBe(true)
   })
 
   it('Should remove the game if the host leaves', () => {

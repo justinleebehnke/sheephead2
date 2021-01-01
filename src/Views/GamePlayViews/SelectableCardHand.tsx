@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import Button from 'react-bootstrap/esm/Button'
+import Button from 'react-bootstrap/Button'
 import GamePresenter from '../../InterfaceAdapters/GamePresenter/GamePresenter'
 import SelectAbleCard from './SelectAbleCard'
 import './SelectableCardHand.css'

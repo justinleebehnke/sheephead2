@@ -6,9 +6,11 @@ import IGameData from './IGameData'
 
 class GameLobby implements IGameLobbyDataProvider {
   private games: GameManager[]
+  private gameIndex: number
 
   constructor() {
     this.games = []
+    this.gameIndex = 1
   }
 
   public getJoinableGames(): IGameData[] {
@@ -18,12 +20,12 @@ class GameLobby implements IGameLobbyDataProvider {
           !gameManager.gameIsStarted() && gameManager.getPlayers().length < 4
       )
       .map((gameManager) => {
-        return { players: gameManager.getPlayers() }
+        return { gameNumber: gameManager.getGameId(), players: gameManager.getPlayers() }
       })
   }
 
   public addNewGame(host: PlayerDTO): void {
-    this.games.push(new GameManager(host))
+    this.games.push(new GameManager(host, this.gameIndex++))
   }
 
   public getAllGames(): GameManager[] {

@@ -13,3 +13,16 @@
 td.light {
   color: gray;
 }
+
+.wrap {
+  height: 500px;
+  overflow-y: scroll;
+}
+
+table {
+  margin: 0;
+  width: 100%;
+}
+.joinable-games-header {
+  margin-top: 1em;
+}
