@@ -23,15 +23,12 @@ function getRandomNumberBetweenZeroAndMax(max: number): number {
   return Math.floor(Math.random() * max)
 }
 
-localStorage.setItem('localPlayerId', new UniqueIdentifier().getId())
-
 type Props = {
   presenter: IGameLobbyPresenter
 }
 
 type State = {
   firstDealerIndex: number
-  isHostingGame: boolean
   isInStartedGame: boolean
   localPlayerName: string
 }
@@ -39,9 +36,8 @@ type State = {
 class GameLobbyView extends Component<Props, State> implements ISubscriber {
   state = {
     firstDealerIndex: -1,
-    isHostingGame: false,
     isInStartedGame: false,
-    localPlayerName: localStorage.getItem('localPlayerName') || '',
+    localPlayerName: this.props.presenter.getLocalPlayerName(),
   }
 
   update(): void {
@@ -53,16 +49,18 @@ class GameLobbyView extends Component<Props, State> implements ISubscriber {
   }
 
   render() {
+    const { presenter } = this.props
     return (
       <Fragment>
-        {!this.state.isInStartedGame && !this.state.isHostingGame && this.renderLobby()}
-        {!this.state.isInStartedGame && this.state.isHostingGame && this.renderHostScreen()}
+        {!this.state.isInStartedGame && !presenter.isHostingGame() && this.renderLobby()}
+        {!this.state.isInStartedGame && presenter.isHostingGame() && this.renderHostScreen()}
         {this.state.isInStartedGame && this.renderStartedGame()}
       </Fragment>
     )
   }
 
   private renderStartedGame = (): ReactElement => {
+    const { presenter } = this.props
     const { firstDealerIndex } = this.state
     const ranker = new BellePlaineRulesCardRanker()
     const game: Game = new Game(
@@ -78,7 +76,7 @@ class GameLobbyView extends Component<Props, State> implements ISubscriber {
 
     game.addPlayer(
       new Player(
-        `${this.state.localPlayerName} (You)`,
+        `${presenter.getLocalPlayerName()} (You)`,
         new UniqueIdentifier(localStorage.getItem('localPlayerId') || undefined)
       )
     )
@@ -110,15 +108,16 @@ class GameLobbyView extends Component<Props, State> implements ISubscriber {
       )
     )
 
-    const presenter = new GamePresenter(
+    const gamePresenter = new GamePresenter(
       new LocalGameCommandInterface(game),
       new UniqueIdentifier(localStorage.getItem('localPlayerId') || undefined),
       game
     )
-    return <GameBoard presenter={presenter} />
+    return <GameBoard presenter={gamePresenter} />
   }
 
   private renderLobby = (): ReactElement => {
+    const { presenter } = this.props
     return (
       <div className='lobby'>
         <div className='split'>
@@ -132,7 +131,7 @@ class GameLobbyView extends Component<Props, State> implements ISubscriber {
               </InputGroup.Prepend>
               <FormControl
                 required
-                onBlur={this.updateNameInLocalStorage}
+                onBlur={() => presenter.setLocalPlayerName(this.state.localPlayerName)}
                 onChange={this.updateName}
                 aria-label='Large'
                 aria-describedby='inputGroup-sizing-sm'
@@ -144,9 +143,9 @@ class GameLobbyView extends Component<Props, State> implements ISubscriber {
 
         <Button
           onClick={
-            this.state.localPlayerName === ''
+            presenter.getLocalPlayerName() === ''
               ? () => this.alertOfRequiredName()
-              : () => this.setState({ isHostingGame: true })
+              : () => presenter.hostNewGame()
           }
         >
           Host a new Game
@@ -202,6 +201,7 @@ class GameLobbyView extends Component<Props, State> implements ISubscriber {
   }
 
   private renderHostScreen = (): ReactElement => {
+    const { presenter } = this.props
     return (
       <div className='lobby'>
         <h1>Host Game Screen</h1>
@@ -235,7 +235,7 @@ class GameLobbyView extends Component<Props, State> implements ISubscriber {
           </thead>
           <tbody>
             <tr>
-              <td>{`${this.state.localPlayerName} (You)`}</td>
+              <td>{`${presenter.getLocalPlayerName()} (You)`}</td>
               <td className='light'>{'Computer by default'}</td>
               <td className='light'>{'Computer by default'}</td>
               <td className='light'>{'Computer by default'}</td>
@@ -245,10 +245,7 @@ class GameLobbyView extends Component<Props, State> implements ISubscriber {
         <div className='split'>
           <div></div>
           <div>
-            <Button
-              variant='outline-primary'
-              onClick={() => this.setState({ isHostingGame: false })}
-            >
+            <Button variant='outline-primary' onClick={() => presenter.leaveGame()}>
               Leave
             </Button>{' '}
             <Button onClick={() => this.setState({ isInStartedGame: true })}>Start Game</Button>
@@ -261,10 +258,6 @@ class GameLobbyView extends Component<Props, State> implements ISubscriber {
   private updateFirstDealerIndex = (event: React.ChangeEvent): void => {
     const eventTarget = event.target as HTMLInputElement
     this.setState({ firstDealerIndex: parseInt(eventTarget.value, 10) })
-  }
-
-  private updateNameInLocalStorage = (): void => {
-    localStorage.setItem('localPlayerName', this.state.localPlayerName)
   }
 
   private updateName = (event: React.ChangeEvent): void => {

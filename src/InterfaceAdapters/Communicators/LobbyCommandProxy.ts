@@ -7,6 +7,7 @@ import HostNewGameCommand from '../CommandTypes/HostNewGameCommand'
 import RemovePlayerCommand from '../CommandTypes/RemovePlayerCommand'
 import StartGameCommand from '../CommandTypes/StartGameCommand'
 import ICommandCommunicator from '../ICommandCommunicator'
+import ICommandCommunicatorRequest from '../ICommandCommunicatorRequest'
 import ICommandCommunicatorResponse from '../ICommandCommunicatorResponse'
 import ICommandObject from '../ICommandObject'
 import IFetch from './IFetch'
@@ -38,10 +39,12 @@ class LobbyCommandProxy implements ICommandCommunicator {
   }
 
   public async giveCommand(command: ICommandObject): Promise<void> {
-    const res: JSON = await this.fetcher.post('http://localhost:2020/lobby', {
+    const request: ICommandCommunicatorRequest = {
       indexOfNextCommand: this.indexOfNextCommand,
-      command: command,
-    })
+      newCommand: command,
+    }
+
+    const res: JSON = await this.fetcher.post('http://localhost:2020/lobby', request)
     this.handleNewCommands(res)
   }
 

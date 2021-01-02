@@ -16,6 +16,10 @@ class GameLobby implements IGameLobbyDataProvider {
     this.subscribers = []
   }
 
+  public getGameByHostId(hostId: UniqueIdentifier): GameManager | undefined {
+    return this.games.find((game) => game.getHost().getId().equals(hostId))
+  }
+
   public addSubscriber(newSubscriber: ISubscriber): void {
     this.subscribers.push(newSubscriber)
   }

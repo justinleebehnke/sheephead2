@@ -23,6 +23,12 @@ describe('Game Lobby', () => {
       getJoinableGames: jest.fn().mockReturnValue([]),
       setView: jest.fn(),
       unSetView: jest.fn(),
+      getLocalPlayerName: jest.fn(),
+      getLocalPlayerId: jest.fn(),
+      setLocalPlayerName: jest.fn(),
+      leaveGame: jest.fn(),
+      hostNewGame: jest.fn(),
+      isHostingGame: jest.fn(),
     }
     act(() => {
       render(<GameLobbyView presenter={mockPresenter} />, container)

@@ -4,23 +4,53 @@ import IGameLobbyDataProvider from '../UseCase/IGameLobbyDataProvider'
 import IGameData from '../UseCase/IGameData'
 import ISubscriber from '../Entities/ISubscriber'
 import PlayerDTO from '../UseCase/PlayerDTO'
+import IGameLobbyPresenter from './IGameLobbyPresenter'
+import RemovePlayerCommand from './CommandTypes/RemovePlayerCommand'
+import UniqueIdentifier from '../Utilities/UniqueIdentifier'
 
-class GameLobbyPresenter implements ISubscriber {
+class GameLobbyPresenter implements IGameLobbyPresenter, ISubscriber {
   private commandInterface: ICommandInterface
-  private localPlayer: PlayerDTO
+  private localPlayer!: PlayerDTO
   private gameLobbyDataProvider: IGameLobbyDataProvider
   private view: ISubscriber | undefined
 
-  constructor(
-    localPlayer: PlayerDTO,
-    commandInterface: ICommandInterface,
-    gameLobbyDataProvider: IGameLobbyDataProvider
-  ) {
+  constructor(commandInterface: ICommandInterface, gameLobbyDataProvider: IGameLobbyDataProvider) {
     this.commandInterface = commandInterface
-    this.localPlayer = localPlayer
     this.gameLobbyDataProvider = gameLobbyDataProvider
     this.commandInterface.watchForCommands()
     this.gameLobbyDataProvider.addSubscriber(this)
+    this.createLocalPlayerFromLocalStorage()
+  }
+
+  private createLocalPlayerFromLocalStorage(): void {
+    if (!localStorage.getItem('localPlayerId')) {
+      localStorage.setItem('localPlayerId', new UniqueIdentifier().getId())
+    }
+    const id: string | null = localStorage.getItem('localPlayerId')
+
+    if (id) {
+      this.localPlayer = {
+        getId: () => new UniqueIdentifier(id),
+        getName: () => localStorage.getItem('localPlayerName') || '',
+      }
+    }
+  }
+
+  public getLocalPlayerName(): string {
+    return this.localPlayer.getName()
+  }
+
+  public getLocalPlayerId(): UniqueIdentifier {
+    return this.localPlayer.getId()
+  }
+
+  public setLocalPlayerName(newName: string): void {
+    localStorage.setItem('localPlayerName', newName)
+    this.createLocalPlayerFromLocalStorage()
+  }
+
+  isHostingGame(): boolean {
+    return !!this.gameLobbyDataProvider.getGameByHostId(this.localPlayer.getId())
   }
 
   setView(gameLobbyView: ISubscriber): void {
@@ -37,6 +67,16 @@ class GameLobbyPresenter implements ISubscriber {
 
   public getJoinableGames(): IGameData[] {
     return this.gameLobbyDataProvider.getJoinableGames()
+  }
+
+  public leaveGame(): void {
+    const command: RemovePlayerCommand = {
+      name: 'removePlayer',
+      params: {
+        playerId: this.localPlayer.getId().getId(),
+      },
+    }
+    this.commandInterface.giveCommand(command)
   }
 
   public hostNewGame(): void {
