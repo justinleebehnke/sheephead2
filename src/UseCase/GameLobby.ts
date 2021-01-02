@@ -16,6 +16,10 @@ class GameLobby implements IGameLobbyDataProvider {
     this.subscribers = []
   }
 
+  public getGameByPlayerId(playerId: UniqueIdentifier): GameManager | undefined {
+    return this.games.find((game) => game.getPlayerById(playerId))
+  }
+
   public getGameByHostId(hostId: UniqueIdentifier): GameManager | undefined {
     return this.games.find((game) => game.getHost().getId().equals(hostId))
   }
@@ -68,6 +72,20 @@ class GameLobby implements IGameLobbyDataProvider {
     if (game) {
       game.addPlayer(player)
       this.notifySubscribers()
+    }
+  }
+
+  public startGameByHostId(
+    hostId: UniqueIdentifier,
+    shuffleSeed: number,
+    firstDealerIndex: number
+  ) {
+    const gameToStart = this.getGameByHostId(hostId)
+    if (gameToStart) {
+      gameToStart.startGame(shuffleSeed, firstDealerIndex)
+      this.notifySubscribers()
+    } else {
+      throw Error('Game to start was not found')
     }
   }
 }

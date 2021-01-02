@@ -4,24 +4,13 @@ import Form from 'react-bootstrap/Form'
 import FormControl from 'react-bootstrap/FormControl'
 import InputGroup from 'react-bootstrap/InputGroup'
 import Table from 'react-bootstrap/Table'
-import BellePlaineRulesCardRanker from '../../Entities/BellePlaineRulesCardRanker'
-import CPUPlayer from '../../UseCase/CPUPlayer'
-import Game from '../../Entities/Game'
 import GameBoard from '../GamePlayViews/GameBoard'
 import IGameData from '../../UseCase/IGameData'
 import ISubscriber from '../../Entities/ISubscriber'
-import GamePresenter from '../../InterfaceAdapters/GamePresenter/GamePresenter'
 import IGameLobbyPresenter from '../../InterfaceAdapters/IGameLobbyPresenter'
-import LocalGameCommandInterface from '../../InterfaceAdapters/LocalGameCommandInterface'
-import Player from '../../Entities/Player'
 import PlayerDTO from '../../UseCase/PlayerDTO'
-import RandomName from '../../UseCase/RandomName'
 import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
 import './GameLobby.css'
-
-function getRandomNumberBetweenZeroAndMax(max: number): number {
-  return Math.floor(Math.random() * max)
-}
 
 type Props = {
   presenter: IGameLobbyPresenter
@@ -29,14 +18,12 @@ type Props = {
 
 type State = {
   firstDealerIndex: number
-  isInStartedGame: boolean
   localPlayerName: string
 }
 
 class GameLobbyView extends Component<Props, State> implements ISubscriber {
   state = {
     firstDealerIndex: -1,
-    isInStartedGame: false,
     localPlayerName: this.props.presenter.getLocalPlayerName(),
   }
 
@@ -52,67 +39,17 @@ class GameLobbyView extends Component<Props, State> implements ISubscriber {
     const { presenter } = this.props
     return (
       <Fragment>
-        {!this.state.isInStartedGame && !presenter.isHostingGame() && this.renderLobby()}
-        {!this.state.isInStartedGame && presenter.isHostingGame() && this.renderHostScreen()}
-        {this.state.isInStartedGame && this.renderStartedGame()}
+        {!presenter.isInStartedGame() && !presenter.isHostingGame() && this.renderLobby()}
+        {!presenter.isInStartedGame() && presenter.isHostingGame() && this.renderHostScreen()}
+        {presenter.isInStartedGame() && this.renderStartedGame()}
       </Fragment>
     )
   }
 
   private renderStartedGame = (): ReactElement => {
     const { presenter } = this.props
-    const { firstDealerIndex } = this.state
-    const ranker = new BellePlaineRulesCardRanker()
-    const game: Game = new Game(
-      [],
-      firstDealerIndex === -1 ? getRandomNumberBetweenZeroAndMax(4) : firstDealerIndex,
-      Date.now()
-    )
-    const commandInterface = new LocalGameCommandInterface(game)
+    const gamePresenter = presenter.getGamePresenter()
 
-    const playerNames: string[] = [new RandomName().getName()]
-    playerNames.push(new RandomName(playerNames).getName())
-    playerNames.push(new RandomName(playerNames).getName())
-
-    game.addPlayer(
-      new Player(
-        `${presenter.getLocalPlayerName()} (You)`,
-        new UniqueIdentifier(localStorage.getItem('localPlayerId') || undefined)
-      )
-    )
-    game.addPlayer(
-      new CPUPlayer(
-        playerNames[0],
-        new UniqueIdentifier('4d2f43c3-224d-46ba-bb76-0e383d9ceb5c'),
-        game,
-        ranker,
-        commandInterface
-      )
-    )
-    game.addPlayer(
-      new CPUPlayer(
-        playerNames[1],
-        new UniqueIdentifier('32b62508-4e72-4028-8794-fd075b0393b5'),
-        game,
-        ranker,
-        commandInterface
-      )
-    )
-    game.addPlayer(
-      new CPUPlayer(
-        playerNames[2],
-        new UniqueIdentifier('81756fd4-3f61-4833-b012-43fbc407b688'),
-        game,
-        ranker,
-        commandInterface
-      )
-    )
-
-    const gamePresenter = new GamePresenter(
-      new LocalGameCommandInterface(game),
-      new UniqueIdentifier(localStorage.getItem('localPlayerId') || undefined),
-      game
-    )
     return <GameBoard presenter={gamePresenter} />
   }
 
@@ -248,7 +185,9 @@ class GameLobbyView extends Component<Props, State> implements ISubscriber {
             <Button variant='outline-primary' onClick={() => presenter.leaveGame()}>
               Leave
             </Button>{' '}
-            <Button onClick={() => this.setState({ isInStartedGame: true })}>Start Game</Button>
+            <Button onClick={() => presenter.startGame(this.state.firstDealerIndex)}>
+              Start Game
+            </Button>
           </div>
         </div>
       </div>

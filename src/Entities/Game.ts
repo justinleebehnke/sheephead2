@@ -17,6 +17,10 @@ class Game implements ISubscriber, IObservable, IReadOnlyGameModel {
     this.subscribers.push(newSubscriber)
   }
 
+  public getPlayers(): Player[] {
+    return this.players
+  }
+
   public removeSubscriber(subscriberToRemove: ISubscriber): void {
     this.subscribers = this.subscribers.filter((subscriber) => subscriber !== subscriberToRemove)
   }

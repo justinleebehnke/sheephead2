@@ -7,6 +7,11 @@ import PlayerDTO from '../UseCase/PlayerDTO'
 import IGameLobbyPresenter from './IGameLobbyPresenter'
 import RemovePlayerCommand from './CommandTypes/RemovePlayerCommand'
 import UniqueIdentifier from '../Utilities/UniqueIdentifier'
+import StartGameCommand from './CommandTypes/StartGameCommand'
+import GamePresenter from './GamePresenter/GamePresenter'
+import Game from '../Entities/Game'
+import CPUPlayer from '../UseCase/CPUPlayer'
+import LocalGameCommandInterface from './LocalGameCommandInterface'
 
 class GameLobbyPresenter implements IGameLobbyPresenter, ISubscriber {
   private commandInterface: ICommandInterface
@@ -20,6 +25,28 @@ class GameLobbyPresenter implements IGameLobbyPresenter, ISubscriber {
     this.commandInterface.watchForCommands()
     this.gameLobbyDataProvider.addSubscriber(this)
     this.createLocalPlayerFromLocalStorage()
+  }
+
+  public getGamePresenter(): GamePresenter {
+    const game = this.gameLobbyDataProvider.getGameByPlayerId(this.getLocalPlayerId())?.getGame()
+    if (game) {
+      const commandInterface: ICommandInterface = this.getGameCommandInterface(game)
+      return new GamePresenter(commandInterface, this.getLocalPlayerId(), game)
+    }
+    throw Error('Game not found')
+  }
+
+  private getGameCommandInterface(game: Game): ICommandInterface {
+    const players = game.getPlayers()
+    if (
+      players.every(
+        (player) =>
+          player instanceof CPUPlayer || player.getId() === this.getLocalPlayerId().getId()
+      )
+    ) {
+      return new LocalGameCommandInterface(game)
+    }
+    throw Error('Cannot start game with non CPU Players yet')
   }
 
   private createLocalPlayerFromLocalStorage(): void {
@@ -53,6 +80,11 @@ class GameLobbyPresenter implements IGameLobbyPresenter, ISubscriber {
     return !!this.gameLobbyDataProvider.getGameByHostId(this.localPlayer.getId())
   }
 
+  isInStartedGame(): boolean {
+    const game = this.gameLobbyDataProvider.getGameByPlayerId(this.localPlayer.getId())
+    return game?.gameIsStarted() || false
+  }
+
   setView(gameLobbyView: ISubscriber): void {
     this.view = gameLobbyView
   }
@@ -67,6 +99,23 @@ class GameLobbyPresenter implements IGameLobbyPresenter, ISubscriber {
 
   public getJoinableGames(): IGameData[] {
     return this.gameLobbyDataProvider.getJoinableGames()
+  }
+
+  private getRandomNumberBetweenZeroAndMax(max: number): number {
+    return Math.floor(Math.random() * max)
+  }
+
+  public startGame(firstDealerIndex: number): void {
+    const command: StartGameCommand = {
+      name: 'startGame',
+      params: {
+        firstDealerIndex:
+          firstDealerIndex === -1 ? this.getRandomNumberBetweenZeroAndMax(4) : firstDealerIndex,
+        hostId: this.localPlayer.getId().getId(),
+        shuffleSeed: Date.now(),
+      },
+    }
+    this.commandInterface.giveCommand(command)
   }
 
   public leaveGame(): void {

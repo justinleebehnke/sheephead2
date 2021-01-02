@@ -3,6 +3,9 @@ import Player from '../Entities/Player'
 import PlayerDTO from './PlayerDTO'
 import RandomName from './RandomName'
 import UniqueIdentifier from '../Utilities/UniqueIdentifier'
+import CPUPlayer from './CPUPlayer'
+import BellePlaineRulesCardRanker from '../Entities/BellePlaineRulesCardRanker'
+import LocalGameCommandInterface from '../InterfaceAdapters/LocalGameCommandInterface'
 
 class GameManager {
   private host: PlayerDTO
@@ -51,6 +54,20 @@ class GameManager {
     this.players.push(player)
   }
 
+  private addCPUPlayer(): void {
+    if (this.game) {
+      this.game.addPlayer(
+        new CPUPlayer(
+          new RandomName().getName(),
+          new UniqueIdentifier(),
+          this.game,
+          new BellePlaineRulesCardRanker(),
+          new LocalGameCommandInterface(this.game)
+        )
+      )
+    }
+  }
+
   public gameIsStarted(): boolean {
     return this.game !== undefined
   }
@@ -69,21 +86,18 @@ class GameManager {
     this.players = this.players.filter((player) => !player.getId().equals(id))
   }
 
-  public startGame(seed: number): void {
+  public startGame(seed: number, firstDealerIndex: number): void {
     if (this.gameIsStarted()) {
       throw new Error('Game already started')
     }
-    while (this.players.length < 4) {
-      this.addPlayer({
-        getId: () => new UniqueIdentifier(),
-        getName: () => new RandomName().getName(),
-      })
-    }
     this.game = new Game(
       this.players.map((playerDto) => new Player(playerDto.getName(), playerDto.getId())),
-      this.firstDealerIndex,
+      firstDealerIndex,
       seed
     )
+    while (this.game.getPlayers().length < 4) {
+      this.addCPUPlayer()
+    }
   }
 
   public getGame(): undefined | Game {

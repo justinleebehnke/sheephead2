@@ -1,5 +1,4 @@
 import GameLobby from '../../UseCase/GameLobby'
-import GameManager from '../../UseCase/GameManager'
 import PlayerDTO from '../../UseCase/PlayerDTO'
 import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
 import AddPlayerCommand from '../CommandTypes/AddPlayerCommand'
@@ -78,16 +77,12 @@ class LobbyCommandProxy implements ICommandCommunicator {
       }
       this.gameLobby.addNewGame(host)
     } else if (this.isStartGameCommand(command)) {
-      const gameManagers: GameManager[] = this.gameLobby.getAllGames()
       const hostId = new UniqueIdentifier(command.params.hostId)
-      const gameToStart = gameManagers.find((gameManager: GameManager) =>
-        gameManager.getPlayerById(hostId)
+      this.gameLobby.startGameByHostId(
+        hostId,
+        command.params.shuffleSeed,
+        command.params.firstDealerIndex
       )
-      if (gameToStart) {
-        gameToStart.startGame(command.params.shuffleSeed)
-      } else {
-        throw Error('Game to start was not found')
-      }
     } else if (this.isRemovePlayerCommand(command)) {
       const playerId = new UniqueIdentifier(command.params.playerId)
       this.gameLobby.removePlayerFromGame(playerId)
