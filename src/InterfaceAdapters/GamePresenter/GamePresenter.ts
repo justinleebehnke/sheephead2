@@ -7,6 +7,7 @@ import ISubscriber from '../../Entities/ISubscriber'
 import Player from '../../Entities/Player'
 import PlayerLayoutData from './PlayerLayoutData'
 import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
+import RemovePlayerCommand from '../CommandTypes/RemovePlayerCommand'
 
 class GamePresenter implements ISubscriber {
   private commandInterface: ICommandInterface
@@ -14,17 +15,30 @@ class GamePresenter implements ISubscriber {
   private view: ISubscriber | undefined
   private game: IReadOnlyGameModel
   private _isLoading: boolean
+  private lobbyInterface: ICommandInterface
 
   constructor(
     commandInterface: ICommandInterface,
     localPlayerId: UniqueIdentifier,
-    game: IReadOnlyGameModel
+    game: IReadOnlyGameModel,
+    lobbyInterface: ICommandInterface
   ) {
+    this.lobbyInterface = lobbyInterface
     this.commandInterface = commandInterface
     this.localPlayerId = localPlayerId
     this.game = game
     this.game.addSubscriber(this)
     this._isLoading = false
+  }
+
+  public leaveGame(): void {
+    const removePlayer: RemovePlayerCommand = {
+      name: 'removePlayer',
+      params: {
+        playerId: this.localPlayerId.getId(),
+      },
+    }
+    this.lobbyInterface.giveCommand(removePlayer)
   }
 
   public setView(view: ISubscriber): void {

@@ -154,7 +154,12 @@ describe('Game Presenter', () => {
       getCurrentRound: jest.fn().mockReturnValue(round),
     }
 
-    presenter = new GamePresenter(mockCommandInterface, localPlayerId, mockReadOnlyGameModel)
+    presenter = new GamePresenter(
+      mockCommandInterface,
+      localPlayerId,
+      mockReadOnlyGameModel,
+      mockCommandInterface
+    )
     presenter.setView(mockGameView)
   })
 

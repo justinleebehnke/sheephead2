@@ -31,7 +31,12 @@ class GameLobbyPresenter implements IGameLobbyPresenter, ISubscriber {
     const game = this.gameLobbyDataProvider.getGameByPlayerId(this.getLocalPlayerId())?.getGame()
     if (game) {
       const commandInterface: ICommandInterface = this.getGameCommandInterface(game)
-      return new GamePresenter(commandInterface, this.getLocalPlayerId(), game)
+      return new GamePresenter(
+        commandInterface,
+        this.getLocalPlayerId(),
+        game,
+        this.commandInterface
+      )
     }
     throw Error('Game not found')
   }
