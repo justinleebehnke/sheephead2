@@ -29,6 +29,9 @@ describe('Game Lobby', () => {
       leaveGame: jest.fn(),
       hostNewGame: jest.fn(),
       isHostingGame: jest.fn(),
+      isInStartedGame: jest.fn(),
+      startGame: jest.fn(),
+      getGamePresenter: jest.fn(),
     }
     act(() => {
       render(<GameLobbyView presenter={mockPresenter} />, container)
