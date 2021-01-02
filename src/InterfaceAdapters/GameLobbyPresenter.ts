@@ -12,6 +12,7 @@ import GamePresenter from './GamePresenter/GamePresenter'
 import Game from '../Entities/Game'
 import CPUPlayer from '../UseCase/CPUPlayer'
 import LocalGameCommandInterface from './LocalGameCommandInterface'
+import AddPlayerCommand from './CommandTypes/AddPlayerCommand'
 
 class GameLobbyPresenter implements IGameLobbyPresenter, ISubscriber {
   private commandInterface: ICommandInterface
@@ -41,6 +42,18 @@ class GameLobbyPresenter implements IGameLobbyPresenter, ISubscriber {
     throw Error('Game not found')
   }
 
+  public joinGame(hostId: UniqueIdentifier): void {
+    const command: AddPlayerCommand = {
+      name: 'addPlayer',
+      params: {
+        playerId: this.getLocalPlayerId().getId(),
+        playerName: this.getLocalPlayerName(),
+        hostId: hostId.getId(),
+      },
+    }
+    this.commandInterface.giveCommand(command)
+  }
+
   private getGameCommandInterface(game: Game): ICommandInterface {
     const players = game.getPlayers()
     if (
@@ -66,6 +79,7 @@ class GameLobbyPresenter implements IGameLobbyPresenter, ISubscriber {
         getName: () => localStorage.getItem('localPlayerName') || '',
       }
     }
+    this.update()
   }
 
   public getLocalPlayerName(): string {
@@ -88,6 +102,52 @@ class GameLobbyPresenter implements IGameLobbyPresenter, ISubscriber {
   isInStartedGame(): boolean {
     const game = this.gameLobbyDataProvider.getGameByPlayerId(this.localPlayer.getId())
     return game?.gameIsStarted() || false
+  }
+
+  isNotHostInGamePlayerThatHasNotYetStarted(): boolean {
+    if (this.isInStartedGame()) {
+      return false
+    }
+    if (this.isHostingGame()) {
+      return false
+    }
+    return !!this.gameLobbyDataProvider.getGameByPlayerId(this.localPlayer.getId())
+  }
+
+  shouldRenderLobby(): boolean {
+    return (
+      !this.isHostingGame() &&
+      !this.isInStartedGame() &&
+      !this.isNotHostInGamePlayerThatHasNotYetStarted()
+    )
+  }
+
+  shouldRenderHostGameSetupView(): boolean {
+    return !this.isInStartedGame() && this.isHostingGame()
+  }
+
+  shouldRenderPlayerGameSetupView(): boolean {
+    return this.isNotHostInGamePlayerThatHasNotYetStarted()
+  }
+
+  shouldRenderGameBoardView(): boolean {
+    return this.isInStartedGame()
+  }
+
+  getJoinedGamePlayers(): PlayerDTO[] {
+    const game = this.gameLobbyDataProvider.getGameByPlayerId(this.getLocalPlayerId())
+    if (game) {
+      return game.getPlayers()
+    }
+    return []
+  }
+
+  getJoinedGameNumber(): number {
+    const game = this.gameLobbyDataProvider.getGameByPlayerId(this.getLocalPlayerId())
+    if (game) {
+      return game.getGameId()
+    }
+    return 0
   }
 
   setView(gameLobbyView: ISubscriber): void {

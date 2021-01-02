@@ -20,6 +20,7 @@ afterEach(() => {
 describe('Game Lobby', () => {
   it('Should ask the presenter immediately for the games that can be joined', () => {
     const mockPresenter: IGameLobbyPresenter = {
+      joinGame: jest.fn(),
       getJoinableGames: jest.fn().mockReturnValue([]),
       setView: jest.fn(),
       unSetView: jest.fn(),
@@ -28,9 +29,13 @@ describe('Game Lobby', () => {
       setLocalPlayerName: jest.fn(),
       leaveGame: jest.fn(),
       hostNewGame: jest.fn(),
-      isHostingGame: jest.fn(),
-      isInStartedGame: jest.fn(),
+      shouldRenderGameBoardView: jest.fn(),
+      shouldRenderHostGameSetupView: jest.fn(),
+      shouldRenderLobby: jest.fn().mockReturnValue(true),
+      shouldRenderPlayerGameSetupView: jest.fn(),
       startGame: jest.fn(),
+      getJoinedGameNumber: jest.fn(),
+      getJoinedGamePlayers: jest.fn(),
       getGamePresenter: jest.fn(),
     }
     act(() => {

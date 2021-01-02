@@ -37,11 +37,14 @@ class GameLobbyView extends Component<Props, State> implements ISubscriber {
 
   render() {
     const { presenter } = this.props
+
     return (
       <Fragment>
-        {!presenter.isInStartedGame() && !presenter.isHostingGame() && this.renderLobby()}
-        {!presenter.isInStartedGame() && presenter.isHostingGame() && this.renderHostScreen()}
-        {presenter.isInStartedGame() && this.renderStartedGame()}
+        {presenter.shouldRenderLobby() && this.renderLobby()}
+        {(presenter.shouldRenderHostGameSetupView() ||
+          presenter.shouldRenderPlayerGameSetupView()) &&
+          this.renderGameSetupScreen()}
+        {presenter.shouldRenderGameBoardView() && this.renderStartedGame()}
       </Fragment>
     )
   }
@@ -114,6 +117,7 @@ class GameLobbyView extends Component<Props, State> implements ISubscriber {
                 while (game.players.length < 4) {
                   game.players.push({ getName: () => '', getId: () => new UniqueIdentifier() })
                 }
+
                 return (
                   <tr key={game.gameNumber}>
                     <td>{game.gameNumber}</td>
@@ -121,7 +125,16 @@ class GameLobbyView extends Component<Props, State> implements ISubscriber {
                       return <td key={player.getId().getId()}>{`${player.getName()}`}</td>
                     })}
                     <td>
-                      <Button variant='primary'>Join</Button>
+                      <Button
+                        variant='primary'
+                        onClick={
+                          presenter.getLocalPlayerName() === ''
+                            ? () => this.alertOfRequiredName()
+                            : () => presenter.joinGame(game.players[0]?.getId())
+                        }
+                      >
+                        Join
+                      </Button>
                     </td>
                   </tr>
                 )
@@ -137,33 +150,47 @@ class GameLobbyView extends Component<Props, State> implements ISubscriber {
     window.alert('Please fill out "Your Displayed Name"')
   }
 
-  private renderHostScreen = (): ReactElement => {
+  private renderGameSetupScreen = (): ReactElement => {
     const { presenter } = this.props
+
+    const players = presenter.getJoinedGamePlayers()
+
+    while (players.length < 4) {
+      players.push({
+        getName: () => '',
+        getId: () => new UniqueIdentifier(),
+      })
+    }
+
     return (
       <div className='lobby'>
-        <h1>Host Game Screen</h1>
-        <Form.Group controlId='firstDealer'>
-          <div className='split'>
+        <h1>Game Setup</h1>
+        {presenter.shouldRenderHostGameSetupView() && (
+          <Form.Group controlId='firstDealer'>
             <div className='split'>
-              <Form.Label>Who should deal first?</Form.Label>
-              <Form.Control
-                as='select'
-                value={this.state.firstDealerIndex}
-                onChange={this.updateFirstDealerIndex}
-              >
-                <option value={-1}>Random</option>
-                <option value={0}>Host (You)</option>
-                <option value={1}>Player 2</option>
-                <option value={2}>Player 3</option>
-                <option value={3}>Player 4</option>
-              </Form.Control>
+              <div className='split'>
+                <Form.Label>Who should deal first?</Form.Label>
+                <Form.Control
+                  as='select'
+                  value={this.state.firstDealerIndex}
+                  onChange={this.updateFirstDealerIndex}
+                >
+                  <option value={-1}>Random</option>
+                  <option value={0}>Host (You)</option>
+                  <option value={1}>Player 2</option>
+                  <option value={2}>Player 3</option>
+                  <option value={3}>Player 4</option>
+                </Form.Control>
+              </div>
+              <div></div>
             </div>
-            <div></div>
-          </div>
-        </Form.Group>
+          </Form.Group>
+        )}
+
         <Table bordered hover variant='dark'>
           <thead>
             <tr>
+              <th>#</th>
               <th>Host</th>
               <th>Player 2</th>
               <th>Player 3</th>
@@ -172,10 +199,21 @@ class GameLobbyView extends Component<Props, State> implements ISubscriber {
           </thead>
           <tbody>
             <tr>
-              <td>{`${presenter.getLocalPlayerName()} (You)`}</td>
-              <td className='light'>{'Computer by default'}</td>
-              <td className='light'>{'Computer by default'}</td>
-              <td className='light'>{'Computer by default'}</td>
+              <td>{presenter.getJoinedGameNumber()}</td>
+              {players.map((player) => {
+                return (
+                  <td
+                    className={player.getName() === '' ? 'light' : ''}
+                    key={player.getId().getId()}
+                  >
+                    {player.getName() === presenter.getLocalPlayerName()
+                      ? `${presenter.getLocalPlayerName()} (You)`
+                      : player.getName() === ''
+                      ? 'Computer by default'
+                      : player.getName()}
+                  </td>
+                )
+              })}
             </tr>
           </tbody>
         </Table>
@@ -185,9 +223,11 @@ class GameLobbyView extends Component<Props, State> implements ISubscriber {
             <Button variant='outline-primary' onClick={() => presenter.leaveGame()}>
               Leave
             </Button>{' '}
-            <Button onClick={() => presenter.startGame(this.state.firstDealerIndex)}>
-              Start Game
-            </Button>
+            {presenter.shouldRenderHostGameSetupView() && (
+              <Button onClick={() => presenter.startGame(this.state.firstDealerIndex)}>
+                Start Game
+              </Button>
+            )}
           </div>
         </div>
       </div>
