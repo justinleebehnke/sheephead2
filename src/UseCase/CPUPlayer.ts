@@ -7,8 +7,8 @@ import Player from '../Entities/Player'
 import PlayCommand from '../InterfaceAdapters/CommandTypes/PlayCommand'
 import UniqueIdentifier from '../Utilities/UniqueIdentifier'
 import ISubscriber from '../Entities/ISubscriber'
-import { PAUSE_DURATION_AFTER_TRICK } from '../Entities/Round/TrickState'
 
+const PAUSE_BEFORE_PLAYING = 1750
 /*
 Some ideas:
 When deciding whether to pick:
@@ -67,7 +67,7 @@ class CPUPlayer extends Player implements ISubscriber {
 
   public update(): void {
     if (this.isTurn()) {
-      new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK)).then(() => {
+      new Promise((r) => setTimeout(r, PAUSE_BEFORE_PLAYING)).then(() => {
         this.takeTurn()
       })
     }

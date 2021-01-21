@@ -5,7 +5,6 @@ import IRoundState from './IRoundState'
 import Round from './Round'
 import Trick from '../Trick'
 
-export const PAUSE_DURATION_AFTER_TRICK = 1750
 const NUM_TRICKS_IN_GAME = 6
 
 class TrickState implements IRoundState {
@@ -32,8 +31,6 @@ class TrickState implements IRoundState {
     if (currentTurnPlayer) {
       this.round.getCurrentTrick().addCardToTrick(card, currentTurnPlayer)
       if (this.isCompleteTrick()) {
-        this.round.notifySubscribers()
-        await this.pause()
         this.round.getCurrentTrick().giveToHighestRankingCardPlayer()
 
         if (this.thereAreMoreTricksLeftToPlay()) {
@@ -56,13 +53,6 @@ class TrickState implements IRoundState {
     } else {
       throw Error('Cannot pick when it is no one is the current turn player')
     }
-  }
-
-  private async pause(): Promise<void> {
-    const indexOfCurrentTurn = this.round.getIndexOfCurrentTurn()
-    this.round.setIndexOfCurrentTurn(-1)
-    await new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK))
-    this.round.setIndexOfCurrentTurn(indexOfCurrentTurn)
   }
 
   private isCompleteTrick(): boolean {
