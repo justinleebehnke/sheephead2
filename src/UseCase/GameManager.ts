@@ -1,11 +1,11 @@
 import Game from '../Entities/Game'
 import Player from '../Entities/Player'
 import PlayerDTO from './PlayerDTO'
-import RandomName from './RandomName'
 import UniqueIdentifier from '../Utilities/UniqueIdentifier'
 import CPUPlayer from './CPUPlayer'
 import BellePlaineRulesCardRanker from '../Entities/BellePlaineRulesCardRanker'
-import LocalGameCommandInterface from '../InterfaceAdapters/LocalGameCommandInterface'
+import GameCommandProxy from '../InterfaceAdapters/Communicators/GameCommandProxy'
+import ServerCommunicator from '../Drivers/ServerCommunicator'
 
 class GameManager {
   private host: PlayerDTO
@@ -46,26 +46,12 @@ class GameManager {
 
   public addPlayer(player: PlayerDTO): void {
     if (this.getPlayerById(player.getId())) {
-      throw new Error('Cannot have two players with same id in game')
+      return // player is already in game
     }
     if (this.gameIsStarted()) {
       throw new Error('Cannot add player to started game')
     }
     this.players.push(player)
-  }
-
-  private addCPUPlayer(): void {
-    if (this.game) {
-      this.game.addPlayer(
-        new CPUPlayer(
-          new RandomName().getName(),
-          new UniqueIdentifier(),
-          this.game,
-          new BellePlaineRulesCardRanker(),
-          new LocalGameCommandInterface(this.game)
-        )
-      )
-    }
   }
 
   public gameIsStarted(): boolean {
@@ -90,14 +76,40 @@ class GameManager {
     if (this.gameIsStarted()) {
       throw new Error('Game already started')
     }
-    this.game = new Game(
-      this.players.map((playerDto) => new Player(playerDto.getName(), playerDto.getId())),
-      firstDealerIndex,
-      seed
-    )
-    while (this.game.getPlayers().length < 4) {
-      this.addCPUPlayer()
+    if (this.players.length < 4) {
+      throw new Error('Not enough players to start game')
     }
+    if (this.host.getId().getId() === localStorage.getItem('localPlayerId')) {
+      const realPlayers: PlayerDTO[] = this.players.filter((player) => this.playerIsReal(player))
+      const cpuPlayers: PlayerDTO[] = this.players.filter((player) => !this.playerIsReal(player))
+      const newGame = new Game(
+        realPlayers.map((playerDto) => new Player(playerDto.getName(), playerDto.getId())),
+        firstDealerIndex,
+        seed
+      )
+      cpuPlayers.forEach((cpuPlayer) =>
+        newGame.addPlayer(
+          new CPUPlayer(
+            cpuPlayer.getName(),
+            cpuPlayer.getId(),
+            newGame,
+            new BellePlaineRulesCardRanker(),
+            new GameCommandProxy(new ServerCommunicator(), newGame)
+          )
+        )
+      )
+      this.game = newGame
+    } else {
+      this.game = new Game(
+        this.players.map((playerDto) => new Player(playerDto.getName(), playerDto.getId())),
+        firstDealerIndex,
+        seed
+      )
+    }
+  }
+
+  private playerIsReal(player: PlayerDTO): boolean {
+    return !player.getName().includes(' (CPU)')
   }
 
   public getGame(): undefined | Game {

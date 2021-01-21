@@ -5,19 +5,20 @@ import AddPlayerCommand from '../CommandTypes/AddPlayerCommand'
 import HostNewGameCommand from '../CommandTypes/HostNewGameCommand'
 import RemovePlayerCommand from '../CommandTypes/RemovePlayerCommand'
 import StartGameCommand from '../CommandTypes/StartGameCommand'
-import ICommandCommunicator from '../ICommandCommunicator'
 import ICommandCommunicatorRequest from '../ICommandCommunicatorRequest'
 import ICommandCommunicatorResponse from '../ICommandCommunicatorResponse'
+import ICommandInterface from '../ICommandInterface'
 import ICommandObject from '../ICommandObject'
 import IFetch from './IFetch'
+import { serverUrl } from './constants'
 
-const POLLING_FREQUENCY_IN_MILLISECONDS = 500
+const POLLING_FREQUENCY_IN_MILLISECONDS = 1000
 
-class LobbyCommandProxy implements ICommandCommunicator {
+class LobbyCommandProxy implements ICommandInterface {
   private fetcher: IFetch
   private indexOfNextCommand: number
   private gameLobby: GameLobby
-  private interval: NodeJS.Timeout | undefined
+  private static interval: NodeJS.Timeout
 
   constructor(fetcher: IFetch, gameLobby: GameLobby) {
     this.fetcher = fetcher
@@ -25,16 +26,8 @@ class LobbyCommandProxy implements ICommandCommunicator {
     this.gameLobby = gameLobby
   }
 
-  public watchForCommands(): void {
-    this.interval = setInterval(async () => {
-      await this.getCommands()
-    }, POLLING_FREQUENCY_IN_MILLISECONDS)
-  }
-
-  public stopWatchingForCommands(): void {
-    if (this.interval) {
-      clearInterval(this.interval)
-    }
+  public start(): void {
+    this.getCommands()
   }
 
   public async giveCommand(command: ICommandObject): Promise<void> {
@@ -43,7 +36,7 @@ class LobbyCommandProxy implements ICommandCommunicator {
       newCommand: command,
     }
 
-    const res: JSON = await this.fetcher.post('http://localhost:2020/lobby', request)
+    const res: JSON = await this.fetcher.post(`${serverUrl}/lobby`, request)
     this.handleNewCommands(res)
   }
 
@@ -52,10 +45,19 @@ class LobbyCommandProxy implements ICommandCommunicator {
   }
 
   private async getCommands(): Promise<void> {
-    const res: JSON = await this.fetcher.get(
-      `http://localhost:2020/lobby/${this.indexOfNextCommand}`
-    )
+    if (LobbyCommandProxy.interval) {
+      clearTimeout(LobbyCommandProxy.interval)
+    }
+    const res = await this.fetcher.get(`${serverUrl}/lobby/${this.indexOfNextCommand}`)
     this.handleNewCommands(res)
+    this.setTimeout()
+  }
+
+  private setTimeout(): void {
+    LobbyCommandProxy.interval = setTimeout(
+      () => this.getCommands(),
+      POLLING_FREQUENCY_IN_MILLISECONDS
+    )
   }
 
   private handleNewCommands(res: any) {

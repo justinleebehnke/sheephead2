@@ -43,6 +43,7 @@ class GamePresenter implements ISubscriber {
 
   public setView(view: ISubscriber): void {
     this.view = view
+    this.commandInterface.start()
   }
 
   public unsetView(): void {
@@ -62,7 +63,9 @@ class GamePresenter implements ISubscriber {
     this._isLoading = true
     this.commandInterface.giveCommand({
       name: 'pass',
-      params: null,
+      params: {
+        date: Date.now(),
+      },
     })
   }
 

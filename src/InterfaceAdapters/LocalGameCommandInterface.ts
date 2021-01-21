@@ -18,11 +18,7 @@ class LocalGameCommandInterface implements ICommandInterface {
     this.game = game
   }
 
-  stopWatchingForCommands(): void {
-    return
-  }
-
-  watchForCommands(): void {
+  public start(): void {
     return
   }
 

@@ -4,6 +4,7 @@ import UniqueIdentifier from '../Utilities/UniqueIdentifier'
 import HostNewGameCommand from './CommandTypes/HostNewGameCommand'
 import IGameLobbyDataProvider from '../UseCase/IGameLobbyDataProvider'
 import PlayerDTO from '../UseCase/PlayerDTO'
+import IFetch from './Communicators/IFetch'
 
 const localPlayer: PlayerDTO = {
   getId: () => new UniqueIdentifier('035e0e59-0b47-429c-ab91-6b112426e4c3'),
@@ -35,20 +36,26 @@ describe('Game Lobby Presenter', () => {
   let lobbyPresenter: GameLobbyPresenter
   let mockLobbyInterface: ICommandInterface
   let gameLobbyDataProvider: IGameLobbyDataProvider
+  let fetcher: IFetch
 
   beforeEach(() => {
     mockLobbyInterface = {
       giveCommand: jest.fn(),
-      watchForCommands: jest.fn(),
-      stopWatchingForCommands: jest.fn(),
+      start: jest.fn(),
     }
     gameLobbyDataProvider = {
       getJoinableGames: jest.fn().mockReturnValue([]),
       addSubscriber: jest.fn(),
       removeSubscriber: jest.fn(),
       getGameByHostId: jest.fn(),
+      getGameByPlayerId: jest.fn(),
     }
-    lobbyPresenter = new GameLobbyPresenter(mockLobbyInterface, gameLobbyDataProvider)
+    fetcher = {
+      get: jest.fn(),
+      post: jest.fn(),
+    }
+
+    lobbyPresenter = new GameLobbyPresenter(mockLobbyInterface, gameLobbyDataProvider, fetcher)
   })
 
   it('Should send a game created by host command when the host creates a game', () => {

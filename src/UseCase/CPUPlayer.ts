@@ -66,9 +66,14 @@ class CPUPlayer extends Player implements ISubscriber {
   }
 
   public update(): void {
+    console.log('UPDATED: ', this.getName())
     if (this.isTurn()) {
+      console.log('TAKING TURN: ', this.getName())
       new Promise((r) => setTimeout(r, PAUSE_DURATION_AFTER_TRICK)).then(() => {
-        this.takeTurn()
+        if (this.isTurn()) {
+          console.log('STILL IS TURN: ', this.getName())
+          this.takeTurn()
+        }
       })
     }
   }
@@ -79,8 +84,10 @@ class CPUPlayer extends Player implements ISubscriber {
 
   private takeTurn(): void {
     if (this.isPickerState()) {
+      console.log('PICKING OR PASSING: ', this.getName())
       this.shouldPick() ? this.pick() : this.pass()
     } else {
+      console.log('PLAYING: ', this.getName())
       this.play()
     }
   }
@@ -130,6 +137,7 @@ class CPUPlayer extends Player implements ISubscriber {
   }
 
   private bury(round: IReadOnlyRound): void {
+    console.log('BURYING: ', this.getName())
     const player = round.getCurrentTurnPlayer()
     if (!player) return
     const playableCards = player.getPlayableCardIds()
@@ -143,11 +151,19 @@ class CPUPlayer extends Player implements ISubscriber {
         cards: [highestValueCardId, secondHighestValueCardId],
       },
     }
+    console.log('BURIED: ', [highestValueCardId, secondHighestValueCardId])
     this.commandInterface.giveCommand(buryCommand)
   }
 
   private pass(): void {
-    this.commandInterface.giveCommand({ name: 'pass', params: null })
+    console.log('PASSED: ', this.getName())
+    this.commandInterface.giveCommand({
+      name: 'pass',
+      params: {
+        player: this.getName(),
+        date: Date.now(),
+      },
+    })
   }
 
   private play(): void {
@@ -164,6 +180,7 @@ class CPUPlayer extends Player implements ISubscriber {
               : player.getPlayableCardIds()[0],
           },
         }
+        console.log('PLAY COMMAND: ', JSON.stringify(playCommand))
         this.commandInterface.giveCommand(playCommand)
       }
     }

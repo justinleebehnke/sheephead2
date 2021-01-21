@@ -9,31 +9,37 @@ import RemovePlayerCommand from './CommandTypes/RemovePlayerCommand'
 import UniqueIdentifier from '../Utilities/UniqueIdentifier'
 import StartGameCommand from './CommandTypes/StartGameCommand'
 import GamePresenter from './GamePresenter/GamePresenter'
-import Game from '../Entities/Game'
-import CPUPlayer from '../UseCase/CPUPlayer'
-import LocalGameCommandInterface from './LocalGameCommandInterface'
 import AddPlayerCommand from './CommandTypes/AddPlayerCommand'
+import IFetch from './Communicators/IFetch'
+import { gameCommandInterfaceFactorMethod } from '../UseCase/CommandInterfaceFactory'
+import ICommandObject from './ICommandObject'
+import GameManager from '../UseCase/GameManager'
+import RandomName from '../UseCase/RandomName'
 
 class GameLobbyPresenter implements IGameLobbyPresenter, ISubscriber {
   private commandInterface: ICommandInterface
   private localPlayer!: PlayerDTO
   private gameLobbyDataProvider: IGameLobbyDataProvider
   private view: ISubscriber | undefined
+  private fetcher: IFetch
 
-  constructor(commandInterface: ICommandInterface, gameLobbyDataProvider: IGameLobbyDataProvider) {
+  constructor(
+    commandInterface: ICommandInterface,
+    gameLobbyDataProvider: IGameLobbyDataProvider,
+    fetcher: IFetch
+  ) {
     this.commandInterface = commandInterface
     this.gameLobbyDataProvider = gameLobbyDataProvider
-    this.commandInterface.watchForCommands()
     this.gameLobbyDataProvider.addSubscriber(this)
     this.createLocalPlayerFromLocalStorage()
+    this.fetcher = fetcher
   }
 
   public getGamePresenter(): GamePresenter {
     const game = this.gameLobbyDataProvider.getGameByPlayerId(this.getLocalPlayerId())?.getGame()
     if (game) {
-      const commandInterface: ICommandInterface = this.getGameCommandInterface(game)
       return new GamePresenter(
-        commandInterface,
+        gameCommandInterfaceFactorMethod(game),
         this.getLocalPlayerId(),
         game,
         this.commandInterface
@@ -52,19 +58,6 @@ class GameLobbyPresenter implements IGameLobbyPresenter, ISubscriber {
       },
     }
     this.commandInterface.giveCommand(command)
-  }
-
-  private getGameCommandInterface(game: Game): ICommandInterface {
-    const players = game.getPlayers()
-    if (
-      players.every(
-        (player) =>
-          player instanceof CPUPlayer || player.getId() === this.getLocalPlayerId().getId()
-      )
-    ) {
-      return new LocalGameCommandInterface(game)
-    }
-    throw Error('Cannot start game with non CPU Players yet')
   }
 
   private createLocalPlayerFromLocalStorage(): void {
@@ -152,6 +145,7 @@ class GameLobbyPresenter implements IGameLobbyPresenter, ISubscriber {
 
   setView(gameLobbyView: ISubscriber): void {
     this.view = gameLobbyView
+    this.commandInterface.start()
   }
 
   unSetView(): void {
@@ -171,7 +165,9 @@ class GameLobbyPresenter implements IGameLobbyPresenter, ISubscriber {
   }
 
   public startGame(firstDealerIndex: number): void {
-    const command: StartGameCommand = {
+    const commandsToExecute: ICommandObject[] = this.addCPUPlayerToGameIfNeeded()
+    console.log('commandsToExecute', commandsToExecute)
+    const startGameCommand: StartGameCommand = {
       name: 'startGame',
       params: {
         firstDealerIndex:
@@ -180,7 +176,43 @@ class GameLobbyPresenter implements IGameLobbyPresenter, ISubscriber {
         shuffleSeed: Date.now(),
       },
     }
-    this.commandInterface.giveCommand(command)
+    commandsToExecute.push(startGameCommand)
+    commandsToExecute.forEach((command) => {
+      this.commandInterface.giveCommand(command)
+    })
+  }
+
+  private addCPUPlayerToGameIfNeeded(): AddPlayerCommand[] {
+    const result: AddPlayerCommand[] = []
+    const gameManager: GameManager | undefined = this.gameLobbyDataProvider.getGameByHostId(
+      this.getLocalPlayerId()
+    )
+    if (gameManager) {
+      const players = gameManager.getPlayers()
+      const namesToAvoid = players.map((player) => player.getName())
+      let numCPUPlayersNeeded = 4 - gameManager.getPlayers().length
+
+      while (numCPUPlayersNeeded > 0) {
+        numCPUPlayersNeeded--
+        const randomName = new RandomName(namesToAvoid).getName()
+        const cpuPlayerDTO: PlayerDTO = {
+          getId: () => new UniqueIdentifier(),
+          getName: () => `${randomName} (CPU)`,
+        }
+        namesToAvoid.push(randomName)
+        gameManager.addPlayer(cpuPlayerDTO)
+        result.push({
+          name: 'addPlayer',
+          params: {
+            hostId: this.getLocalPlayerId().getId(),
+            playerId: cpuPlayerDTO.getId().getId(),
+            playerName: cpuPlayerDTO.getName(),
+          },
+        })
+      }
+    }
+
+    return result
   }
 
   public leaveGame(): void {

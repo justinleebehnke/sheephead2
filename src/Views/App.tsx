@@ -10,7 +10,8 @@ function App(): ReactElement {
   const gameLobby = new GameLobby()
   const lobbyPresenter = new GameLobbyPresenter(
     new LobbyCommandProxy(new ServerCommunicator(), gameLobby),
-    gameLobby
+    gameLobby,
+    new ServerCommunicator()
   )
   return (
     <section>
