@@ -297,4 +297,39 @@ describe('Game Presenter', () => {
   })
 })
 
+describe('At the end of a trick', () => {
+  it('Should pause before the end of a trick', () => {
+    // the presenter should take in a constructor a time delay on construction
+
+    // what are the test cases?
+
+    // after a card is played there should be a short delay
+
+    // after the trick has ended there should be a short delay
+
+    // after the last trick ends, there should be a shorter delay before the end of game report appears
+
+    // So how will I be able to do this
+
+    // it seems like the presenter should be able to store a list of things that have happened that need delays before they show up
+
+    // so the CPU Players don't play until they have their turn
+
+    // so like we have a queue of events
+    // and the timer resets after each event has happened to let the next event happen
+
+    // when a card is played
+    // then the next step
+
+    // if I am at the end of a trick
+    // and I ask for
+    // there is a timer that starts
+    // and nothing is shown..
+    // or whenever a card is played
+    // a timer is set
+    // or a list of timers have to be
+    expect(true).toBe(false)
+  })
+})
+
 export {}
