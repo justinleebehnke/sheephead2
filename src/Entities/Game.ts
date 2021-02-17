@@ -1,12 +1,11 @@
 import BellePlaineRulesCardRanker from './BellePlaineRulesCardRanker'
-import IObservable from './IObservable'
 import IReadOnlyGameModel from './ReadOnlyEntities/IReadOnlyGameModel'
 import ISubscriber from './ISubscriber'
 import Player from './Player'
 import Round from './Round/Round'
 import UniqueIdentifier from '../Utilities/UniqueIdentifier'
 
-class Game implements ISubscriber, IObservable, IReadOnlyGameModel {
+class Game implements ISubscriber, IReadOnlyGameModel {
   private players: Player[]
   private currentDealer: number
   private currentRound: Round | null
