@@ -4,7 +4,8 @@ import GamePresenter from '../../InterfaceAdapters/GamePresenter/GamePresenter'
 import Hand from './Hand'
 import ISubscriber from '../../Entities/ISubscriber'
 import PassOrPick from './PassOrPick'
-import PlayerLayout from './PlayerLayout'
+import PlayerLayout from './PlayerLayout/PlayerLayout'
+import PlayerLayoutDisplayData from './PlayerLayout/PlayerLayoutDisplayData'
 
 type Props = {
   presenter: GamePresenter
@@ -20,13 +21,20 @@ class GameBoard extends Component<Props> implements ISubscriber {
   }
 
   render() {
+    const allPlayerData: PlayerLayoutDisplayData = {
+      dataForLocalPlayer: this.props.presenter.getDataForLocalPlayer(),
+      dataForPlayerAcross: this.props.presenter.getDataForPlayerAcross(),
+      dataForPlayerToLeft: this.props.presenter.getDataForPlayerToLeft(),
+      dataForPlayerToRight: this.props.presenter.getDataForPlayerToRight(),
+    }
+
     return (
       this.props.presenter && (
         <div>
           {this.props.presenter.isShowingPassOrPickForm() && (
             <PassOrPick presenter={this.props.presenter} />
           )}
-          <PlayerLayout presenter={this.props.presenter} />
+          <PlayerLayout allPlayerData={allPlayerData} />
           <Hand presenter={this.props.presenter} />
           {this.props.presenter.isShowEndOfRoundReport() && (
             <EndOfRoundReport presenter={this.props.presenter} />
