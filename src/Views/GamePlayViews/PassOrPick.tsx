@@ -2,13 +2,8 @@ import React, { Component, ReactElement } from 'react'
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
+import PassOrPickViewData from './PassOrPickViewData'
 import SelectableCardHand from './SelectableCardHand'
-
-interface PassOrPickViewData {
-  isShowingPassOrPickForm: boolean
-  isPicking: boolean
-  hand: string[]
-}
 
 interface PassOrPickPresenter {
   bury(cardIds: string[]): void

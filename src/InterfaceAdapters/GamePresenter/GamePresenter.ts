@@ -1,5 +1,6 @@
 import Card from '../../Entities/Card'
 import EndOfRoundData from '../../Entities/Round/EndOfRoundReportData'
+import GameBoardViewData from '../../Views/GamePlayViews/GameBoardViewData'
 import ICommandInterface from '../ICommandInterface'
 import IReadOnlyGameModel from '../../Entities/ReadOnlyEntities/IReadOnlyGameModel'
 import IReadOnlyRound from '../../Entities/ReadOnlyEntities/IReadOnlyRound'
@@ -42,6 +43,22 @@ class GamePresenter implements ISubscriber {
   public update(): void {
     this._isLoading = false
     this.view?.update()
+  }
+
+  public getGameBoardViewData(): GameBoardViewData {
+    return {
+      allPlayerData: {
+        dataForLocalPlayer: this.getDataForLocalPlayer(),
+        dataForPlayerAcross: this.getDataForPlayerAcross(),
+        dataForPlayerToLeft: this.getDataForPlayerToLeft(),
+        dataForPlayerToRight: this.getDataForPlayerToRight(),
+      },
+      passOrPickViewData: {
+        isPicking: this.isPicking(),
+        isShowingPassOrPickForm: this.isShowingPassOrPickForm(),
+        hand: this.getHand(),
+      },
+    }
   }
 
   public pass(): void {
