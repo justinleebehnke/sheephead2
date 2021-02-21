@@ -1,10 +1,8 @@
-import EndOfRoundData from '../../Entities/Round/EndOfRoundReportData'
 import GameBoardViewData from '../../Views/GamePlayViews/GameBoardViewData'
 import ICommandInterface from '../ICommandInterface'
 import IGameBoardModel from '../IGameBoardModel'
 import IGameBoardPresenter from '../../Views/GamePlayViews/IGameBoardPresenter'
 import ISubscriber from '../../Entities/ISubscriber'
-import PlayerData from '../../Views/GamePlayViews/EndOfRoundReport/PlayerData'
 
 class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
   private readonly commandInterface: ICommandInterface
@@ -18,6 +16,11 @@ class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
   }
 
   public update(): void {
+    // when I call update
+    // then I should ask my model for everything that I need to build a GameBoardViewData
+    // then I should compare it to the most recent one in the queue
+    // if they are different, then I should update it to the new one
+    // otherwise I should just throw it away
     throw new Error('Method not implemented.')
   }
 
@@ -30,19 +33,7 @@ class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
     throw new Error('Method not implemented.')
   }
 
-  public getEndOfRoundReport(): EndOfRoundData | undefined {
-    throw new Error('Method not implemented.')
-  }
-
   public getGameBoardViewData(): GameBoardViewData {
-    throw new Error('Method not implemented.')
-  }
-
-  public getPickerIndex(): number | undefined {
-    throw new Error('Method not implemented.')
-  }
-
-  public getPlayersData(): PlayerData[] {
     throw new Error('Method not implemented.')
   }
 
