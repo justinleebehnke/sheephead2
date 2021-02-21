@@ -1,11 +1,11 @@
 import React, { Component, Fragment } from 'react'
 import Button from 'react-bootstrap/esm/Button'
-import GamePresenter from '../../InterfaceAdapters/GamePresenter/GamePresenter'
 import SelectAbleCard from './SelectAbleCard'
+import SelectableCardHandData from './SelectableCardHandData'
 import './SelectableCardHand.css'
 
 type Props = {
-  presenter: GamePresenter
+  selectableCardHandData: SelectableCardHandData
 }
 
 type State = {
@@ -18,14 +18,14 @@ class SelectableCardHand extends Component<Props, State> {
 
   render() {
     const setOfSelectedCardIds: Set<string> = new Set(this.state.selectedCardIds)
-    const { presenter } = this.props
-    const isShowBury = presenter.isPicking()
+    const { hand, isPicking } = this.props.selectableCardHandData
+    const isShowBury = isPicking
 
     return (
       <Fragment>
         <div className='selectableCardHand'>
           <div className={`selectableCardHand-hand ${isShowBury ? '' : 'short'}`}>
-            {presenter.getHand().map((cardId) => (
+            {hand.map((cardId) => (
               <SelectAbleCard
                 key={cardId}
                 isSelected={setOfSelectedCardIds.has(cardId)}
@@ -66,9 +66,8 @@ class SelectableCardHand extends Component<Props, State> {
   }
 
   burySelectedCards = (): void => {
-    const { presenter } = this.props
     const { selectedCardIds } = this.state
-    presenter.bury(selectedCardIds)
+    this.props.selectableCardHandData.bury(selectedCardIds)
   }
 }
 

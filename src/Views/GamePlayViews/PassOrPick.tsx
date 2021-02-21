@@ -2,8 +2,9 @@ import React, { Component, ReactElement } from 'react'
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
-import SelectableCardHand from './SelectableCardHand'
 import GamePresenter from '../../InterfaceAdapters/GamePresenter/GamePresenter'
+import SelectableCardHand from './SelectableCardHand'
+import SelectableCardHandData from './SelectableCardHandData'
 
 type Props = {
   presenter: GamePresenter
@@ -61,7 +62,12 @@ class PassOrPick extends Component<Props> {
 
   renderHand = (): ReactElement => {
     const { presenter } = this.props
-    return <SelectableCardHand presenter={presenter} />
+    const selectableCardHandData: SelectableCardHandData = {
+      bury: presenter.bury,
+      hand: presenter.getHand(),
+      isPicking: presenter.isPicking(),
+    }
+    return <SelectableCardHand selectableCardHandData={selectableCardHandData} />
   }
 }
 
