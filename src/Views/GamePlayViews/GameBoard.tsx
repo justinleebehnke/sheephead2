@@ -33,10 +33,24 @@ class GameBoard extends Component<Props> implements ISubscriber {
       this.props.presenter && (
         <div>
           {this.props.presenter.isShowingPassOrPickForm() && (
-            <PassOrPick presenter={this.props.presenter} />
+            <PassOrPick
+              presenter={this.props.presenter}
+              data={{
+                isPicking: this.props.presenter.isPicking(),
+                isShowingPassOrPickForm: this.props.presenter.isShowingPassOrPickForm(),
+                hand: this.props.presenter.getHand(),
+              }}
+            />
           )}
           <PlayerLayout allPlayerData={allPlayerData} />
-          <Hand presenter={this.props.presenter} />
+          <Hand
+            presenter={this.props.presenter}
+            data={{
+              isTurn: this.props.presenter.getDataForLocalPlayer().isTurn,
+              playableCardIds: Array.from(this.props.presenter.getPlayableCardIds()),
+              hand: this.props.presenter.getHand(),
+            }}
+          />
           {this.props.presenter.isShowEndOfRoundReport() && this.renderEndOfRoundReport()}
         </div>
       )

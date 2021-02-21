@@ -1,19 +1,29 @@
 import { Component } from 'react'
 import Card from './Card'
-import GamePresenter from '../../InterfaceAdapters/GamePresenter/GamePresenter'
 import './Hand.css'
 
+interface LocalPlayerHandViewData {
+  isTurn: boolean
+  playableCardIds: string[]
+  hand: string[]
+}
+
+interface HandPresenter {
+  play(cardId: string): void
+}
+
 type Props = {
-  presenter: GamePresenter
+  presenter: HandPresenter
+  data: LocalPlayerHandViewData
 }
 
 class Hand extends Component<Props> {
   render() {
-    if (this.props.presenter.getDataForLocalPlayer().isTurn) {
-      const playAbleCards: Set<string> = this.props.presenter.getPlayableCardIds()
+    if (this.props.data.isTurn) {
+      const playAbleCards: Set<string> = new Set(this.props.data.playableCardIds)
       return (
         <div id='hand'>
-          {this.props.presenter.getHand().map((cardName) => (
+          {this.props.data.hand.map((cardName) => (
             <Card
               key={cardName}
               isPlayable={playAbleCards.has(cardName)}
@@ -39,7 +49,7 @@ class Hand extends Component<Props> {
     }
     return (
       <div id='hand'>
-        {this.props.presenter.getHand().map((cardName) => (
+        {this.props.data.hand.map((cardName) => (
           <Card key={cardName} isPlayable={false} card={cardName} play={() => {}} />
         ))}
       </div>

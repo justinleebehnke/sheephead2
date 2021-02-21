@@ -2,21 +2,32 @@ import React, { Component, ReactElement } from 'react'
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
-import GamePresenter from '../../InterfaceAdapters/GamePresenter/GamePresenter'
 import SelectableCardHand from './SelectableCardHand'
-import SelectableCardHandData from './SelectableCardHandData'
+
+interface PassOrPickViewData {
+  isShowingPassOrPickForm: boolean
+  isPicking: boolean
+  hand: string[]
+}
+
+interface PassOrPickPresenter {
+  bury(cardIds: string[]): void
+  pass(): void
+  pick(): void
+}
 
 type Props = {
-  presenter: GamePresenter
+  presenter: PassOrPickPresenter
+  data: PassOrPickViewData
 }
 
 class PassOrPick extends Component<Props> {
   render() {
     return (
-      <Modal show={this.props.presenter.isShowingPassOrPickForm()}>
+      <Modal show={this.props.data.isShowingPassOrPickForm}>
         <Modal.Header>
           <Modal.Title className='center'>
-            {this.props.presenter.isPicking() ? 'Choose 2 Cards to Bury' : 'Pass or Pick'}
+            {this.props.data.isPicking ? 'Choose 2 Cards to Bury' : 'Pass or Pick'}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -31,7 +42,7 @@ class PassOrPick extends Component<Props> {
 
   renderActions = (): ReactElement => {
     const { presenter } = this.props
-    if (!this.props.presenter.isPicking()) {
+    if (!this.props.data.isPicking) {
       return (
         <div className='controls'>
           <span>
@@ -61,14 +72,8 @@ class PassOrPick extends Component<Props> {
   }
 
   renderHand = (): ReactElement => {
-    const { presenter } = this.props
-    const selectableCardHandData: SelectableCardHandData = {
-      hand: presenter.getHand(),
-      isPicking: presenter.isPicking(),
-    }
-    return (
-      <SelectableCardHand presenter={presenter} selectableCardHandData={selectableCardHandData} />
-    )
+    const { data, presenter } = this.props
+    return <SelectableCardHand presenter={presenter} selectableCardHandData={data} />
   }
 }
 
