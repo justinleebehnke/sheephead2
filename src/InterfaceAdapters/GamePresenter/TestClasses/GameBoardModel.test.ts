@@ -1,9 +1,7 @@
 import BellePlaineRulesCardRanker from '../../../Entities/BellePlaineRulesCardRanker'
 import Card from '../../../Entities/Card'
 import CardPlayedByData from '../../../Entities/DataStructures/CardPlayedByData'
-import GamePresenter from '../GamePresenter'
-import ICommandInterface from '../../ICommandInterface'
-import ICommandObject from '../../ICommandObject'
+import GameBoardModel from '../GameBoardModel'
 import IReadOnlyGameModel from '../../../Entities/ReadOnlyEntities/IReadOnlyGameModel'
 import IReadOnlyRound from '../../../Entities/ReadOnlyEntities/IReadOnlyRound'
 import IReadOnlyTrick from '../../../Entities/ReadOnlyEntities/IReadOnlyTrick'
@@ -15,12 +13,11 @@ import UniqueIdentifier from '../../../Utilities/UniqueIdentifier'
 
 const cardRanker = new BellePlaineRulesCardRanker()
 
-describe('Game Presenter', () => {
-  let mockCommandInterface: ICommandInterface
+describe('Game Board Model', () => {
   let localPlayerId: UniqueIdentifier
-  let mockGameView: ISubscriber
+  let mockSubscriber: ISubscriber
   let mockReadOnlyGameModel: IReadOnlyGameModel
-  let presenter: GamePresenter
+  let model: GameBoardModel
   let round: IReadOnlyRound
   let trick: IReadOnlyTrick
   let trickData: TrickData
@@ -39,8 +36,7 @@ describe('Game Presenter', () => {
 
   beforeEach(() => {
     localPlayerId = new UniqueIdentifier()
-    mockCommandInterface = { giveCommand: jest.fn() }
-    mockGameView = { update: jest.fn() }
+    mockSubscriber = { update: jest.fn() }
 
     player2Id = new UniqueIdentifier()
     player3Id = new UniqueIdentifier()
@@ -111,7 +107,7 @@ describe('Game Presenter', () => {
       pick: jest.fn(),
       addSubscriber: jest.fn(),
       removeSubscriber: jest.fn(),
-      updateSubscribers: jest.fn().mockImplementation(() => presenter.update()),
+      updateSubscribers: jest.fn().mockImplementation(() => model.update()),
       getIndexOfPlayerById: jest.fn().mockImplementation((id: UniqueIdentifier) => {
         if (id.equals(localPlayerId)) {
           return 0
@@ -150,70 +146,27 @@ describe('Game Presenter', () => {
       getCurrentRound: jest.fn().mockReturnValue(round),
     }
 
-    presenter = new GamePresenter(mockCommandInterface, localPlayerId, mockReadOnlyGameModel)
-    presenter.addSubscriber(mockGameView)
+    model = new GameBoardModel(localPlayerId, mockReadOnlyGameModel)
+    model.addSubscriber(mockSubscriber)
   })
 
-  it('Should send a pass command if someone clicks the pass button', () => {
-    presenter.pass()
-    const passCommand: ICommandObject = {
-      name: 'pass',
-      params: null,
-    }
-    expect(mockCommandInterface.giveCommand).toHaveBeenCalledWith(passCommand)
-  })
-
-  it('Should update the view whenever something interesting happens', () => {
-    presenter.pick()
+  it('Should update the subscriber whenever something interesting happens', () => {
+    model.pick()
     expect(mockReadOnlyGameModel.pick).toHaveBeenCalled()
-    expect(mockGameView.update).toHaveBeenCalled()
+    expect(mockSubscriber.update).toHaveBeenCalled()
   })
 
   it("Should have the ability to get the local player's hand", () => {
-    const cardsInHand: string[] = presenter.getHand()
+    const cardsInHand: string[] = model.getHand()
     expect(cardsInHand).toEqual(['qc', '7d', 'qh', 'qd', 'jc', 'as'])
   })
 
-  it('Should send a command when the player buries', () => {
-    presenter.pick()
-    presenter.bury(['qc', '7d'])
-    const buryCommand: ICommandObject = {
-      name: 'bury',
-      params: {
-        cards: ['qc', '7d'],
-      },
-    }
-    expect(mockCommandInterface.giveCommand).toHaveBeenCalledWith(buryCommand)
-  })
-
-  it('Should update the view whenever the model updates the presenter', () => {
+  it('Should update the subscriber whenever the model updates the presenter', () => {
     expect(mockReadOnlyGameModel.addSubscriber).toHaveBeenCalledTimes(1)
     mockReadOnlyGameModel.updateSubscribers()
     mockReadOnlyGameModel.updateSubscribers()
     mockReadOnlyGameModel.updateSubscribers()
-    expect(mockGameView.update).toHaveBeenCalledTimes(3)
-  })
-
-  it('Should send a play command when the user plays a card', () => {
-    presenter.play('qc')
-    const playCommand: ICommandObject = {
-      name: 'play',
-      params: {
-        card: 'qc',
-      },
-    }
-    expect(mockCommandInterface.giveCommand).toHaveBeenCalledWith(playCommand)
-  })
-
-  it('Should send a playAgain command for the local player if the decide to do so', () => {
-    presenter.playAgain()
-    const playAgain: ICommandObject = {
-      name: 'playAgain',
-      params: {
-        playerId: localPlayerId,
-      },
-    }
-    expect(mockCommandInterface.giveCommand).toHaveBeenCalledWith(playAgain)
+    expect(mockSubscriber.update).toHaveBeenCalledTimes(3)
   })
 
   it('Should figure out what to display for the player across from the local player', () => {
@@ -224,7 +177,7 @@ describe('Game Presenter', () => {
       isPicker: true,
       cardPlayed: 'ac',
     }
-    expect(presenter.getDataForPlayerAcross()).toEqual(expectedAcross)
+    expect(model.getDataForPlayerAcross()).toEqual(expectedAcross)
 
     const expectedToLeft: PlayerLayoutData = {
       name: mockPlayer2.getName(),
@@ -233,7 +186,7 @@ describe('Game Presenter', () => {
       isPicker: false,
       cardPlayed: 'turn',
     }
-    expect(presenter.getDataForPlayerToLeft()).toEqual(expectedToLeft)
+    expect(model.getDataForPlayerToLeft()).toEqual(expectedToLeft)
 
     const expectedToRight: PlayerLayoutData = {
       name: mockPlayer4.getName(),
@@ -242,7 +195,7 @@ describe('Game Presenter', () => {
       isPicker: false,
       cardPlayed: 'jd',
     }
-    expect(presenter.getDataForPlayerToRight()).toEqual(expectedToRight)
+    expect(model.getDataForPlayerToRight()).toEqual(expectedToRight)
     const expectedLocal: PlayerLayoutData = {
       name: localPlayer.getName(),
       isTurn: false,
@@ -250,32 +203,32 @@ describe('Game Presenter', () => {
       isPicker: false,
       cardPlayed: 'as',
     }
-    expect(presenter.getDataForLocalPlayer()).toEqual(expectedLocal)
+    expect(model.getDataForLocalPlayer()).toEqual(expectedLocal)
   })
 
   it('Should not update the view if the view has been cleared', () => {
     expect(mockReadOnlyGameModel.addSubscriber).toHaveBeenCalledTimes(1)
     mockReadOnlyGameModel.updateSubscribers()
     mockReadOnlyGameModel.updateSubscribers()
-    presenter.removeSubscriber()
+    model.removeSubscriber()
     mockReadOnlyGameModel.updateSubscribers()
-    expect(mockGameView.update).toHaveBeenCalledTimes(2)
+    expect(mockSubscriber.update).toHaveBeenCalledTimes(2)
   })
 
   it('Should return the correct playable cards from a hand based on a lead card', () => {
-    expect(presenter.getPlayableCardIds().length).toBe(5)
+    expect(model.getPlayableCardIds().length).toBe(5)
   })
 
   it('Should give the correct person for the picker index', () => {
-    expect(presenter.getPickerIndex()).toBe(2)
+    expect(model.getPickerIndex()).toBe(2)
   })
 
   it('Should return the players in order', () => {
-    expect(presenter.getPlayers()).toEqual([localPlayer, mockPlayer2, mockPlayer3, mockPlayer4])
+    expect(model.getPlayers()).toEqual([localPlayer, mockPlayer2, mockPlayer3, mockPlayer4])
   })
 
   it('Should return the current rounds end of round report', () => {
-    expect(presenter.getEndOfRoundReport()).toBe(undefined)
+    expect(model.getEndOfRoundReport()).toBe(undefined)
   })
 })
 

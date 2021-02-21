@@ -1,7 +1,5 @@
 import Card from '../../Entities/Card'
 import EndOfRoundData from '../../Entities/Round/EndOfRoundReportData'
-import GameBoardViewData from '../../Views/GamePlayViews/GameBoardViewData'
-import ICommandInterface from '../ICommandInterface'
 import IReadOnlyGameModel from '../../Entities/ReadOnlyEntities/IReadOnlyGameModel'
 import IReadOnlyRound from '../../Entities/ReadOnlyEntities/IReadOnlyRound'
 import ISubscriber from '../../Entities/ISubscriber'
@@ -11,18 +9,12 @@ import PlayerLayoutData from './PlayerLayoutData'
 import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
 import IGameBoardModel from '../IGameBoardModel'
 
-class GamePresenter implements ISubscriber, IGameBoardModel {
-  private commandInterface: ICommandInterface
+class GameBoardModel implements ISubscriber, IGameBoardModel {
   private localPlayerId: UniqueIdentifier
   private subscriber: ISubscriber | undefined
   private game: IReadOnlyGameModel
 
-  constructor(
-    commandInterface: ICommandInterface,
-    localPlayerId: UniqueIdentifier,
-    game: IReadOnlyGameModel
-  ) {
-    this.commandInterface = commandInterface
+  constructor(localPlayerId: UniqueIdentifier, game: IReadOnlyGameModel) {
     this.localPlayerId = localPlayerId
     this.game = game
     this.game.addSubscriber(this)
@@ -40,69 +32,9 @@ class GamePresenter implements ISubscriber, IGameBoardModel {
     this.subscriber?.update()
   }
 
-  public getGameBoardViewData(): GameBoardViewData {
-    return {
-      allPlayerData: {
-        dataForLocalPlayer: this.getDataForLocalPlayer(),
-        dataForPlayerAcross: this.getDataForPlayerAcross(),
-        dataForPlayerToLeft: this.getDataForPlayerToLeft(),
-        dataForPlayerToRight: this.getDataForPlayerToRight(),
-      },
-      passOrPickViewData: {
-        isPicking: this.isPicking(),
-        isShowingPassOrPickForm: this.isShowingPassOrPickForm(),
-        hand: this.getHand(),
-      },
-      handViewData: {
-        isTurn: this.getDataForLocalPlayer().isTurn,
-        playableCardIds: Array.from(this.getPlayableCardIds()),
-        hand: this.getHand(),
-      },
-      endOfRoundViewData: {
-        players: this.getPlayersData(),
-        pickerIndex: this.getPickerIndex(),
-        endOfRoundReport: this.getEndOfRoundReport(),
-      },
-    }
-  }
-
-  public pass(): void {
-    this.commandInterface.giveCommand({
-      name: 'pass',
-      params: null,
-    })
-  }
-
   public pick(): void {
     this.game.pick()
     this.subscriber?.update()
-  }
-
-  public bury(cards: string[]): void {
-    this.commandInterface.giveCommand({
-      name: 'bury',
-      params: {
-        cards,
-      },
-    })
-  }
-
-  public play(card: string): void {
-    this.commandInterface.giveCommand({
-      name: 'play',
-      params: {
-        card,
-      },
-    })
-  }
-
-  public playAgain(): void {
-    this.commandInterface.giveCommand({
-      name: 'playAgain',
-      params: {
-        playerId: this.localPlayerId,
-      },
-    })
   }
 
   public getHand(): string[] {
@@ -237,4 +169,4 @@ class GamePresenter implements ISubscriber, IGameBoardModel {
   }
 }
 
-export default GamePresenter
+export default GameBoardModel
