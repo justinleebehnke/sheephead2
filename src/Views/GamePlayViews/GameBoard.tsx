@@ -1,14 +1,14 @@
 import { Component, ReactElement } from 'react'
 import EndOfRoundReport from './EndOfRoundReport/EndOfRoundReport'
 import EndOfRoundViewData from './EndOfRoundReport/EndOfRoundViewData'
-import GamePresenter from '../../InterfaceAdapters/GamePresenter/GamePresenter'
 import Hand from './Hand'
+import IGameBoardPresenter from './IGameBoardPresenter'
 import ISubscriber from '../../Entities/ISubscriber'
 import PassOrPick from './PassOrPick'
 import PlayerLayout from './PlayerLayout/PlayerLayout'
 
 type Props = {
-  presenter: GamePresenter
+  presenter: IGameBoardPresenter
 }
 
 class GameBoard extends Component<Props> implements ISubscriber {
@@ -55,12 +55,7 @@ class GameBoard extends Component<Props> implements ISubscriber {
     }
 
     const endOfRoundViewData: EndOfRoundViewData = {
-      players: this.props.presenter.getPlayers().map((player) => {
-        return {
-          id: player.getId(),
-          name: player.getName(),
-        }
-      }),
+      players: this.props.presenter.getPlayersData(),
       endOfRoundReport,
       pickerIndex,
     }

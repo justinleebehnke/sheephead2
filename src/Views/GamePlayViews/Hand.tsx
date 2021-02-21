@@ -1,15 +1,12 @@
 import { Component } from 'react'
 import Card from './Card'
+import HandPresenter from './HandPresenter'
 import LocalPlayerHandViewData from './LocalPlayerHandViewData'
 import './Hand.css'
 
-interface HandPresenter {
-  play(cardId: string): void
-}
-
 type Props = {
-  presenter: HandPresenter
   data: LocalPlayerHandViewData
+  presenter: HandPresenter
 }
 
 class Hand extends Component<Props> {

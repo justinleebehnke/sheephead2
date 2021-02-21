@@ -2,14 +2,16 @@ import Card from '../../Entities/Card'
 import EndOfRoundData from '../../Entities/Round/EndOfRoundReportData'
 import GameBoardViewData from '../../Views/GamePlayViews/GameBoardViewData'
 import ICommandInterface from '../ICommandInterface'
+import IGameBoardPresenter from '../../Views/GamePlayViews/IGameBoardPresenter'
 import IReadOnlyGameModel from '../../Entities/ReadOnlyEntities/IReadOnlyGameModel'
 import IReadOnlyRound from '../../Entities/ReadOnlyEntities/IReadOnlyRound'
 import ISubscriber from '../../Entities/ISubscriber'
 import Player from '../../Entities/Player'
+import PlayerData from '../../Views/GamePlayViews/EndOfRoundReport/PlayerData'
 import PlayerLayoutData from './PlayerLayoutData'
 import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
 
-class GamePresenter implements ISubscriber {
+class GamePresenter implements ISubscriber, IGameBoardPresenter {
   private commandInterface: ICommandInterface
   private localPlayerId: UniqueIdentifier
   private view: ISubscriber | undefined
@@ -157,6 +159,15 @@ class GamePresenter implements ISubscriber {
       this.game.getPlayerByIndex(2),
       this.game.getPlayerByIndex(3),
     ]
+  }
+
+  public getPlayersData(): PlayerData[] {
+    return this.getPlayers().map((player: Player) => {
+      return {
+        name: player.getName(),
+        id: player.getId(),
+      }
+    })
   }
 
   public getEndOfRoundReport(): EndOfRoundData | undefined {
