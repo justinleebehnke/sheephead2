@@ -63,11 +63,12 @@ class PassOrPick extends Component<Props> {
   renderHand = (): ReactElement => {
     const { presenter } = this.props
     const selectableCardHandData: SelectableCardHandData = {
-      bury: presenter.bury,
       hand: presenter.getHand(),
       isPicking: presenter.isPicking(),
     }
-    return <SelectableCardHand selectableCardHandData={selectableCardHandData} />
+    return (
+      <SelectableCardHand presenter={presenter} selectableCardHandData={selectableCardHandData} />
+    )
   }
 }
 

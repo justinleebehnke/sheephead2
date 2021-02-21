@@ -5,18 +5,20 @@ import Table from 'react-bootstrap/Table'
 import AbbreviatedCard from './AbbreviatedCard'
 import CardPlayedByData from '../../../Entities/DataStructures/CardPlayedByData'
 import EndOfRoundPresenter from './EndOfRoundPresenter'
+import EndOfRoundViewData from './EndOfRoundViewData'
 import TrickData from '../../../Entities/DataStructures/TrickData'
 import './EndOfRoundReport.css'
 
 type Props = {
+  endOfRoundData: EndOfRoundViewData
   endOfGamePresenter: EndOfRoundPresenter
 }
 
 class EndOfRoundReport extends Component<Props> {
   render() {
-    const report = this.props.endOfGamePresenter.endOfRoundReport
-    const players = this.props.endOfGamePresenter.players
-    const indexOfPicker = this.props.endOfGamePresenter.pickerIndex
+    const report = this.props.endOfRoundData.endOfRoundReport
+    const players = this.props.endOfRoundData.players
+    const indexOfPicker = this.props.endOfRoundData.pickerIndex
     if (report) {
       return (
         <Modal show={true} onHide={() => {}} backdrop='static'>

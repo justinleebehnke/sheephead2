@@ -2,10 +2,12 @@ import React, { Component, Fragment } from 'react'
 import Button from 'react-bootstrap/esm/Button'
 import SelectAbleCard from './SelectAbleCard'
 import SelectableCardHandData from './SelectableCardHandData'
+import SelectableCardHandPresenter from './SelectableCardHandPresenter'
 import './SelectableCardHand.css'
 
 type Props = {
   selectableCardHandData: SelectableCardHandData
+  presenter: SelectableCardHandPresenter
 }
 
 type State = {
@@ -67,7 +69,7 @@ class SelectableCardHand extends Component<Props, State> {
 
   burySelectedCards = (): void => {
     const { selectedCardIds } = this.state
-    this.props.selectableCardHandData.bury(selectedCardIds)
+    this.props.presenter.bury(selectedCardIds)
   }
 }
 
