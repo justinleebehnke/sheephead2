@@ -16,12 +16,15 @@ class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
   }
 
   public update(): void {
+    if (this.view) {
+      this.view.update()
+    }
     // when I call update
     // then I should ask my model for everything that I need to build a GameBoardViewData
     // then I should compare it to the most recent one in the queue
     // if they are different, then I should update it to the new one
     // otherwise I should just throw it away
-    throw new Error('Method not implemented.')
+    // throw new Error('Method not implemented.')
   }
 
   public setView(view: ISubscriber): void {

@@ -30,6 +30,14 @@ class GamePresenter implements ISubscriber, IGameBoardPresenter {
     this._isLoading = false
   }
 
+  public addSubscriber(subscriber: ISubscriber): void {
+    this.setView(subscriber)
+  }
+
+  public removeSubscriber(): void {
+    this.unsetView()
+  }
+
   public setView(view: ISubscriber): void {
     this.view = view
   }
@@ -124,14 +132,13 @@ class GamePresenter implements ISubscriber, IGameBoardPresenter {
     return []
   }
 
-  public getPlayableCardIds(): Set<string> {
+  public getPlayableCardIds(): string[] {
     const localPlayer: Player | undefined = this.game.getPlayerById(this.localPlayerId)
     const leadCard: Card | undefined = this.game.getCurrentRound()?.getCurrentTrick().getLeadCard()
     if (localPlayer) {
-      return new Set(localPlayer.getPlayableCardIds(leadCard))
+      return localPlayer.getPlayableCardIds(leadCard)
     }
-    let res: Set<string> = new Set()
-    return res
+    return []
   }
 
   public getDataForPlayerToLeft(): PlayerLayoutData {

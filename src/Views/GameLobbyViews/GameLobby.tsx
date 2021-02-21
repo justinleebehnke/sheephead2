@@ -14,6 +14,7 @@ import Player from '../../Entities/Player'
 import RandomName from '../../UseCase/RandomName'
 import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
 import './GameLobby.css'
+import GameBoardPresenter from '../../InterfaceAdapters/GameBoardPresenter/GameBoardPresenter'
 
 function getRandomNumberBetweenZeroAndMax(max: number): number {
   return Math.floor(Math.random() * max)
@@ -94,10 +95,13 @@ class GameLobby extends Component<{}, State> {
       )
     )
 
-    const presenter = new GamePresenter(
+    const presenter = new GameBoardPresenter(
       new LocalGameCommandInterface(game),
-      new UniqueIdentifier(localStorage.getItem('localPlayerId') || undefined),
-      game
+      new GamePresenter(
+        new LocalGameCommandInterface(game),
+        new UniqueIdentifier(localStorage.getItem('localPlayerId') || undefined),
+        game
+      )
     )
     return <GameBoard presenter={presenter} />
   }

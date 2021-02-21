@@ -272,7 +272,7 @@ describe('Game Presenter', () => {
   })
 
   it('Should return the correct playable cards from a hand based on a lead card', () => {
-    expect(presenter.getPlayableCardIds().size).toBe(5)
+    expect(presenter.getPlayableCardIds().length).toBe(5)
   })
 
   it('Should give the correct person for the picker index', () => {
