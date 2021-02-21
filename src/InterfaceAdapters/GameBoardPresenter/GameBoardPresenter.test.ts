@@ -34,8 +34,6 @@ describe('Game Board Presenter', () => {
   })
 
   describe('Commands', () => {
-    //   play(cardId: string
-    //   playAgain(): void {
     it('Should delegate the call to bury to the command interface object it is given', () => {
       presenter.bury(['cardA', 'cardB'])
       expect(commandInterface.giveCommand).toHaveBeenCalledWith({
@@ -55,6 +53,20 @@ describe('Game Board Presenter', () => {
     it('Should delegate the call to pick to the model', () => {
       presenter.pick()
       expect(model.pick).toHaveBeenCalled()
+    })
+    it('Should delegate the call to play to the command interface object', () => {
+      presenter.play('cardA')
+      expect(commandInterface.giveCommand).toHaveBeenCalledWith({
+        name: 'play',
+        params: { card: 'cardA' },
+      })
+    })
+    it('Should delegate the call to play again to the command interface object', () => {
+      presenter.playAgain()
+      expect(commandInterface.giveCommand).toHaveBeenCalledWith({
+        name: 'playAgain',
+        params: null,
+      })
     })
   })
 })

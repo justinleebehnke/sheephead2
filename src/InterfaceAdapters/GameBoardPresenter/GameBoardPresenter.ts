@@ -65,12 +65,20 @@ class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
     this.model.pick()
   }
 
-  public play(cardId: string): void {
-    throw new Error('Method not implemented.')
+  public play(card: string): void {
+    this.commandInterface.giveCommand({
+      name: 'play',
+      params: {
+        card,
+      },
+    })
   }
 
   public playAgain(): void {
-    throw new Error('Method not implemented.')
+    this.commandInterface.giveCommand({
+      name: 'playAgain',
+      params: null,
+    })
   }
 }
 
