@@ -1,3 +1,4 @@
+import EndOfRoundViewData from './EndOfRoundReport/EndOfRoundViewData'
 import LocalPlayerHandViewData from './LocalPlayerHandViewData'
 import PassOrPickViewData from './PassOrPickViewData'
 import PlayerLayoutDisplayData from './PlayerLayout/PlayerLayoutDisplayData'
@@ -5,8 +6,8 @@ import PlayerLayoutDisplayData from './PlayerLayout/PlayerLayoutDisplayData'
 interface GameBoardViewData {
   allPlayerData: PlayerLayoutDisplayData
   handViewData: LocalPlayerHandViewData
-  isShowEndOfRoundReport: boolean
   passOrPickViewData: PassOrPickViewData
+  endOfRoundViewData: EndOfRoundViewData
 }
 
 export default GameBoardViewData

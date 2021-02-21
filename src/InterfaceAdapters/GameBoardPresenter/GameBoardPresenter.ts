@@ -25,6 +25,7 @@ class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
     this.view = view
     this.view.update()
   }
+
   public unsetView(): void {
     throw new Error('Method not implemented.')
   }
@@ -32,16 +33,16 @@ class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
   public getEndOfRoundReport(): EndOfRoundData | undefined {
     throw new Error('Method not implemented.')
   }
+
   public getGameBoardViewData(): GameBoardViewData {
     throw new Error('Method not implemented.')
   }
+
   public getPickerIndex(): number | undefined {
     throw new Error('Method not implemented.')
   }
+
   public getPlayersData(): PlayerData[] {
-    throw new Error('Method not implemented.')
-  }
-  public isShowingPassOrPickForm(): boolean {
     throw new Error('Method not implemented.')
   }
 

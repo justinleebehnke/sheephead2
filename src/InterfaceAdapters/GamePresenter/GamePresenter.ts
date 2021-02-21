@@ -65,7 +65,11 @@ class GamePresenter implements ISubscriber, IGameBoardPresenter {
         playableCardIds: Array.from(this.getPlayableCardIds()),
         hand: this.getHand(),
       },
-      isShowEndOfRoundReport: this.isShowEndOfRoundReport(),
+      endOfRoundViewData: {
+        players: this.getPlayersData(),
+        pickerIndex: this.getPickerIndex(),
+        endOfRoundReport: this.getEndOfRoundReport(),
+      },
     }
   }
 
@@ -171,7 +175,9 @@ class GamePresenter implements ISubscriber, IGameBoardPresenter {
   }
 
   public getEndOfRoundReport(): EndOfRoundData | undefined {
-    return this.game.getCurrentRound()?.getEndOfRoundReport()
+    return this.isShowEndOfRoundReport()
+      ? this.game.getCurrentRound()?.getEndOfRoundReport()
+      : undefined
   }
 
   public getDataForLocalPlayer(): PlayerLayoutData {

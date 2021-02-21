@@ -11,7 +11,6 @@ interface IGameBoardPresenter extends PassOrPickPresenter, HandPresenter, EndOfR
   getGameBoardViewData(): GameBoardViewData
   getPickerIndex(): number | undefined
   getPlayersData(): PlayerData[]
-  isShowingPassOrPickForm(): boolean
   setView(view: ISubscriber): void
   unsetView(): void
 }
