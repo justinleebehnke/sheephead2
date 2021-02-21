@@ -7,18 +7,6 @@ import ISubscriber from '../../Entities/ISubscriber'
 import PassOrPick from './PassOrPick'
 import PlayerLayout from './PlayerLayout/PlayerLayout'
 
-// what this guy does
-// is he gives me everything that I need to do this stuff...
-// a delayed update queue is not going to work...
-// I actually need the game presenter to return this on command
-// and also to update me when it changes
-// but I also need it to be able to give me this information
-// and THEN
-// I will modify the game presenter
-// so that it uses a queue to delay updating this information and update me as it changes
-// and then finally I can remove the pausing from the system to try and make this work correctly
-// so is does this mean I need a new kind of presenter??
-
 type Props = {
   presenter: GamePresenter
 }
@@ -33,27 +21,26 @@ class GameBoard extends Component<Props> implements ISubscriber {
   }
 
   render() {
+    return this.props.presenter && this.renderBoard()
+  }
+
+  private renderBoard(): ReactElement {
     return (
-      this.props.presenter && (
-        <div>
-          {this.props.presenter.isShowingPassOrPickForm() && (
-            <PassOrPick
-              presenter={this.props.presenter}
-              data={this.props.presenter.getGameBoardViewData().passOrPickViewData}
-            />
-          )}
-          <PlayerLayout allPlayerData={this.props.presenter.getGameBoardViewData().allPlayerData} />
-          <Hand
+      <div>
+        {this.props.presenter.isShowingPassOrPickForm() && (
+          <PassOrPick
             presenter={this.props.presenter}
-            data={{
-              isTurn: this.props.presenter.getDataForLocalPlayer().isTurn,
-              playableCardIds: Array.from(this.props.presenter.getPlayableCardIds()),
-              hand: this.props.presenter.getHand(),
-            }}
+            data={this.props.presenter.getGameBoardViewData().passOrPickViewData}
           />
-          {this.props.presenter.isShowEndOfRoundReport() && this.renderEndOfRoundReport()}
-        </div>
-      )
+        )}
+        <PlayerLayout allPlayerData={this.props.presenter.getGameBoardViewData().allPlayerData} />
+        <Hand
+          presenter={this.props.presenter}
+          data={this.props.presenter.getGameBoardViewData().handViewData}
+        />
+        {this.props.presenter.getGameBoardViewData().isShowEndOfRoundReport &&
+          this.renderEndOfRoundReport()}
+      </div>
     )
   }
 

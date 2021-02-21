@@ -1,12 +1,7 @@
 import { Component } from 'react'
 import Card from './Card'
+import LocalPlayerHandViewData from './LocalPlayerHandViewData'
 import './Hand.css'
-
-interface LocalPlayerHandViewData {
-  isTurn: boolean
-  playableCardIds: string[]
-  hand: string[]
-}
 
 interface HandPresenter {
   play(cardId: string): void

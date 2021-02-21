@@ -58,6 +58,12 @@ class GamePresenter implements ISubscriber {
         isShowingPassOrPickForm: this.isShowingPassOrPickForm(),
         hand: this.getHand(),
       },
+      handViewData: {
+        isTurn: this.getDataForLocalPlayer().isTurn,
+        playableCardIds: Array.from(this.getPlayableCardIds()),
+        hand: this.getHand(),
+      },
+      isShowEndOfRoundReport: this.isShowEndOfRoundReport(),
     }
   }
 
