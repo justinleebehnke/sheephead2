@@ -8,35 +8,84 @@ import PlayerData from '../../Views/GamePlayViews/EndOfRoundReport/PlayerData'
 import PlayerLayoutData from '../GamePresenter/PlayerLayoutData'
 
 describe('Game Board Presenter', () => {
+  let delayedUpdateDurationInMS: number
   let view: ISubscriber
   let presenter: IGameBoardPresenter
   let model: IGameBoardModel
   let commandInterface: ICommandInterface
+  let localPlayerData: PlayerLayoutData
+  let acrossPlayerData: PlayerLayoutData
+  let leftPlayerData: PlayerLayoutData
+  let rightPlayerData: PlayerLayoutData
+  let playersData: PlayerData[]
 
   beforeEach(() => {
+    delayedUpdateDurationInMS = 50
     view = {
       update: jest.fn(),
     }
+    localPlayerData = {
+      cardPlayed: 'qc',
+      isDealer: true,
+      isPicker: true,
+      isTurn: false,
+      name: 'George',
+    }
+    acrossPlayerData = {
+      cardPlayed: 'none',
+      isDealer: false,
+      isPicker: false,
+      isTurn: true,
+      name: 'David',
+    }
+    leftPlayerData = {
+      ...acrossPlayerData,
+      isTurn: false,
+      cardPlayed: 'none',
+      name: 'Luis',
+    }
+    rightPlayerData = {
+      ...leftPlayerData,
+      name: 'Eliza',
+    }
+    playersData = [
+      {
+        name: 'George',
+        id: 'georges-id',
+      },
+      {
+        name: 'Luis',
+        id: 'luis-id',
+      },
+      {
+        name: 'David',
+        id: 'davids-id',
+      },
+      {
+        name: 'Eliza',
+        id: 'eliza-id',
+      },
+    ]
     model = {
       addSubscriber: jest.fn(),
       removeSubscriber: jest.fn(),
       pick: jest.fn(),
-      getDataForLocalPlayer: jest.fn(),
-      getDataForPlayerAcross: jest.fn(),
-      getDataForPlayerToLeft: jest.fn(),
-      getDataForPlayerToRight: jest.fn(),
-      isPicking: jest.fn(),
-      isShowingPassOrPickForm: jest.fn(),
-      getHand: jest.fn(),
-      getPlayableCardIds: jest.fn(),
-      getPlayersData: jest.fn(),
-      getPickerIndex: jest.fn(),
-      getEndOfRoundReport: jest.fn(),
+      getDataForLocalPlayer: jest.fn().mockReturnValue(localPlayerData),
+      getDataForPlayerAcross: jest.fn().mockReturnValue(acrossPlayerData),
+      getDataForPlayerToLeft: jest.fn().mockReturnValue(leftPlayerData),
+      getDataForPlayerToRight: jest.fn().mockReturnValue(rightPlayerData),
+      isPicking: jest.fn().mockReturnValue(true),
+      isShowingPassOrPickForm: jest.fn().mockReturnValue(true),
+      getHand: jest.fn().mockReturnValue(['ac', 'ad']),
+      getPlayableCardIds: jest.fn().mockReturnValue(['ad']),
+      getPlayersData: jest.fn().mockReturnValue(playersData),
+      getPickerIndex: jest.fn().mockReturnValueOnce(0).mockReturnValueOnce(1).mockReturnValue(0),
+      getEndOfRoundReport: jest.fn().mockReturnValue(undefined),
     }
     commandInterface = {
       giveCommand: jest.fn(),
     }
-    presenter = new GameBoardPresenter(commandInterface, model)
+    presenter = new GameBoardPresenter(commandInterface, model, delayedUpdateDurationInMS)
   })
 
   it('Should be able to have a view subscribe to it', () => {
@@ -48,73 +97,9 @@ describe('Game Board Presenter', () => {
   })
 
   describe('Game Board View Data', () => {
-    let localPlayerData: PlayerLayoutData
-    let acrossPlayerData: PlayerLayoutData
-    let leftPlayerData: PlayerLayoutData
-    let rightPlayerData: PlayerLayoutData
-    let playersData: PlayerData[]
+    let expected1stResponse: GameBoardViewData
     beforeEach(() => {
-      localPlayerData = {
-        cardPlayed: 'qc',
-        isDealer: true,
-        isPicker: true,
-        isTurn: false,
-        name: 'George',
-      }
-      acrossPlayerData = {
-        cardPlayed: 'none',
-        isDealer: false,
-        isPicker: false,
-        isTurn: true,
-        name: 'David',
-      }
-      leftPlayerData = {
-        ...acrossPlayerData,
-        isTurn: false,
-        cardPlayed: 'none',
-        name: 'Luis',
-      }
-      rightPlayerData = {
-        ...leftPlayerData,
-        name: 'Eliza',
-      }
-      playersData = [
-        {
-          name: 'George',
-          id: 'georges-id',
-        },
-        {
-          name: 'Luis',
-          id: 'luis-id',
-        },
-        {
-          name: 'David',
-          id: 'davids-id',
-        },
-        {
-          name: 'Eliza',
-          id: 'eliza-id',
-        },
-      ]
-      model = {
-        ...model,
-        getDataForLocalPlayer: jest.fn().mockReturnValueOnce(localPlayerData),
-        getDataForPlayerAcross: jest.fn().mockReturnValueOnce(acrossPlayerData),
-        getDataForPlayerToLeft: jest.fn().mockReturnValueOnce(leftPlayerData),
-        getDataForPlayerToRight: jest.fn().mockReturnValueOnce(rightPlayerData),
-        isPicking: jest.fn().mockReturnValueOnce(true),
-        isShowingPassOrPickForm: jest.fn().mockReturnValueOnce(true),
-        getHand: jest.fn().mockReturnValueOnce(['ac', 'ad']),
-        getPlayableCardIds: jest.fn().mockReturnValueOnce(['ad']),
-        getPlayersData: jest.fn().mockReturnValueOnce(playersData),
-        getPickerIndex: jest.fn().mockReturnValueOnce(0),
-        getEndOfRoundReport: jest.fn().mockReturnValueOnce(undefined),
-      }
-      presenter = new GameBoardPresenter(commandInterface, model)
-    })
-    it('Should return exactly what the model says initially', () => {
-      const res = presenter.getGameBoardViewData()
-      const expectedResponse: GameBoardViewData = {
+      expected1stResponse = {
         allPlayerData: {
           dataForLocalPlayer: localPlayerData,
           dataForPlayerAcross: acrossPlayerData,
@@ -137,12 +122,31 @@ describe('Game Board Presenter', () => {
           players: playersData,
         },
       }
+    })
 
-      // it would be nice if the model was a system that could just tell me all of this stuff
-      // but then if the model changes it should be the same thing
-      // but then if it doesn't change
-      // if the model is updated but it remains the same from our perspective and then it is also updated to say that something else happened that is actually different, after a SINGLE interval it should update even though 2 changes occurred, the first change was meaningless
-      expect(res).toEqual(expectedResponse)
+    it('Should return exactly what the model says initially', () => {
+      const res = presenter.getGameBoardViewData()
+      expect(res).toEqual(expected1stResponse)
+    })
+    function pause(ms: number) {
+      return new Promise((resolve) => setTimeout(resolve, ms))
+    }
+    it('Should do a delayed update after there is a state change if the changes happened close together', async () => {
+      // @ts-ignore pretending that the model called update on him
+      presenter.update()
+      // @ts-ignore pretending that the model called update on him
+      presenter.update()
+      expect(presenter.getGameBoardViewData()).toEqual(expected1stResponse)
+      await pause(delayedUpdateDurationInMS / 2)
+      expect(presenter.getGameBoardViewData()).toEqual(expected1stResponse)
+      await pause(delayedUpdateDurationInMS / 2)
+      expected1stResponse.endOfRoundViewData.pickerIndex = 1
+      expect(presenter.getGameBoardViewData()).toEqual(expected1stResponse)
+      await pause(delayedUpdateDurationInMS)
+      expected1stResponse.endOfRoundViewData.pickerIndex = 0
+      expect(presenter.getGameBoardViewData()).toEqual(expected1stResponse)
+      await pause(delayedUpdateDurationInMS)
+      expect(presenter.getGameBoardViewData()).toEqual(expected1stResponse)
     })
   })
 

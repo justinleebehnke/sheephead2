@@ -16,6 +16,8 @@ import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
 import './GameLobby.css'
 import GameBoardPresenter from '../../InterfaceAdapters/GameBoardPresenter/GameBoardPresenter'
 
+const PAUSE_DURATION_FOR_GAME_EVENTS = 1300
+
 function getRandomNumberBetweenZeroAndMax(max: number): number {
   return Math.floor(Math.random() * max)
 }
@@ -101,7 +103,8 @@ class GameLobby extends Component<{}, State> {
         new LocalGameCommandInterface(game),
         new UniqueIdentifier(localStorage.getItem('localPlayerId') || undefined),
         game
-      )
+      ),
+      PAUSE_DURATION_FOR_GAME_EVENTS
     )
     return <GameBoard presenter={presenter} />
   }

@@ -1,3 +1,4 @@
+import DelayedUpdateQueue from '../../Utilities/DelayedUpdateQueue/DelayedUpdateQueue'
 import GameBoardViewData from '../../Views/GamePlayViews/GameBoardViewData'
 import ICommandInterface from '../ICommandInterface'
 import IGameBoardModel from '../IGameBoardModel'
@@ -6,37 +7,34 @@ import ISubscriber from '../../Entities/ISubscriber'
 
 class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
   private readonly commandInterface: ICommandInterface
-  private view: ISubscriber | undefined
   private readonly model: IGameBoardModel
+  private readonly gameStateDelayedUpdater: DelayedUpdateQueue<GameBoardViewData>
 
-  constructor(commandInterface: ICommandInterface, model: IGameBoardModel) {
+  constructor(commandInterface: ICommandInterface, model: IGameBoardModel, delayToUse: number) {
     this.commandInterface = commandInterface
     this.model = model
     this.model.addSubscriber(this)
+    this.gameStateDelayedUpdater = new DelayedUpdateQueue(delayToUse)
+    this.gameStateDelayedUpdater.push(this.getLiveGameBoardViewData())
   }
 
   public update(): void {
-    if (this.view) {
-      this.view.update()
+    const liveState: GameBoardViewData = this.getLiveGameBoardViewData()
+    const mostRecentState: GameBoardViewData = this.gameStateDelayedUpdater.peekLastEnqueued()
+    if (JSON.stringify(liveState) !== JSON.stringify(mostRecentState)) {
+      this.gameStateDelayedUpdater.push(liveState)
     }
-    // when I call update
-    // then I should ask my model for everything that I need to build a GameBoardViewData
-    // then I should compare it to the most recent one in the queue
-    // if they are different, then I should update it to the new one
-    // otherwise I should just throw it away
-    // throw new Error('Method not implemented.')
   }
 
   public setView(view: ISubscriber): void {
-    this.view = view
-    this.view.update()
+    this.gameStateDelayedUpdater.addSubscriber(view)
   }
 
   public unsetView(): void {
     throw new Error('Method not implemented.')
   }
 
-  public getGameBoardViewData(): GameBoardViewData {
+  private getLiveGameBoardViewData(): GameBoardViewData {
     const dataForLocalPlayer = this.model.getDataForLocalPlayer()
     const hand = this.model.getHand()
     return {
@@ -62,6 +60,10 @@ class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
         endOfRoundReport: this.model.getEndOfRoundReport(),
       },
     }
+  }
+
+  public getGameBoardViewData(): GameBoardViewData {
+    return this.gameStateDelayedUpdater.peek()
   }
 
   public bury(cards: string[]): void {
