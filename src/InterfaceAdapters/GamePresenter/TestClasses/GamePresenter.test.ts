@@ -151,25 +151,22 @@ describe('Game Presenter', () => {
     }
 
     presenter = new GamePresenter(mockCommandInterface, localPlayerId, mockReadOnlyGameModel)
-    presenter.setView(mockGameView)
+    presenter.addSubscriber(mockGameView)
   })
 
   it('Should send a pass command if someone clicks the pass button', () => {
-    expect(presenter.isLoading()).toBe(false)
     presenter.pass()
     const passCommand: ICommandObject = {
       name: 'pass',
       params: null,
     }
     expect(mockCommandInterface.giveCommand).toHaveBeenCalledWith(passCommand)
-    expect(presenter.isLoading()).toBe(true)
   })
 
   it('Should update the view whenever something interesting happens', () => {
     presenter.pick()
     expect(mockReadOnlyGameModel.pick).toHaveBeenCalled()
     expect(mockGameView.update).toHaveBeenCalled()
-    expect(presenter.isLoading()).toBe(false)
   })
 
   it("Should have the ability to get the local player's hand", () => {
@@ -178,7 +175,6 @@ describe('Game Presenter', () => {
   })
 
   it('Should send a command when the player buries', () => {
-    expect(presenter.isLoading()).toBe(false)
     presenter.pick()
     presenter.bury(['qc', '7d'])
     const buryCommand: ICommandObject = {
@@ -188,7 +184,6 @@ describe('Game Presenter', () => {
       },
     }
     expect(mockCommandInterface.giveCommand).toHaveBeenCalledWith(buryCommand)
-    expect(presenter.isLoading()).toBe(true)
   })
 
   it('Should update the view whenever the model updates the presenter', () => {
@@ -200,7 +195,6 @@ describe('Game Presenter', () => {
   })
 
   it('Should send a play command when the user plays a card', () => {
-    expect(presenter.isLoading()).toBe(false)
     presenter.play('qc')
     const playCommand: ICommandObject = {
       name: 'play',
@@ -209,11 +203,9 @@ describe('Game Presenter', () => {
       },
     }
     expect(mockCommandInterface.giveCommand).toHaveBeenCalledWith(playCommand)
-    expect(presenter.isLoading()).toBe(true)
   })
 
   it('Should send a playAgain command for the local player if the decide to do so', () => {
-    expect(presenter.isLoading()).toBe(false)
     presenter.playAgain()
     const playAgain: ICommandObject = {
       name: 'playAgain',
@@ -222,7 +214,6 @@ describe('Game Presenter', () => {
       },
     }
     expect(mockCommandInterface.giveCommand).toHaveBeenCalledWith(playAgain)
-    expect(presenter.isLoading()).toBe(true)
   })
 
   it('Should figure out what to display for the player across from the local player', () => {
@@ -266,7 +257,7 @@ describe('Game Presenter', () => {
     expect(mockReadOnlyGameModel.addSubscriber).toHaveBeenCalledTimes(1)
     mockReadOnlyGameModel.updateSubscribers()
     mockReadOnlyGameModel.updateSubscribers()
-    presenter.unsetView()
+    presenter.removeSubscriber()
     mockReadOnlyGameModel.updateSubscribers()
     expect(mockGameView.update).toHaveBeenCalledTimes(2)
   })

@@ -2,7 +2,6 @@ import Card from '../../Entities/Card'
 import EndOfRoundData from '../../Entities/Round/EndOfRoundReportData'
 import GameBoardViewData from '../../Views/GamePlayViews/GameBoardViewData'
 import ICommandInterface from '../ICommandInterface'
-import IGameBoardPresenter from '../../Views/GamePlayViews/IGameBoardPresenter'
 import IReadOnlyGameModel from '../../Entities/ReadOnlyEntities/IReadOnlyGameModel'
 import IReadOnlyRound from '../../Entities/ReadOnlyEntities/IReadOnlyRound'
 import ISubscriber from '../../Entities/ISubscriber'
@@ -10,13 +9,13 @@ import Player from '../../Entities/Player'
 import PlayerData from '../../Views/GamePlayViews/EndOfRoundReport/PlayerData'
 import PlayerLayoutData from './PlayerLayoutData'
 import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
+import IGameBoardModel from '../IGameBoardModel'
 
-class GamePresenter implements ISubscriber, IGameBoardPresenter {
+class GamePresenter implements ISubscriber, IGameBoardModel {
   private commandInterface: ICommandInterface
   private localPlayerId: UniqueIdentifier
-  private view: ISubscriber | undefined
+  private subscriber: ISubscriber | undefined
   private game: IReadOnlyGameModel
-  private _isLoading: boolean
 
   constructor(
     commandInterface: ICommandInterface,
@@ -27,32 +26,18 @@ class GamePresenter implements ISubscriber, IGameBoardPresenter {
     this.localPlayerId = localPlayerId
     this.game = game
     this.game.addSubscriber(this)
-    this._isLoading = false
   }
 
   public addSubscriber(subscriber: ISubscriber): void {
-    this.setView(subscriber)
+    this.subscriber = subscriber
   }
 
   public removeSubscriber(): void {
-    this.unsetView()
-  }
-
-  public setView(view: ISubscriber): void {
-    this.view = view
-  }
-
-  public unsetView(): void {
-    this.view = undefined
-  }
-
-  public isLoading(): boolean {
-    return this._isLoading
+    this.subscriber = undefined
   }
 
   public update(): void {
-    this._isLoading = false
-    this.view?.update()
+    this.subscriber?.update()
   }
 
   public getGameBoardViewData(): GameBoardViewData {
@@ -82,7 +67,6 @@ class GamePresenter implements ISubscriber, IGameBoardPresenter {
   }
 
   public pass(): void {
-    this._isLoading = true
     this.commandInterface.giveCommand({
       name: 'pass',
       params: null,
@@ -91,11 +75,10 @@ class GamePresenter implements ISubscriber, IGameBoardPresenter {
 
   public pick(): void {
     this.game.pick()
-    this.view?.update()
+    this.subscriber?.update()
   }
 
   public bury(cards: string[]): void {
-    this._isLoading = true
     this.commandInterface.giveCommand({
       name: 'bury',
       params: {
@@ -105,7 +88,6 @@ class GamePresenter implements ISubscriber, IGameBoardPresenter {
   }
 
   public play(card: string): void {
-    this._isLoading = true
     this.commandInterface.giveCommand({
       name: 'play',
       params: {
@@ -115,7 +97,6 @@ class GamePresenter implements ISubscriber, IGameBoardPresenter {
   }
 
   public playAgain(): void {
-    this._isLoading = true
     this.commandInterface.giveCommand({
       name: 'playAgain',
       params: {

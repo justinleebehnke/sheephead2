@@ -1,5 +1,5 @@
-import ISubscriber from '../../Entities/ISubscriber'
 import DelayedUpdateQueue from './DelayedUpdateQueue'
+import ISubscriber from '../../Entities/ISubscriber'
 
 describe('Delayed Update Queue', () => {
   it('Should accept a time to expire queue item and correctly implement the basic interface', () => {
