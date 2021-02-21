@@ -284,7 +284,7 @@ describe('Game Presenter', () => {
   })
 
   it('Should return the current rounds end of round report', () => {
-    expect(presenter.getEndOfRoundReport()).toBe(null)
+    expect(presenter.getEndOfRoundReport()).toBe(undefined)
   })
 })
 

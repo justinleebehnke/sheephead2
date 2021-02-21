@@ -34,7 +34,31 @@ class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
   }
 
   public getGameBoardViewData(): GameBoardViewData {
-    throw new Error('Method not implemented.')
+    const dataForLocalPlayer = this.model.getDataForLocalPlayer()
+    const hand = this.model.getHand()
+    return {
+      allPlayerData: {
+        dataForLocalPlayer,
+        dataForPlayerAcross: this.model.getDataForPlayerAcross(),
+        dataForPlayerToLeft: this.model.getDataForPlayerToLeft(),
+        dataForPlayerToRight: this.model.getDataForPlayerToRight(),
+      },
+      passOrPickViewData: {
+        isPicking: this.model.isPicking(),
+        isShowingPassOrPickForm: this.model.isShowingPassOrPickForm(),
+        hand,
+      },
+      handViewData: {
+        isTurn: dataForLocalPlayer.isTurn,
+        playableCardIds: Array.from(this.model.getPlayableCardIds()),
+        hand,
+      },
+      endOfRoundViewData: {
+        players: this.model.getPlayersData(),
+        pickerIndex: this.model.getPickerIndex(),
+        endOfRoundReport: this.model.getEndOfRoundReport(),
+      },
+    }
   }
 
   public bury(cards: string[]): void {
