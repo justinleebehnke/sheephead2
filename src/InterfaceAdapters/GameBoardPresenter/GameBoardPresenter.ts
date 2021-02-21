@@ -1,15 +1,18 @@
+import EndOfRoundData from '../../Entities/Round/EndOfRoundReportData'
+import GameBoardViewData from '../../Views/GamePlayViews/GameBoardViewData'
+import ICommandInterface from '../ICommandInterface'
+import IGameBoardModel from '../IGameBoardModel'
 import IGameBoardPresenter from '../../Views/GamePlayViews/IGameBoardPresenter'
 import ISubscriber from '../../Entities/ISubscriber'
-import EndOfRoundData from '../../Entities/Round/EndOfRoundReportData'
 import PlayerData from '../../Views/GamePlayViews/EndOfRoundReport/PlayerData'
-import GameBoardViewData from '../../Views/GamePlayViews/GameBoardViewData'
-import IObservable from '../../Entities/IObservable'
 
 class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
+  private readonly commandInterface: ICommandInterface
   private view: ISubscriber | undefined
-  private model: IObservable
+  private readonly model: IGameBoardModel
 
-  constructor(model: IObservable) {
+  constructor(commandInterface: ICommandInterface, model: IGameBoardModel) {
+    this.commandInterface = commandInterface
     this.model = model
     this.model.addSubscriber(this)
   }
@@ -41,18 +44,31 @@ class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
   public isShowingPassOrPickForm(): boolean {
     throw new Error('Method not implemented.')
   }
-  public bury(cardIds: string[]): void {
-    throw new Error('Method not implemented.')
+
+  public bury(cards: string[]): void {
+    this.commandInterface.giveCommand({
+      name: 'bury',
+      params: {
+        cards,
+      },
+    })
   }
+
   public pass(): void {
-    throw new Error('Method not implemented.')
+    this.commandInterface.giveCommand({
+      name: 'pass',
+      params: null,
+    })
   }
+
   public pick(): void {
-    throw new Error('Method not implemented.')
+    this.model.pick()
   }
+
   public play(cardId: string): void {
     throw new Error('Method not implemented.')
   }
+
   public playAgain(): void {
     throw new Error('Method not implemented.')
   }
