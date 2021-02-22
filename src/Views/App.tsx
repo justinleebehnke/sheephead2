@@ -1,5 +1,5 @@
-import './App.css'
 import GameLobby from './GameLobbyViews/GameLobby'
+import './App.css'
 
 function App() {
   return (
