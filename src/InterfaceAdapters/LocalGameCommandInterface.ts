@@ -42,8 +42,6 @@ class LocalGameCommandInterface implements ICommandInterface {
     } else {
       throw new Error('Method not implemented.')
     }
-
-    return new Promise(() => {}) // this is required to implement the interface
   }
 }
 
