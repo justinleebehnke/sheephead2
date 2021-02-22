@@ -58,6 +58,11 @@ describe('Online Multiplayer Game Command Interface', () => {
     expect(fetcher.get).toHaveBeenNthCalledWith(5, `${baseRoute}/${hostId}/17`)
     await pause(pollingIntervalInMilliseconds)
   })
+
+  // TODO should give the commands over to a command executor
+  // TODO that command executor should be the same one that the local system uses
+  // TODO when given a command it should post and then update the response the same way that it does when given one.
+  // TODO while waiting for a response to come back from polling it should not be able to get into a situation where it asks for the same POLL twice before a poll can answer back, so basically we want to create a test where the fetch response takes longer than a poll would normally take, just to make sure he is handling that well.
 })
 
 export {}
