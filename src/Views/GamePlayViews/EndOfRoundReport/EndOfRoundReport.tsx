@@ -3,20 +3,22 @@ import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import Table from 'react-bootstrap/Table'
 import AbbreviatedCard from './AbbreviatedCard'
-import CardPlayedByData from '../../Entities/DataStructures/CardPlayedByData'
-import GamePresenter from '../../InterfaceAdapters/GamePresenter/GamePresenter'
-import TrickData from '../../Entities/DataStructures/TrickData'
+import CardPlayedByData from '../../../Entities/DataStructures/CardPlayedByData'
+import EndOfRoundPresenter from './EndOfRoundPresenter'
+import EndOfRoundViewData from './EndOfRoundViewData'
+import TrickData from '../../../Entities/DataStructures/TrickData'
 import './EndOfRoundReport.css'
 
 type Props = {
-  presenter: GamePresenter
+  endOfRoundData: EndOfRoundViewData
+  endOfGamePresenter: EndOfRoundPresenter
 }
 
 class EndOfRoundReport extends Component<Props> {
   render() {
-    const report = this.props.presenter.getEndOfRoundReport()
-    const players = this.props.presenter.getPlayers()
-    const indexOfPicker = this.props.presenter.getPickerIndex()
+    const report = this.props.endOfRoundData.endOfRoundReport
+    const players = this.props.endOfRoundData.players
+    const indexOfPicker = this.props.endOfRoundData.pickerIndex
     if (report) {
       return (
         <Modal show={true} onHide={() => {}} backdrop='static'>
@@ -42,14 +44,14 @@ class EndOfRoundReport extends Component<Props> {
                   return (
                     <tr>
                       <td className='short'>
-                        {player.getName()}
+                        {player.name}
                         {indexOfPicker === index && <p>(Picker)</p>}
                       </td>
                       {report.tricks.map((trick) => {
                         const winningCardId = trick.cards[trick.winningCardIndex].cardId
                         const leadingCardId = trick.cards[0].cardId
                         const cardId = trick.cards.find(
-                          (card: CardPlayedByData) => card.playedByPlayerId === player.getId()
+                          (card: CardPlayedByData) => card.playedByPlayerId === player.id
                         )?.cardId
                         return (
                           <td
@@ -66,7 +68,7 @@ class EndOfRoundReport extends Component<Props> {
                         {report.tricks.reduce((total: number, trick: TrickData) => {
                           const winningCardId = trick.cards[trick.winningCardIndex].cardId
                           const cardPlayedByPlayer: CardPlayedByData | undefined = trick.cards.find(
-                            (card: CardPlayedByData) => card.playedByPlayerId === player.getId()
+                            (card: CardPlayedByData) => card.playedByPlayerId === player.id
                           )
                           if (cardPlayedByPlayer && cardPlayedByPlayer.cardId === winningCardId) {
                             return (
@@ -126,7 +128,7 @@ class EndOfRoundReport extends Component<Props> {
             <Button
               variant='primary'
               onClick={() => {
-                this.props.presenter.playAgain()
+                this.props.endOfGamePresenter.playAgain()
               }}
             >
               Play Another Round

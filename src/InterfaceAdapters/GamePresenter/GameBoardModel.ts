@@ -1,90 +1,40 @@
 import Card from '../../Entities/Card'
 import EndOfRoundData from '../../Entities/Round/EndOfRoundReportData'
-import ICommandInterface from '../ICommandInterface'
 import IReadOnlyGameModel from '../../Entities/ReadOnlyEntities/IReadOnlyGameModel'
 import IReadOnlyRound from '../../Entities/ReadOnlyEntities/IReadOnlyRound'
 import ISubscriber from '../../Entities/ISubscriber'
 import Player from '../../Entities/Player'
+import PlayerData from '../../Views/GamePlayViews/EndOfRoundReport/PlayerData'
 import PlayerLayoutData from './PlayerLayoutData'
 import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
+import IGameBoardModel from '../IGameBoardModel'
 
-class GamePresenter implements ISubscriber {
-  private commandInterface: ICommandInterface
+class GameBoardModel implements ISubscriber, IGameBoardModel {
   private localPlayerId: UniqueIdentifier
-  private view: ISubscriber | undefined
+  private subscriber: ISubscriber | undefined
   private game: IReadOnlyGameModel
-  private _isLoading: boolean
 
-  constructor(
-    commandInterface: ICommandInterface,
-    localPlayerId: UniqueIdentifier,
-    game: IReadOnlyGameModel
-  ) {
-    this.commandInterface = commandInterface
+  constructor(localPlayerId: UniqueIdentifier, game: IReadOnlyGameModel) {
     this.localPlayerId = localPlayerId
     this.game = game
     this.game.addSubscriber(this)
-    this._isLoading = false
   }
 
-  public setView(view: ISubscriber): void {
-    this.view = view
+  public addSubscriber(subscriber: ISubscriber): void {
+    this.subscriber = subscriber
   }
 
-  public unsetView(): void {
-    this.view = undefined
-  }
-
-  public isLoading(): boolean {
-    return this._isLoading
+  public removeSubscriber(): void {
+    this.subscriber = undefined
   }
 
   public update(): void {
-    this._isLoading = false
-    this.view?.update()
-  }
-
-  public pass(): void {
-    this._isLoading = true
-    this.commandInterface.giveCommand({
-      name: 'pass',
-      params: null,
-    })
+    this.subscriber?.update()
   }
 
   public pick(): void {
     this.game.pick()
-    this.view?.update()
-  }
-
-  public bury(cards: string[]): void {
-    this._isLoading = true
-    this.commandInterface.giveCommand({
-      name: 'bury',
-      params: {
-        cards,
-      },
-    })
-  }
-
-  public play(card: string): void {
-    this._isLoading = true
-    this.commandInterface.giveCommand({
-      name: 'play',
-      params: {
-        card,
-      },
-    })
-  }
-
-  public playAgain(): void {
-    this._isLoading = true
-    this.commandInterface.giveCommand({
-      name: 'playAgain',
-      params: {
-        playerId: this.localPlayerId,
-      },
-    })
+    this.subscriber?.update()
   }
 
   public getHand(): string[] {
@@ -95,14 +45,13 @@ class GamePresenter implements ISubscriber {
     return []
   }
 
-  public getPlayableCardIds(): Set<string> {
+  public getPlayableCardIds(): string[] {
     const localPlayer: Player | undefined = this.game.getPlayerById(this.localPlayerId)
     const leadCard: Card | undefined = this.game.getCurrentRound()?.getCurrentTrick().getLeadCard()
     if (localPlayer) {
-      return new Set(localPlayer.getPlayableCardIds(leadCard))
+      return localPlayer.getPlayableCardIds(leadCard)
     }
-    let res: Set<string> = new Set()
-    return res
+    return []
   }
 
   public getDataForPlayerToLeft(): PlayerLayoutData {
@@ -136,8 +85,19 @@ class GamePresenter implements ISubscriber {
     ]
   }
 
+  public getPlayersData(): PlayerData[] {
+    return this.getPlayers().map((player: Player) => {
+      return {
+        name: player.getName(),
+        id: player.getId(),
+      }
+    })
+  }
+
   public getEndOfRoundReport(): EndOfRoundData | undefined {
-    return this.game.getCurrentRound()?.getEndOfRoundReport()
+    return this.isShowEndOfRoundReport()
+      ? this.game.getCurrentRound()?.getEndOfRoundReport()
+      : undefined
   }
 
   public getDataForLocalPlayer(): PlayerLayoutData {
@@ -209,4 +169,4 @@ class GamePresenter implements ISubscriber {
   }
 }
 
-export default GamePresenter
+export default GameBoardModel

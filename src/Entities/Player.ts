@@ -24,7 +24,7 @@ class Player {
     return this.uniqueIdentifier.getId()
   }
 
-  public giveCard(card: Card) {
+  public giveCard(card: Card): void {
     this.hand.addCard(card)
   }
 

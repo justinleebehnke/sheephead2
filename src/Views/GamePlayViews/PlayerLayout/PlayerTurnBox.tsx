@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Badge from 'react-bootstrap/Badge'
-import Card from './Card'
+import Card from '../Card'
 import './PlayerTurnBox.css'
 
 type Props = {

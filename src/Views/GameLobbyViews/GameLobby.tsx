@@ -8,12 +8,15 @@ import BellePlaineRulesCardRanker from '../../Entities/BellePlaineRulesCardRanke
 import CPUPlayer from '../../UseCase/CPUPlayer'
 import Game from '../../Entities/Game'
 import GameBoard from './../GamePlayViews/GameBoard'
-import GamePresenter from '../../InterfaceAdapters/GamePresenter/GamePresenter'
+import GameBoardModel from '../../InterfaceAdapters/GamePresenter/GameBoardModel'
 import LocalGameCommandInterface from '../../InterfaceAdapters/LocalGameCommandInterface'
 import Player from '../../Entities/Player'
 import RandomName from '../../UseCase/RandomName'
 import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
 import './GameLobby.css'
+import GameBoardPresenter from '../../InterfaceAdapters/GameBoardPresenter/GameBoardPresenter'
+
+const PAUSE_DURATION_FOR_GAME_EVENTS = 1300
 
 function getRandomNumberBetweenZeroAndMax(max: number): number {
   return Math.floor(Math.random() * max)
@@ -94,10 +97,13 @@ class GameLobby extends Component<{}, State> {
       )
     )
 
-    const presenter = new GamePresenter(
+    const presenter = new GameBoardPresenter(
       new LocalGameCommandInterface(game),
-      new UniqueIdentifier(localStorage.getItem('localPlayerId') || undefined),
-      game
+      new GameBoardModel(
+        new UniqueIdentifier(localStorage.getItem('localPlayerId') || undefined),
+        game
+      ),
+      PAUSE_DURATION_FOR_GAME_EVENTS
     )
     return <GameBoard presenter={presenter} />
   }
