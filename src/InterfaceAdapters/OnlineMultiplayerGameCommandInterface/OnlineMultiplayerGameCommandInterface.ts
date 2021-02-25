@@ -32,6 +32,16 @@ class OnlineMultiplayerGameCommandInterface implements ICommandInterface {
     const response = await this.fetcher.get(
       `${this.baseRoute}/${this.hostId}/${this.indexOfNextCommand}`
     )
+    this.handleResponse(response)
+    setTimeout(() => this.getCommands(), this.pollingFrequency)
+  }
+
+  public async giveCommand(command: ICommandObject): Promise<void> {
+    const response = await this.fetcher.post(`${this.baseRoute}/${this.hostId}`, command)
+    this.handleResponse(response)
+  }
+
+  private handleResponse(response: object): void {
     if (this.isCommandCommunicatorResponse(response)) {
       if (response.indexOfNextCommand > this.indexOfNextCommand) {
         this.indexOfNextCommand = response.indexOfNextCommand
@@ -40,7 +50,6 @@ class OnlineMultiplayerGameCommandInterface implements ICommandInterface {
         this.commandExecutor.execute(newCommand)
       )
     }
-    setTimeout(() => this.getCommands(), this.pollingFrequency)
   }
 
   private isCommandCommunicatorResponse(
@@ -51,10 +60,6 @@ class OnlineMultiplayerGameCommandInterface implements ICommandInterface {
       Object.prototype.hasOwnProperty.call(response, 'indexOfNextCommand') &&
       Object.prototype.hasOwnProperty.call(response, 'newCommands')
     )
-  }
-
-  public async giveCommand(command: ICommandObject): Promise<void> {
-    throw new Error('Method not implemented.')
   }
 }
 
