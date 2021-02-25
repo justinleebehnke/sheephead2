@@ -108,6 +108,7 @@ describe('Online Multiplayer Game Command Interface', () => {
         commandExecutor
       )
     })
+
     it('Should post a command and attempt to execute the response it receives', async () => {
       expect(fetcher.get).toHaveBeenNthCalledWith(1, `${baseRoute}/${hostId}/0`)
       await pause(pollingIntervalInMilliseconds)
