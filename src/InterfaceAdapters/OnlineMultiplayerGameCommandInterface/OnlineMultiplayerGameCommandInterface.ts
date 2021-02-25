@@ -37,8 +37,7 @@ class OnlineMultiplayerGameCommandInterface implements ICommandInterface {
   }
 
   public async giveCommand(command: ICommandObject): Promise<void> {
-    const response = await this.fetcher.post(`${this.baseRoute}/${this.hostId}`, command)
-    this.handleResponse(response)
+    this.fetcher.post(`${this.baseRoute}/${this.hostId}`, command)
   }
 
   private handleResponse(response: object): void {

@@ -95,10 +95,7 @@ describe('Online Multiplayer Game Command Interface', () => {
           indexOfNextCommand: 10,
           newCommands: [],
         }),
-        post: jest.fn().mockReturnValueOnce({
-          indexOfNextCommand: 15,
-          newCommands: [{ name: 'Command 1', params: null }],
-        }),
+        post: jest.fn(),
       }
       gameCommandInterface = new OnlineMultiplayerGameCommandInterface(
         pollingIntervalInMilliseconds,
@@ -109,33 +106,14 @@ describe('Online Multiplayer Game Command Interface', () => {
       )
     })
 
-    it('Should post a command and attempt to execute the response it receives', async () => {
-      expect(fetcher.get).toHaveBeenNthCalledWith(1, `${baseRoute}/${hostId}/0`)
-      await pause(pollingIntervalInMilliseconds)
-      expect(fetcher.get).toHaveBeenNthCalledWith(2, `${baseRoute}/${hostId}/10`)
-
-      await pause(pollingIntervalInMilliseconds / 2)
+    it('Should post a command to the server immediately when it is received', async () => {
       await gameCommandInterface.giveCommand({ name: 'Command 1', params: null })
       expect(fetcher.post).toHaveBeenNthCalledWith(1, `${baseRoute}/${hostId}`, {
         name: 'Command 1',
         params: null,
       })
-
-      await pause(pollingIntervalInMilliseconds)
-      expect(fetcher.get).toHaveBeenNthCalledWith(3, `${baseRoute}/${hostId}/15`)
-      await pause(pollingIntervalInMilliseconds)
-      expect(fetcher.get).toHaveBeenNthCalledWith(4, `${baseRoute}/${hostId}/15`)
     })
   })
-
-  // TODO that command executor should be the same one that the local system uses
-  // TODO while waiting for a response to come back from polling it should not be able to get into a situation where it asks for the same POLL twice before a poll can answer back, so basically we want to create a test where the fetch response takes longer than a poll would normally take, just to make sure he is handling that well.
-
-  // What would happen if it is given a command, while it was sending a command and awaiting the response?
-
-  // it can only post one command at a time
-  // and there could be like ten that come in all at once
-  // we need to make sure that he is sending them in a way that keeps track of all that stuff flying around
 })
 
 export {}
