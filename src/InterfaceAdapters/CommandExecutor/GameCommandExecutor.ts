@@ -1,14 +1,11 @@
-import GameCommandFactory from './GameCommands/GameCommandFactory'
+import IGameCommandFactory from './GameCommands/IGameCommandFactory'
 import ICommandExecutor from './ICommandExecutor'
 import ICommandObject from '../ICommandObject'
-import IGame from './Interfaces/IGame'
 
 class GameCommandExecutor implements ICommandExecutor {
-  private readonly game: IGame
-  private readonly gameCommandFactory: GameCommandFactory
+  private readonly gameCommandFactory: IGameCommandFactory
 
-  constructor(game: IGame, gameCommandFactory: GameCommandFactory) {
-    this.game = game
+  constructor(gameCommandFactory: IGameCommandFactory) {
     this.gameCommandFactory = gameCommandFactory
   }
 

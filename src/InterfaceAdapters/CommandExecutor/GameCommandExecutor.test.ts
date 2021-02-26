@@ -1,95 +1,24 @@
 import GameCommandExecutor from './GameCommandExecutor'
-import GameCommandFactory from './GameCommands/GameCommandFactory'
-import ICommandExecutor from './ICommandExecutor'
-import ICommandObject from '../ICommandObject'
-import IGame from './Interfaces/IGame'
-import IPlayer from './Interfaces/IPlayer'
-import IRound from './Interfaces/IRound'
-import PlayCommand from '../CommandTypes/PlayCommand'
+import ICommand from './GameCommands/ICommand'
+import IGameCommandFactory from './GameCommands/IGameCommandFactory'
 
 describe('Game Command Executor', () => {
-  let game: IGame
-  let round: IRound
-  let player: IPlayer
-  let commandExecutor: ICommandExecutor
-  let gameCommandFactory: GameCommandFactory
-
+  let gameCommandFactory: IGameCommandFactory
+  let gameCommandExecutor: GameCommandExecutor
+  let command: ICommand
   beforeEach(() => {
-    player = {
-      removeCardFromHand: jest.fn().mockReturnValue({}),
+    command = {
+      execute: jest.fn(),
     }
-    round = {
-      pass: jest.fn(),
-      play: jest.fn(),
-      getCurrentTurnPlayer: jest.fn().mockReturnValue(player),
+    gameCommandFactory = {
+      getCommand: jest.fn().mockReturnValue(command),
     }
-    game = {
-      getCurrentRound: jest.fn().mockReturnValue(round),
-    }
-    gameCommandFactory = new GameCommandFactory(game)
-    commandExecutor = new GameCommandExecutor(game, gameCommandFactory)
+    gameCommandExecutor = new GameCommandExecutor(gameCommandFactory)
   })
 
-  it('Should throw an error if the command is not recognized', () => {
-    const invalidCommand = { name: 'unrecognizedName', params: null }
-    expect(() => commandExecutor.execute(invalidCommand)).toThrow(
-      `Game command is not recognized: ${JSON.stringify(invalidCommand)}`
-    )
-  })
-
-  describe('Play Command', () => {
-    let playCommand: PlayCommand
-    beforeEach(() => {
-      playCommand = { name: 'play', params: { card: 'ac' } }
-    })
-
-    it('Should correctly execute the play command', () => {
-      commandExecutor.execute(playCommand)
-      expect(player.removeCardFromHand).toHaveBeenCalledWith('ac')
-      expect(round.play).toHaveBeenCalledWith({})
-    })
-
-    it('Should throw an exception if there is no current turn player', () => {
-      round.getCurrentTurnPlayer = jest.fn().mockReturnValue(undefined)
-      game = {
-        getCurrentRound: jest.fn().mockReturnValue(round),
-      }
-      gameCommandFactory = new GameCommandFactory(game)
-      commandExecutor = new GameCommandExecutor(game, gameCommandFactory)
-      expect(() => commandExecutor.execute(playCommand)).toThrow(
-        "Cannot play because it is not anyone's turn"
-      )
-    })
-
-    it('Should throw an exception if there is no current round', () => {
-      game = {
-        getCurrentRound: jest.fn().mockReturnValue(undefined),
-      }
-      gameCommandFactory = new GameCommandFactory(game)
-      commandExecutor = new GameCommandExecutor(game, gameCommandFactory)
-      expect(() => commandExecutor.execute(playCommand)).toThrow(
-        'Cannot play because there is no current round'
-      )
-    })
-  })
-
-  describe('Pass Command', () => {
-    let passCommand: ICommandObject = { name: 'pass', params: null }
-    it('Should correctly execute the pass command', () => {
-      commandExecutor.execute(passCommand)
-      expect(round.pass).toHaveBeenCalled()
-    })
-
-    it('Should throw an exception if there is not current round', () => {
-      game = {
-        getCurrentRound: jest.fn().mockReturnValue(undefined),
-      }
-      gameCommandFactory = new GameCommandFactory(game)
-      commandExecutor = new GameCommandExecutor(game, gameCommandFactory)
-      expect(() => commandExecutor.execute(passCommand)).toThrow(
-        'Cannot pass because there is no current round'
-      )
-    })
+  it('Should call execute on the command that the game returns', () => {
+    gameCommandExecutor.execute({ name: 'hello', params: null })
+    expect(command.execute).toHaveBeenCalled()
   })
 })
 

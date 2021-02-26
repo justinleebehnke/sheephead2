@@ -1,11 +1,12 @@
 import ICommandObject from '../../ICommandObject'
-import IGame from '../Interfaces/IGame'
 import ICommand from './ICommand'
+import IGame from '../Interfaces/IGame'
+import IGameCommandFactory from './IGameCommandFactory'
 import PassCommand from './PassCommand'
 import PlayCommand from './PlayCommand'
 import PlayCommandObject from '../../CommandTypes/PlayCommand'
 
-class GameCommandFactory {
+class GameCommandFactory implements IGameCommandFactory {
   private readonly game: IGame
 
   constructor(game: IGame) {
