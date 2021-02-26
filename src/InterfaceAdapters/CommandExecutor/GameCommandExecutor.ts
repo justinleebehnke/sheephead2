@@ -1,6 +1,6 @@
-import IGameCommandFactory from './GameCommands/IGameCommandFactory'
 import ICommandExecutor from './ICommandExecutor'
 import ICommandObject from '../ICommandObject'
+import IGameCommandFactory from './GameCommands/IGameCommandFactory'
 
 class GameCommandExecutor implements ICommandExecutor {
   private readonly gameCommandFactory: IGameCommandFactory

@@ -1,5 +1,5 @@
-import ICommandObject from '../../ICommandObject'
 import ICommand from './ICommand'
+import ICommandObject from '../../ICommandObject'
 import IGame from '../Interfaces/IGame'
 import IGameCommandFactory from './IGameCommandFactory'
 import PassCommand from './PassCommand'
