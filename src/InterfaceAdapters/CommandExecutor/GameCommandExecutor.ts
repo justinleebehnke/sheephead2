@@ -13,23 +13,7 @@ class GameCommandExecutor implements ICommandExecutor {
   }
 
   public execute(command: ICommandObject): void {
-    if (command.name === 'pass') {
-      this.pass()
-    } else {
-      this.gameCommandFactory.getCommand(command).execute()
-    }
-  }
-
-  private pass(): void {
-    const round = this.game.getCurrentRound()
-    if (!round) {
-      throw Error(this.getNoRoundErrorMessage('pass'))
-    }
-    round.pass()
-  }
-
-  private getNoRoundErrorMessage(commandName: string): string {
-    return `Cannot ${commandName} because there is no current round`
+    this.gameCommandFactory.getCommand(command).execute()
   }
 }
 

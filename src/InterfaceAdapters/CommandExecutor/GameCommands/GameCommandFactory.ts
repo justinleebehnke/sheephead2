@@ -1,6 +1,7 @@
 import ICommandObject from '../../ICommandObject'
 import IGame from '../Interfaces/IGame'
 import ICommand from './ICommand'
+import PassCommand from './PassCommand'
 import PlayCommand from './PlayCommand'
 import PlayCommandObject from '../../CommandTypes/PlayCommand'
 
@@ -12,6 +13,9 @@ class GameCommandFactory {
   }
 
   public getCommand(commandDTO: ICommandObject): ICommand {
+    if (commandDTO.name === 'pass') {
+      return new PassCommand(this.game)
+    }
     if (this.isPlayCommand(commandDTO)) {
       return new PlayCommand(this.game, commandDTO.params.card)
     }
