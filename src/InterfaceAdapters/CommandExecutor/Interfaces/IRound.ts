@@ -3,6 +3,7 @@ import IPlayer from './IPlayer'
 
 interface IRound {
   getCurrentTurnPlayer(): IPlayer | undefined
+  pass(): void
   play(card: ICard): void
 }
 

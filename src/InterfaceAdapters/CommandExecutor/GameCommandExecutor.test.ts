@@ -1,5 +1,6 @@
 import GameCommandExecutor from './GameCommandExecutor'
 import ICommandExecutor from './ICommandExecutor'
+import ICommandObject from '../ICommandObject'
 import IGame from './Interfaces/IGame'
 import IPlayer from './Interfaces/IPlayer'
 import IRound from './Interfaces/IRound'
@@ -16,6 +17,7 @@ describe('Game Command Executor', () => {
       removeCardFromHand: jest.fn().mockReturnValue({}),
     }
     round = {
+      pass: jest.fn(),
       play: jest.fn(),
       getCurrentTurnPlayer: jest.fn().mockReturnValue(player),
     }
@@ -62,6 +64,24 @@ describe('Game Command Executor', () => {
       commandExecutor = new GameCommandExecutor(game)
       expect(() => commandExecutor.execute(playCommand)).toThrow(
         'Cannot play because there is no current round'
+      )
+    })
+  })
+
+  describe('Pass Command', () => {
+    let passCommand: ICommandObject = { name: 'pass', params: null }
+    it('Should correctly execute the pass command', () => {
+      commandExecutor.execute(passCommand)
+      expect(round.pass).toHaveBeenCalled()
+    })
+
+    it('Should throw an exception if there is not current round', () => {
+      game = {
+        getCurrentRound: jest.fn().mockReturnValue(undefined),
+      }
+      commandExecutor = new GameCommandExecutor(game)
+      expect(() => commandExecutor.execute(passCommand)).toThrow(
+        'Cannot pass because there is no current round'
       )
     })
   })

@@ -11,21 +11,35 @@ class GameCommandExecutor implements ICommandExecutor {
   }
 
   public execute(command: ICommandObject): void {
-    if (this.isPlayCommand(command)) {
+    if (command.name === 'pass') {
+      this.pass()
+    } else if (this.isPlayCommand(command)) {
       this.play(command)
     } else {
       throw Error(`Game command is not recognized: ${JSON.stringify(command)}`)
     }
   }
 
+  private pass(): void {
+    const round = this.game.getCurrentRound()
+    if (!round) {
+      throw Error(this.getNoRoundErrorMessage('pass'))
+    }
+    round.pass()
+  }
+
   private isPlayCommand(command: ICommandObject): command is PlayCommand {
     return command.name === 'play'
+  }
+
+  private getNoRoundErrorMessage(commandName: string): string {
+    return `Cannot ${commandName} because there is no current round`
   }
 
   private play(command: PlayCommand): void {
     const round = this.game.getCurrentRound()
     if (!round) {
-      throw Error('Cannot play because there is no current round')
+      throw Error(this.getNoRoundErrorMessage(command.name))
     }
     const player = round.getCurrentTurnPlayer()
     if (!player) {
