@@ -6,6 +6,7 @@ import IGameBoardPresenter from '../../Views/GamePlayViews/IGameBoardPresenter'
 import ISubscriber from '../../Entities/ISubscriber'
 import PlayerData from '../../Views/GamePlayViews/EndOfRoundReport/PlayerData'
 import PlayerLayoutData from '../GamePresenter/PlayerLayoutData'
+import { pause } from '../../Utilities/TestingUtilities'
 
 describe('Game Board Presenter', () => {
   let delayedUpdateDurationInMS: number
@@ -128,9 +129,7 @@ describe('Game Board Presenter', () => {
       const res = presenter.getGameBoardViewData()
       expect(res).toEqual(expected1stResponse)
     })
-    function pause(ms: number) {
-      return new Promise((resolve) => setTimeout(resolve, ms))
-    }
+
     it('Should do a delayed update after there is a state change if the changes happened close together', async () => {
       // @ts-ignore pretending that the model called update on him
       presenter.update()

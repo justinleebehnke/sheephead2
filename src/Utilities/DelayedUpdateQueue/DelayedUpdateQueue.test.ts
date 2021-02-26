@@ -1,5 +1,6 @@
 import DelayedUpdateQueue from './DelayedUpdateQueue'
 import ISubscriber from '../../Entities/ISubscriber'
+import { pause } from '../TestingUtilities'
 
 describe('Delayed Update Queue', () => {
   it('Should accept a time to expire queue item and correctly implement the basic interface', () => {
@@ -23,10 +24,6 @@ describe('Delayed Update Queue', () => {
     dQ.push('Hello')
     expect(subscriber.update).toHaveBeenCalled()
   })
-
-  function pause(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms))
-  }
 
   it('Should update all subscribers as soon as the response to peek has updated', async () => {
     const subscriber: ISubscriber = {

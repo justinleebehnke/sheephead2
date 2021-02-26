@@ -4,12 +4,16 @@ import { act } from 'react-dom/test-utils'
 import AbbreviatedCard from '../AbbreviatedCard'
 
 let container: HTMLElement | null = null
+
+const consoleLog = console.error
 beforeEach(() => {
+  console.error = jest.fn()
   container = document.createElement('div')
   document.body.appendChild(container)
 })
 
 afterEach(() => {
+  console.error = consoleLog
   if (container) {
     unmountComponentAtNode(container)
     container.remove()
