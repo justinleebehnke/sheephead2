@@ -1,17 +1,15 @@
-import ICommand from './ICommand'
+import AbstractCommand from './AbstractCommand'
 import IGame from '../Interfaces/IGame'
 
-class PassCommand implements ICommand {
-  private readonly game: IGame
-
+class PassCommand extends AbstractCommand {
   constructor(game: IGame) {
-    this.game = game
+    super('pass', game)
   }
 
   execute(): void {
     const round = this.game.getCurrentRound()
     if (!round) {
-      throw Error('Cannot pass because there is no current round')
+      throw Error(this.getNoRoundErrorMessage())
     }
     round.pass()
   }

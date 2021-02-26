@@ -1,19 +1,18 @@
-import ICommand from './ICommand'
+import AbstractCommand from './AbstractCommand'
 import IGame from '../Interfaces/IGame'
 
-class PlayCommand implements ICommand {
-  private readonly game: IGame
+class PlayCommand extends AbstractCommand {
   private readonly cardId: string
 
   constructor(game: IGame, cardId: string) {
-    this.game = game
+    super('play', game)
     this.cardId = cardId
   }
 
   public execute(): void {
     const round = this.game.getCurrentRound()
     if (!round) {
-      throw Error('Cannot play because there is no current round')
+      throw Error(this.getNoRoundErrorMessage())
     }
     const player = round.getCurrentTurnPlayer()
     if (!player) {
