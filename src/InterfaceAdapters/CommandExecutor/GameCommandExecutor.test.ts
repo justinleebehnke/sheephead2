@@ -1,4 +1,5 @@
 import GameCommandExecutor from './GameCommandExecutor'
+import GameCommandFactory from './GameCommands/GameCommandFactory'
 import ICommandExecutor from './ICommandExecutor'
 import ICommandObject from '../ICommandObject'
 import IGame from './Interfaces/IGame'
@@ -11,6 +12,7 @@ describe('Game Command Executor', () => {
   let round: IRound
   let player: IPlayer
   let commandExecutor: ICommandExecutor
+  let gameCommandFactory: GameCommandFactory
 
   beforeEach(() => {
     player = {
@@ -24,7 +26,8 @@ describe('Game Command Executor', () => {
     game = {
       getCurrentRound: jest.fn().mockReturnValue(round),
     }
-    commandExecutor = new GameCommandExecutor(game)
+    gameCommandFactory = new GameCommandFactory(game)
+    commandExecutor = new GameCommandExecutor(game, gameCommandFactory)
   })
 
   it('Should throw an error if the command is not recognized', () => {
@@ -51,7 +54,8 @@ describe('Game Command Executor', () => {
       game = {
         getCurrentRound: jest.fn().mockReturnValue(round),
       }
-      commandExecutor = new GameCommandExecutor(game)
+      gameCommandFactory = new GameCommandFactory(game)
+      commandExecutor = new GameCommandExecutor(game, gameCommandFactory)
       expect(() => commandExecutor.execute(playCommand)).toThrow(
         "Cannot play because it is not anyone's turn"
       )
@@ -61,7 +65,8 @@ describe('Game Command Executor', () => {
       game = {
         getCurrentRound: jest.fn().mockReturnValue(undefined),
       }
-      commandExecutor = new GameCommandExecutor(game)
+      gameCommandFactory = new GameCommandFactory(game)
+      commandExecutor = new GameCommandExecutor(game, gameCommandFactory)
       expect(() => commandExecutor.execute(playCommand)).toThrow(
         'Cannot play because there is no current round'
       )
@@ -79,7 +84,8 @@ describe('Game Command Executor', () => {
       game = {
         getCurrentRound: jest.fn().mockReturnValue(undefined),
       }
-      commandExecutor = new GameCommandExecutor(game)
+      gameCommandFactory = new GameCommandFactory(game)
+      commandExecutor = new GameCommandExecutor(game, gameCommandFactory)
       expect(() => commandExecutor.execute(passCommand)).toThrow(
         'Cannot pass because there is no current round'
       )

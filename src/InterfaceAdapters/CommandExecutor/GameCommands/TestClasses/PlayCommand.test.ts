@@ -45,7 +45,7 @@ describe('Play Command', () => {
       getCurrentRound: jest.fn().mockReturnValue(undefined),
     }
     playCommand = new PlayCommand(game, 'ac')
-    expect(() => playCommand.execute()).toThrow('Cannot play because there is no round')
+    expect(() => playCommand.execute()).toThrow('Cannot play because there is no current round')
   })
 })
 

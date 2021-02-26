@@ -13,7 +13,7 @@ class PlayCommand implements ICommand {
   public execute(): void {
     const round = this.game.getCurrentRound()
     if (!round) {
-      throw Error('Cannot play because there is no round')
+      throw Error('Cannot play because there is no current round')
     }
     const player = round.getCurrentTurnPlayer()
     if (!player) {
