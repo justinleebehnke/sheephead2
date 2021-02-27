@@ -10,6 +10,7 @@ describe('Pass Command', () => {
 
   beforeEach(() => {
     round = {
+      bury: jest.fn(),
       pass: jest.fn(),
       play: jest.fn(),
       getCurrentTurnPlayer: jest.fn(),

@@ -16,7 +16,7 @@ class PlayCommand extends AbstractCommand {
     }
     const player = round.getCurrentTurnPlayer()
     if (!player) {
-      throw Error("Cannot play because it is not anyone's turn")
+      throw Error(this.getNoCurrentTurnErrorMessage())
     }
     round.play(player.removeCardFromHand(this.cardId))
   }

@@ -15,6 +15,10 @@ abstract class AbstractCommand implements ICommand {
   protected getNoRoundErrorMessage(): string {
     return `Cannot ${this.commandName} because there is no current round`
   }
+
+  protected getNoCurrentTurnErrorMessage(): string {
+    return `Cannot ${this.commandName} because there is no current turn player`
+  }
 }
 
 export default AbstractCommand

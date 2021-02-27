@@ -15,6 +15,7 @@ describe('Play Command', () => {
       removeCardFromHand: jest.fn().mockReturnValue({ name: 'crazyCard' }),
     }
     round = {
+      bury: jest.fn(),
       pass: jest.fn(),
       play: jest.fn(),
       getCurrentTurnPlayer: jest.fn().mockReturnValue(player),
@@ -37,7 +38,9 @@ describe('Play Command', () => {
       getCurrentRound: jest.fn().mockReturnValue(round),
     }
     playCommand = new PlayCommand(game, 'ac')
-    expect(() => playCommand.execute()).toThrow("Cannot play because it is not anyone's turn")
+    expect(() => playCommand.execute()).toThrow(
+      'Cannot play because there is no current turn player'
+    )
   })
 
   it('Should throw an exception if there is no current round', () => {
