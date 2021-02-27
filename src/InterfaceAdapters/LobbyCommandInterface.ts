@@ -11,7 +11,7 @@ Then the server will give the command right back to him along with any others th
  */
 
 import ICommandInterface from './ICommandInterface'
-import ICommandObject from './ICommandObject'
+import CommandDTO from './CommandExecutor/GameCommandDTOs/CommandDTO'
 
 /*
  If all other players are CPU, then there is no need to go to the server...
@@ -23,7 +23,7 @@ import ICommandObject from './ICommandObject'
 Game Command Interface
  */
 class LobbyCommandInterface implements ICommandInterface {
-  giveCommand(command: ICommandObject): Promise<void> {
+  giveCommand(command: CommandDTO): Promise<void> {
     throw new Error('Method not implemented.')
   }
 }

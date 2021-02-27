@@ -7,14 +7,16 @@ import Table from 'react-bootstrap/Table'
 import BellePlaineRulesCardRanker from '../../Entities/BellePlaineRulesCardRanker'
 import CPUPlayer from '../../UseCase/CPUPlayer'
 import Game from '../../Entities/Game'
+import GameCommandExecutor from '../../InterfaceAdapters/CommandExecutor/GameCommandExecutor'
+import GameCommandFactory from '../../InterfaceAdapters/CommandExecutor/GameCommands/GameCommandFactory'
 import GameBoard from './../GamePlayViews/GameBoard'
+import GameBoardPresenter from '../../InterfaceAdapters/GameBoardPresenter/GameBoardPresenter'
 import GameBoardModel from '../../InterfaceAdapters/GamePresenter/GameBoardModel'
 import LocalGameCommandInterface from '../../InterfaceAdapters/LocalGameCommandInterface'
 import Player from '../../Entities/Player'
 import RandomName from '../../UseCase/RandomName'
 import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
 import './GameLobby.css'
-import GameBoardPresenter from '../../InterfaceAdapters/GameBoardPresenter/GameBoardPresenter'
 
 const PAUSE_DURATION_FOR_GAME_EVENTS = 1300
 
@@ -57,7 +59,9 @@ class GameLobby extends Component<{}, State> {
       firstDealerIndex === -1 ? getRandomNumberBetweenZeroAndMax(4) : firstDealerIndex,
       Date.now()
     )
-    const commandInterface = new LocalGameCommandInterface(game)
+    const commandInterface = new LocalGameCommandInterface(
+      new GameCommandExecutor(new GameCommandFactory(game))
+    )
 
     const playerNames: string[] = [new RandomName().getName()]
     playerNames.push(new RandomName(playerNames).getName())
@@ -98,7 +102,7 @@ class GameLobby extends Component<{}, State> {
     )
 
     const presenter = new GameBoardPresenter(
-      new LocalGameCommandInterface(game),
+      commandInterface,
       new GameBoardModel(
         new UniqueIdentifier(localStorage.getItem('localPlayerId') || undefined),
         game

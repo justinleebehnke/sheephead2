@@ -1,7 +1,7 @@
-import ICommandObject from '../ICommandObject'
+import CommandDTO from './GameCommandDTOs/CommandDTO'
 
 interface ICommandExecutor {
-  execute(command: ICommandObject): void
+  execute(command: CommandDTO): void
 }
 
 export default ICommandExecutor

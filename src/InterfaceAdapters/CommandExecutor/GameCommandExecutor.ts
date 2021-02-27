@@ -1,5 +1,5 @@
+import CommandDTO from './GameCommandDTOs/CommandDTO'
 import ICommandExecutor from './ICommandExecutor'
-import ICommandObject from '../ICommandObject'
 import IGameCommandFactory from './GameCommands/IGameCommandFactory'
 
 class GameCommandExecutor implements ICommandExecutor {
@@ -9,7 +9,7 @@ class GameCommandExecutor implements ICommandExecutor {
     this.gameCommandFactory = gameCommandFactory
   }
 
-  public execute(command: ICommandObject): void {
+  public execute(command: CommandDTO): void {
     this.gameCommandFactory.getCommand(command).execute()
   }
 }

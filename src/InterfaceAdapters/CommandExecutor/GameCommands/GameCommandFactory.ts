@@ -1,13 +1,13 @@
 import BuryCommand from './BuryCommand'
-import BuryCommandDTO from '../../CommandTypes/BuryCommandDTO'
+import BuryCommandDTO from '../GameCommandDTOs/BuryCommandDTO'
 import ICommand from './ICommand'
-import ICommandObject from '../../ICommandObject'
+import CommandDTO from '../GameCommandDTOs/CommandDTO'
 import IGame from '../Interfaces/IGame'
 import IGameCommandFactory from './IGameCommandFactory'
 import PassCommand from './PassCommand'
 import PlayAgainCommand from './PlayAgainCommand'
 import PlayCommand from './PlayCommand'
-import PlayCommandObject from '../../CommandTypes/PlayCommandDTO'
+import PlayCommandDTO from '../GameCommandDTOs/PlayCommandDTO'
 
 class GameCommandFactory implements IGameCommandFactory {
   private readonly game: IGame
@@ -16,7 +16,7 @@ class GameCommandFactory implements IGameCommandFactory {
     this.game = game
   }
 
-  public getCommand(commandDTO: ICommandObject): ICommand {
+  public getCommand(commandDTO: CommandDTO): ICommand {
     if (commandDTO.name === 'pass') {
       return new PassCommand(this.game)
     }
@@ -32,11 +32,11 @@ class GameCommandFactory implements IGameCommandFactory {
     throw Error(`Game command is not recognized: ${JSON.stringify(commandDTO)}`)
   }
 
-  private isPlayCommand(command: ICommandObject): command is PlayCommandObject {
+  private isPlayCommand(command: CommandDTO): command is PlayCommandDTO {
     return command.name === 'play'
   }
 
-  private isBuryCommandDTO(command: ICommandObject): command is BuryCommandDTO {
+  private isBuryCommandDTO(command: CommandDTO): command is BuryCommandDTO {
     return command.name === 'bury'
   }
 }

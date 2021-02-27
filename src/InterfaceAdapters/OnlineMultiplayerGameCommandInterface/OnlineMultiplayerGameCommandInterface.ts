@@ -1,7 +1,7 @@
+import CommandDTO from '../CommandExecutor/GameCommandDTOs/CommandDTO'
 import ICommandCommunicatorResponse from '../ICommandCommunicatorResponse'
 import ICommandExecutor from '../CommandExecutor/ICommandExecutor'
 import ICommandInterface from '../ICommandInterface'
-import ICommandObject from '../ICommandObject'
 import IFetch from '../IFetch'
 
 class OnlineMultiplayerGameCommandInterface implements ICommandInterface {
@@ -36,7 +36,7 @@ class OnlineMultiplayerGameCommandInterface implements ICommandInterface {
     setTimeout(() => this.getCommands(), this.pollingFrequency)
   }
 
-  public async giveCommand(command: ICommandObject): Promise<void> {
+  public async giveCommand(command: CommandDTO): Promise<void> {
     this.fetcher.post(`${this.baseRoute}/${this.hostId}`, command)
   }
 
@@ -45,7 +45,7 @@ class OnlineMultiplayerGameCommandInterface implements ICommandInterface {
       if (response.indexOfNextCommand > this.indexOfNextCommand) {
         this.indexOfNextCommand = response.indexOfNextCommand
       }
-      response.newCommands.forEach((newCommand: ICommandObject) =>
+      response.newCommands.forEach((newCommand: CommandDTO) =>
         this.commandExecutor.execute(newCommand)
       )
     }

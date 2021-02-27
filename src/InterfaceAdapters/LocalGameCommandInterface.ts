@@ -1,18 +1,11 @@
-import Game from '../Entities/Game'
+import CommandDTO from './CommandExecutor/GameCommandDTOs/CommandDTO'
 import GameCommandExecutor from './CommandExecutor/GameCommandExecutor'
-import GameCommandFactory from './CommandExecutor/GameCommands/GameCommandFactory'
 import ICommandInterface from './ICommandInterface'
-import ICommandObject from './ICommandObject'
 
 class LocalGameCommandInterface implements ICommandInterface {
-  private game: Game
-  private readonly gameCommandExecutor: GameCommandExecutor
-  constructor(game: Game) {
-    this.game = game
-    this.gameCommandExecutor = new GameCommandExecutor(new GameCommandFactory(this.game))
-  }
+  constructor(private readonly gameCommandExecutor: GameCommandExecutor) {}
 
-  public async giveCommand(command: ICommandObject): Promise<void> {
+  public async giveCommand(command: CommandDTO): Promise<void> {
     this.gameCommandExecutor.execute(command)
   }
 }

@@ -1,8 +1,8 @@
-import ICommandObject from './ICommandObject'
+import CommandDTO from './CommandExecutor/GameCommandDTOs/CommandDTO'
 
 interface ICommandCommunicatorResponse {
   indexOfNextCommand: number
-  newCommands: ICommandObject[]
+  newCommands: CommandDTO[]
 }
 
 export default ICommandCommunicatorResponse

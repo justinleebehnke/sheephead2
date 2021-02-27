@@ -1,8 +1,8 @@
 import ICommand from './ICommand'
-import ICommandObject from '../../ICommandObject'
+import CommandDTO from '../GameCommandDTOs/CommandDTO'
 
 interface IGameCommandFactory {
-  getCommand(commandDTO: ICommandObject): ICommand
+  getCommand(commandDTO: CommandDTO): ICommand
 }
 
 export default IGameCommandFactory
