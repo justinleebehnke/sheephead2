@@ -1,3 +1,4 @@
+import BuryCommand from '../BuryCommand'
 import GameCommandFactory from '../GameCommandFactory'
 import IGame from '../../Interfaces/IGame'
 import PassCommand from '../PassCommand'
@@ -19,6 +20,12 @@ describe('Game Command Factory', () => {
     expect(gameCommandFactory.getCommand({ name: 'pass', params: null })).toEqual(
       new PassCommand(game)
     )
+  })
+
+  it('Should create a Bury Command when given a BuryCommandDTO', () => {
+    expect(
+      gameCommandFactory.getCommand({ name: 'bury', params: { cards: ['ac', 'as'] } })
+    ).toEqual(new BuryCommand(game, ['ac', 'as']))
   })
 })
 

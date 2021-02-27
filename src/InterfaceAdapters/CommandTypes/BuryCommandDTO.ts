@@ -1,9 +1,9 @@
 import ICommandObject from '../ICommandObject'
 
-interface BuryCommand extends ICommandObject {
+interface BuryCommandDTO extends ICommandObject {
   name: 'bury'
   params: {
     cards: string[]
   }
 }
-export default BuryCommand
+export default BuryCommandDTO

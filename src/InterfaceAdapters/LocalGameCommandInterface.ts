@@ -1,14 +1,14 @@
-import BuryCommand from './CommandTypes/BuryCommand'
+import BuryCommandDTO from './CommandTypes/BuryCommandDTO'
 import ICommandInterface from './ICommandInterface'
 import ICommandObject from './ICommandObject'
 import Game from '../Entities/Game'
-import PlayCommand from './CommandTypes/PlayCommand'
+import PlayCommandDTO from './CommandTypes/PlayCommandDTO'
 
-function isPlayCommand(command: ICommandObject): command is PlayCommand {
+function isPlayCommand(command: ICommandObject): command is PlayCommandDTO {
   return command.name === 'play'
 }
 
-function isBuryCommand(command: ICommandObject): command is BuryCommand {
+function isBuryCommand(command: ICommandObject): command is BuryCommandDTO {
   return command.name === 'bury'
 }
 

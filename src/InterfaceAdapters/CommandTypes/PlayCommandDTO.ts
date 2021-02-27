@@ -1,10 +1,10 @@
 import ICommandObject from '../ICommandObject'
 
-interface PlayCommand extends ICommandObject {
+interface PlayCommandDTO extends ICommandObject {
   name: 'play'
   params: {
     card: string
   }
 }
 
-export default PlayCommand
+export default PlayCommandDTO
