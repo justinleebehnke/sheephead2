@@ -22,6 +22,7 @@ describe('Play Command', () => {
     }
     game = {
       getCurrentRound: jest.fn().mockReturnValue(round),
+      playAgain: jest.fn(),
     }
     playCommand = new PlayCommand(game, 'ac')
   })
@@ -36,6 +37,7 @@ describe('Play Command', () => {
     round.getCurrentTurnPlayer = jest.fn().mockReturnValue(undefined)
     game = {
       getCurrentRound: jest.fn().mockReturnValue(round),
+      playAgain: jest.fn(),
     }
     playCommand = new PlayCommand(game, 'ac')
     expect(() => playCommand.execute()).toThrow(
@@ -46,6 +48,7 @@ describe('Play Command', () => {
   it('Should throw an exception if there is no current round', () => {
     game = {
       getCurrentRound: jest.fn().mockReturnValue(undefined),
+      playAgain: jest.fn(),
     }
     playCommand = new PlayCommand(game, 'ac')
     expect(() => playCommand.execute()).toThrow('Cannot play because there is no current round')

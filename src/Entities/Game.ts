@@ -91,7 +91,7 @@ class Game implements ISubscriber, IReadOnlyGameModel {
     this.notifySubscribers()
   }
 
-  public playAnotherRound(): void {
+  public playAgain(): void {
     this.currentRound?.removeSubscriber(this)
     this.setNextDealer()
     this.playRound()

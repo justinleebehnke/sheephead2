@@ -27,6 +27,7 @@ describe('Bury Command', () => {
 
     game = {
       getCurrentRound: jest.fn().mockReturnValue(round),
+      playAgain: jest.fn(),
     }
   })
 
@@ -55,6 +56,7 @@ describe('Bury Command', () => {
     round.getCurrentTurnPlayer = jest.fn()
     game = {
       getCurrentRound: jest.fn().mockReturnValue(round),
+      playAgain: jest.fn(),
     }
     const buryCommand = new BuryCommand(game, cardIds)
     expect(() => buryCommand.execute()).toThrow(

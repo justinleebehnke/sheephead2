@@ -17,9 +17,11 @@ describe('Pass Command', () => {
     }
     game = {
       getCurrentRound: jest.fn().mockReturnValue(round),
+      playAgain: jest.fn(),
     }
     passCommand = new PassCommand(game)
   })
+
   it('Should correctly execute the pass command', () => {
     passCommand.execute()
     expect(round.pass).toHaveBeenCalled()
@@ -28,6 +30,7 @@ describe('Pass Command', () => {
   it('Should throw an exception if there is not current round', () => {
     game = {
       getCurrentRound: jest.fn().mockReturnValue(undefined),
+      playAgain: jest.fn(),
     }
     passCommand = new PassCommand(game)
     expect(() => passCommand.execute()).toThrow('Cannot pass because there is no current round')

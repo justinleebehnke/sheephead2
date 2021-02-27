@@ -2,6 +2,7 @@ import BuryCommand from '../BuryCommand'
 import GameCommandFactory from '../GameCommandFactory'
 import IGame from '../../Interfaces/IGame'
 import PassCommand from '../PassCommand'
+import PlayAgainCommand from '../PlayAgainCommand'
 import PlayCommand from '../PlayCommand'
 
 describe('Game Command Factory', () => {
@@ -26,6 +27,12 @@ describe('Game Command Factory', () => {
     expect(
       gameCommandFactory.getCommand({ name: 'bury', params: { cards: ['ac', 'as'] } })
     ).toEqual(new BuryCommand(game, ['ac', 'as']))
+  })
+
+  it('Should create a Play Again Command when given a PlayAgainCommandDTO', () => {
+    expect(gameCommandFactory.getCommand({ name: 'playAgain', params: null })).toEqual(
+      new PlayAgainCommand(game)
+    )
   })
 })
 

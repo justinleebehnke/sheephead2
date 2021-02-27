@@ -13,11 +13,7 @@ class LocalGameCommandInterface implements ICommandInterface {
   }
 
   public async giveCommand(command: ICommandObject): Promise<void> {
-    if (command.name === 'playAgain') {
-      this.game.playAnotherRound()
-    } else {
-      this.gameCommandExecutor.execute(command)
-    }
+    this.gameCommandExecutor.execute(command)
   }
 }
 
