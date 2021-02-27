@@ -1,7 +1,7 @@
 import IRound from './IRound'
 
 interface IGame {
-  getCurrentRound(): IRound | undefined
+  getCurrentRound(): IRound | null
 }
 
 export default IGame
