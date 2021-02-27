@@ -3,11 +3,7 @@ import ICommandExecutor from './ICommandExecutor'
 import IGameCommandFactory from './GameCommands/IGameCommandFactory'
 
 class GameCommandExecutor implements ICommandExecutor {
-  private readonly gameCommandFactory: IGameCommandFactory
-
-  constructor(gameCommandFactory: IGameCommandFactory) {
-    this.gameCommandFactory = gameCommandFactory
-  }
+  constructor(private readonly gameCommandFactory: IGameCommandFactory) {}
 
   public execute(command: CommandDTO): void {
     this.gameCommandFactory.getCommand(command).execute()
