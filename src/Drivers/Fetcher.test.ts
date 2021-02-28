@@ -21,9 +21,36 @@ describe('Fetcher', () => {
     global.window.fetch = originalFetch
   })
 
-  it('Should call window.fetch with what ever it is given on a get request', async () => {
+  it('Should call window.fetch with what ever it is given on a GET request', async () => {
     const res = await fetcher.get('https://example.com')
     expect(global.window.fetch).toHaveBeenCalledWith('https://example.com')
+    expect(res).toEqual({
+      indexOfNextCommand: 0,
+      newCommands: [],
+    })
+  })
+
+  it('Should call window.fetch with what ever it is given on a POST request', async () => {
+    const body = {
+      indexOfNextCommand: 0,
+      newCommand: {
+        name: 'hostNewGame',
+        params: {
+          hostId: '6c6414bf-bc91-47c5-b743-4bc867c855a5',
+          hostName: 'YetAnotherPerson',
+        },
+      },
+    }
+    const res = await fetcher.post('https://example.com', body)
+
+    expect(global.window.fetch).toHaveBeenCalledWith('https://example.com', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    })
+
     expect(res).toEqual({
       indexOfNextCommand: 0,
       newCommands: [],

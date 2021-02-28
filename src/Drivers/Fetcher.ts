@@ -5,8 +5,16 @@ class Fetcher implements IFetch {
     return (await fetch(url)).json()
   }
 
-  post(url: string, request: any): Promise<object> {
-    throw new Error('Method not implemented.')
+  public async post(url: string, request: any): Promise<object> {
+    return (
+      await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(request),
+      })
+    ).json()
   }
 }
 
