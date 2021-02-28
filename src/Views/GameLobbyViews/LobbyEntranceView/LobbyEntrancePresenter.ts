@@ -1,3 +1,4 @@
+import ICommandInterface from '../../../InterfaceAdapters/ICommandInterface'
 import ILobbyEntrancePresenter from './ILobbyEntrancePresenter'
 import ILocalPlayerInfoManager from './ILocalPlayerInfoManager'
 import INotifier from './INotifier'
@@ -11,7 +12,8 @@ class LobbyEntrancePresenter implements ILobbyEntrancePresenter {
 
   constructor(
     private readonly playerInfoManager: ILocalPlayerInfoManager,
-    private readonly userNotifier: INotifier
+    private readonly userNotifier: INotifier,
+    private readonly lobbyCommandInterface: ICommandInterface
   ) {
     this.localPlayerName = this.playerInfoManager.getPlayerName()
 
@@ -44,7 +46,13 @@ class LobbyEntrancePresenter implements ILobbyEntrancePresenter {
     if (!this.localPlayerName) {
       this.userNotifier.notify('Please enter your name before hosting a game')
     } else {
-      throw new Error('Method not implemented.')
+      this.lobbyCommandInterface.giveCommand({
+        name: 'hostNewGame',
+        params: {
+          hostId: this.localPlayerId.getId(),
+          hostName: this.localPlayerName,
+        },
+      })
     }
   }
 
