@@ -140,10 +140,10 @@ class GameLobby extends Component<{}, State> {
           onClick={
             this.state.localPlayerName === ''
               ? () => this.alertOfRequiredName()
-              : () => this.setState({ isHostingGame: true })
+              : () => this.setState({ isInStartedGame: true })
           }
         >
-          Host a new Game
+          Play Computer
         </Button>
       </div>
     )
