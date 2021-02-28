@@ -1,10 +1,10 @@
-import BuryCommand from '../InterfaceAdapters/CommandTypes/BuryCommand'
+import BuryCommandDTO from '../InterfaceAdapters/CommandExecutor/GameCommandDTOs/BuryCommandDTO'
 import IReadOnlyGameModel from '../Entities/ReadOnlyEntities/IReadOnlyGameModel'
 import IReadOnlyRound from '../Entities/ReadOnlyEntities/IReadOnlyRound'
 import ICardRanker from '../Entities/ICardRanker'
 import ICommandInterface from '../InterfaceAdapters/ICommandInterface'
 import Player from '../Entities/Player'
-import PlayCommand from '../InterfaceAdapters/CommandTypes/PlayCommand'
+import PlayCommandDTO from '../InterfaceAdapters/CommandExecutor/GameCommandDTOs/PlayCommandDTO'
 import UniqueIdentifier from '../Utilities/UniqueIdentifier'
 import ISubscriber from '../Entities/ISubscriber'
 
@@ -143,7 +143,7 @@ class CPUPlayer extends Player implements ISubscriber {
     const secondHighestValueCardId = this.getHighestValueCardId(
       playableCards.filter((cardId: string) => cardId !== highestValueCardId)
     )
-    const buryCommand: BuryCommand = {
+    const buryCommand: BuryCommandDTO = {
       name: 'bury',
       params: {
         cards: [highestValueCardId, secondHighestValueCardId],
@@ -162,7 +162,7 @@ class CPUPlayer extends Player implements ISubscriber {
       const player = round.getCurrentTurnPlayer()
       if (player) {
         const leadCard = round.getCurrentTrick().getLeadCard()
-        const playCommand: PlayCommand = {
+        const playCommand: PlayCommandDTO = {
           name: 'play',
           params: {
             card: leadCard

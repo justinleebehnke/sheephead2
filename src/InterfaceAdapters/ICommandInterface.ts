@@ -1,7 +1,7 @@
-import ICommandObject from './ICommandObject'
+import CommandDTO from './CommandExecutor/GameCommandDTOs/CommandDTO'
 
 interface ICommandInterface {
-  giveCommand(command: ICommandObject): Promise<void>
+  giveCommand(command: CommandDTO): Promise<void>
 }
 
 export default ICommandInterface
