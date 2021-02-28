@@ -56,14 +56,6 @@ describe('Lobby Entrance View', () => {
     }
     expect(lobbyEntrancePresenter.hostNewGame).toHaveBeenCalled()
   })
-
-  // it should display the games that it gets...
-  // it should ask the presenter for a list of joinable games
-  // it should offer a person the ability to join those games
-  // as the list of game changes, the presenter should update it
-  // and the list should actually update
-  // if a person changes their name in the input box, the presenter should be notified
-  // the presenter should notify the alert system if the person tries to start a game without having checked that box.
 })
 
 export {}
