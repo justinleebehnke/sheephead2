@@ -1,5 +1,5 @@
 import UniqueIdentifier from '../../../Utilities/UniqueIdentifier'
-import ICommand from '../GameCommands/ICommand'
+import ICommand from '../ICommand'
 import IGameManager from './IGameManager'
 
 class HostNewGameCommand implements ICommand {

@@ -1,4 +1,4 @@
-import CommandDTO from './GameCommandDTOs/CommandDTO'
+import CommandDTO from './CommandDTO'
 
 interface ICommandExecutor {
   execute(command: CommandDTO): void

@@ -1,4 +1,4 @@
-import CommandDTO from '../GameCommandDTOs/CommandDTO'
+import CommandDTO from './CommandDTO'
 import ICommand from './ICommand'
 
 interface ICommandFactory {

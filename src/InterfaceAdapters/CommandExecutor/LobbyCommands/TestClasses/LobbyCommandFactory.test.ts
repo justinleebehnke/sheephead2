@@ -1,4 +1,4 @@
-import ICommandFactory from '../../GameCommands/ICommandFactory'
+import ICommandFactory from '../../ICommandFactory'
 import HostNewGameCommand from '../HostNewGameCommand'
 import IGameManager from '../IGameManager'
 import LobbyCommandFactory from '../LobbyCommandFactory'
