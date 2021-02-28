@@ -1,6 +1,6 @@
-import HostNewGameCommand from './HostNewGameCommand'
-import IGameManager from './IGameManager'
-import UniqueIdentifier from '../../../Utilities/UniqueIdentifier'
+import HostNewGameCommand from '../HostNewGameCommand'
+import IGameManager from '../IGameManager'
+import UniqueIdentifier from '../../../../Utilities/UniqueIdentifier'
 
 describe('Host New Game Command', () => {
   let gameManager: IGameManager

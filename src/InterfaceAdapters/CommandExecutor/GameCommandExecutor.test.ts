@@ -1,11 +1,12 @@
 import GameCommandExecutor from './GameCommandExecutor'
 import ICommand from './GameCommands/ICommand'
-import IGameCommandFactory from './GameCommands/IGameCommandFactory'
+import ICommandFactory from './GameCommands/ICommandFactory'
 
 describe('Game Command Executor', () => {
-  let gameCommandFactory: IGameCommandFactory
+  let gameCommandFactory: ICommandFactory
   let gameCommandExecutor: GameCommandExecutor
   let command: ICommand
+
   beforeEach(() => {
     command = {
       execute: jest.fn(),
