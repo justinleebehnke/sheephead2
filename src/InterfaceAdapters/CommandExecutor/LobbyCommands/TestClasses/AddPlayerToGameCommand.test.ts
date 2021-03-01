@@ -1,6 +1,6 @@
+import AddPlayerToGameCommand from '../AddPlayerToGameCommand'
 import IGameManager from '../../../../Entities/GameManager/IGameManager'
 import UniqueIdentifier from '../../../../Utilities/UniqueIdentifier'
-import AddPlayerToGameCommand from '../AddPlayerToGameCommand'
 
 describe('Add Player To Game Command', () => {
   let gameManager: IGameManager
