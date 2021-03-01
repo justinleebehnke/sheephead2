@@ -8,6 +8,8 @@ import ICommandFactory from '../ICommandFactory'
 import IGameManager from '../../../Entities/GameManager/IGameManager'
 import RemovePlayerFromGameCommandDTO from './LobbyCommandDTOs/RemovePlayerFromGameCommandDTO'
 import RemovePlayerFromGameCommand from './RemovePlayerFromGameCommand'
+import StartGameCommand from './StartGameCommand'
+import StartGameCommandDTO from './LobbyCommandDTOs/StartGameCommandDTO'
 
 class LobbyCommandFactory implements ICommandFactory {
   constructor(private readonly gameManager: IGameManager) {}
@@ -33,6 +35,12 @@ class LobbyCommandFactory implements ICommandFactory {
         playerToRemoveId: commandDTO.params.playerId,
       })
     }
+    if (this.isStartGameCommandDTO(commandDTO)) {
+      return new StartGameCommand(this.gameManager, commandDTO.params.hostId, {
+        shuffleSeed: commandDTO.params.shuffleSeed,
+        firstDealerIndex: commandDTO.params.firstDealerIndex,
+      })
+    }
     throw new Error(`Lobby Command not recognized: ${JSON.stringify(commandDTO)}`)
   }
 
@@ -48,6 +56,10 @@ class LobbyCommandFactory implements ICommandFactory {
     commandDTO: CommandDTO
   ): commandDTO is RemovePlayerFromGameCommandDTO {
     return commandDTO.name === 'removePlayer'
+  }
+
+  private isStartGameCommandDTO(commandDTO: CommandDTO): commandDTO is StartGameCommandDTO {
+    return commandDTO.name === 'startGame'
   }
 }
 

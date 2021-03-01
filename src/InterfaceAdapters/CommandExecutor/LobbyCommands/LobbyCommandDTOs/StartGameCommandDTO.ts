@@ -4,6 +4,7 @@ interface StartGameCommandDTO extends CommandDTO {
   name: 'startGame'
   params: {
     firstDealerIndex: number
+    hostId: string
     shuffleSeed: number
   }
 }

@@ -1,9 +1,11 @@
 import AddPlayerToGameCommand from '../AddPlayerToGameCommand'
+import GameConfigurationDTO from '../../../../Entities/GameManager/GameConfigurationDTO'
 import HostNewGameCommand from '../HostNewGameCommand'
 import ICommandFactory from '../../ICommandFactory'
 import IGameManager from '../../../../Entities/GameManager/IGameManager'
 import LobbyCommandFactory from '../LobbyCommandFactory'
 import RemovePlayerFromGameCommand from '../RemovePlayerFromGameCommand'
+import StartGameCommand from '../StartGameCommand'
 import UniqueIdentifier from '../../../../Utilities/UniqueIdentifier'
 
 describe('Lobby Command Factory', () => {
@@ -74,6 +76,26 @@ describe('Lobby Command Factory', () => {
         playerToRemoveId: playerId,
       })
     )
+  })
+
+  it('Should build a start game command when given that DTO', () => {
+    const hostId = new UniqueIdentifier().getId()
+
+    const gameConfig: GameConfigurationDTO = {
+      firstDealerIndex: 2,
+      shuffleSeed: 124512452323,
+    }
+
+    expect(
+      factory.getCommand({
+        name: 'startGame',
+        params: {
+          hostId,
+          firstDealerIndex: gameConfig.firstDealerIndex,
+          shuffleSeed: gameConfig.shuffleSeed,
+        },
+      })
+    ).toEqual(new StartGameCommand(gameManager, hostId, gameConfig))
   })
 })
 
