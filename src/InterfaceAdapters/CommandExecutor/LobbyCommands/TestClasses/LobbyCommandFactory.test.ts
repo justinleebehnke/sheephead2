@@ -3,6 +3,7 @@ import HostNewGameCommand from '../HostNewGameCommand'
 import ICommandFactory from '../../ICommandFactory'
 import IGameManager from '../../../../Entities/GameManager/IGameManager'
 import LobbyCommandFactory from '../LobbyCommandFactory'
+import RemovePlayerFromGameCommand from '../RemovePlayerFromGameCommand'
 import UniqueIdentifier from '../../../../Utilities/UniqueIdentifier'
 
 describe('Lobby Command Factory', () => {
@@ -51,6 +52,26 @@ describe('Lobby Command Factory', () => {
         hostId,
         newPlayerId: playerId,
         newPlayerName: 'Random Name',
+      })
+    )
+  })
+
+  it('Should build a remove player from game command when given that DTO', () => {
+    const hostId = new UniqueIdentifier().getId()
+    const playerId = new UniqueIdentifier().getId()
+
+    expect(
+      factory.getCommand({
+        name: 'removePlayer',
+        params: {
+          hostId,
+          playerId,
+        },
+      })
+    ).toEqual(
+      new RemovePlayerFromGameCommand(gameManager, {
+        hostId,
+        playerToRemoveId: playerId,
       })
     )
   })

@@ -1,11 +1,13 @@
 import AddPlayerToGameCommand from './AddPlayerToGameCommand'
 import AddPlayerToGameCommandDTO from './LobbyCommandDTOs/AddPlayerToGameCommandDTO'
 import CommandDTO from '../CommandDTO'
+import HostNewGameCommand from './HostNewGameCommand'
+import HostNewGameCommandDTO from './LobbyCommandDTOs/HostNewGameCommandDTO'
 import ICommand from '../ICommand'
 import ICommandFactory from '../ICommandFactory'
-import HostNewGameCommand from './HostNewGameCommand'
 import IGameManager from '../../../Entities/GameManager/IGameManager'
-import HostNewGameCommandDTO from './LobbyCommandDTOs/HostNewGameCommandDTO'
+import RemovePlayerFromGameCommandDTO from './LobbyCommandDTOs/RemovePlayerFromGameCommandDTO'
+import RemovePlayerFromGameCommand from './RemovePlayerFromGameCommand'
 
 class LobbyCommandFactory implements ICommandFactory {
   constructor(private readonly gameManager: IGameManager) {}
@@ -25,6 +27,12 @@ class LobbyCommandFactory implements ICommandFactory {
         hostId: commandDTO.params.hostId,
       })
     }
+    if (this.isRemovePlayerCommandDTO(commandDTO)) {
+      return new RemovePlayerFromGameCommand(this.gameManager, {
+        hostId: commandDTO.params.hostId,
+        playerToRemoveId: commandDTO.params.playerId,
+      })
+    }
     throw new Error(`Lobby Command not recognized: ${JSON.stringify(commandDTO)}`)
   }
 
@@ -34,6 +42,12 @@ class LobbyCommandFactory implements ICommandFactory {
 
   private isAddPlayerCommandDTO(commandDTO: CommandDTO): commandDTO is AddPlayerToGameCommandDTO {
     return commandDTO.name === 'addPlayer'
+  }
+
+  private isRemovePlayerCommandDTO(
+    commandDTO: CommandDTO
+  ): commandDTO is RemovePlayerFromGameCommandDTO {
+    return commandDTO.name === 'removePlayer'
   }
 }
 
