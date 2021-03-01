@@ -1,7 +1,9 @@
-import ICommandFactory from '../../ICommandFactory'
+import AddPlayerToGameCommand from '../AddPlayerToGameCommand'
 import HostNewGameCommand from '../HostNewGameCommand'
+import ICommandFactory from '../../ICommandFactory'
 import IGameManager from '../../../../Entities/GameManager/IGameManager'
 import LobbyCommandFactory from '../LobbyCommandFactory'
+import UniqueIdentifier from '../../../../Utilities/UniqueIdentifier'
 
 describe('Lobby Command Factory', () => {
   let gameManager: IGameManager
@@ -29,6 +31,28 @@ describe('Lobby Command Factory', () => {
         },
       })
     ).toEqual(new HostNewGameCommand(gameManager, 'Justin', 'c568788e-7e5b-47ad-a0e0-375e1f3996a4'))
+  })
+
+  it('Should build an add player to game command when given an add player game dto', () => {
+    const hostId = new UniqueIdentifier().getId()
+    const playerId = new UniqueIdentifier().getId()
+
+    expect(
+      factory.getCommand({
+        name: 'addPlayer',
+        params: {
+          hostId,
+          playerId,
+          playerName: 'Random Name',
+        },
+      })
+    ).toEqual(
+      new AddPlayerToGameCommand(gameManager, {
+        hostId,
+        newPlayerId: playerId,
+        newPlayerName: 'Random Name',
+      })
+    )
   })
 })
 

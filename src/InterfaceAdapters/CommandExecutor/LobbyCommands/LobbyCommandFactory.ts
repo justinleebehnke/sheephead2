@@ -1,3 +1,5 @@
+import AddPlayerToGameCommand from './AddPlayerToGameCommand'
+import AddPlayerToGameCommandDTO from './LobbyCommandDTOs/AddPlayerToGameCommandDTO'
 import CommandDTO from '../CommandDTO'
 import ICommand from '../ICommand'
 import ICommandFactory from '../ICommandFactory'
@@ -16,11 +18,22 @@ class LobbyCommandFactory implements ICommandFactory {
         commandDTO.params.hostId
       )
     }
+    if (this.isAddPlayerCommandDTO(commandDTO)) {
+      return new AddPlayerToGameCommand(this.gameManager, {
+        newPlayerName: commandDTO.params.playerName,
+        newPlayerId: commandDTO.params.playerId,
+        hostId: commandDTO.params.hostId,
+      })
+    }
     throw new Error(`Lobby Command not recognized: ${JSON.stringify(commandDTO)}`)
   }
 
   private isHostNewGameCommandDTO(commandDTO: CommandDTO): commandDTO is HostNewGameCommandDTO {
     return commandDTO.name === 'hostNewGame'
+  }
+
+  private isAddPlayerCommandDTO(commandDTO: CommandDTO): commandDTO is AddPlayerToGameCommandDTO {
+    return commandDTO.name === 'addPlayer'
   }
 }
 
