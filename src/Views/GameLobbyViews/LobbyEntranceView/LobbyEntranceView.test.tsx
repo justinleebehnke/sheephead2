@@ -17,6 +17,7 @@ describe('Lobby Entrance View', () => {
       getLocalPlayerName: jest.fn(),
       setLocalPlayerName: jest.fn(),
       nameInputBlurred: jest.fn(),
+      setView: jest.fn(),
     }
   })
 

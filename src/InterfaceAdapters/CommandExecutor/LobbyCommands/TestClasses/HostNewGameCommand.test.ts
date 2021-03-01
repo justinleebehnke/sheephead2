@@ -1,5 +1,5 @@
 import HostNewGameCommand from '../HostNewGameCommand'
-import IGameManager from '../IGameManager'
+import IGameManager from '../../../../Entities/GameManager/IGameManager'
 import UniqueIdentifier from '../../../../Utilities/UniqueIdentifier'
 
 describe('Host New Game Command', () => {

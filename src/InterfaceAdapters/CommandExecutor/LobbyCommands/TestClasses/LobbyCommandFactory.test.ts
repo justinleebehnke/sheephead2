@@ -1,6 +1,6 @@
 import ICommandFactory from '../../ICommandFactory'
 import HostNewGameCommand from '../HostNewGameCommand'
-import IGameManager from '../IGameManager'
+import IGameManager from '../../../../Entities/GameManager/IGameManager'
 import LobbyCommandFactory from '../LobbyCommandFactory'
 
 describe('Lobby Command Factory', () => {
@@ -9,7 +9,12 @@ describe('Lobby Command Factory', () => {
 
   beforeEach(() => {
     gameManager = {
+      addPlayerToGame: jest.fn(),
       createGame: jest.fn(),
+      removePlayerFromGame: jest.fn(),
+      setGameConfig: jest.fn(),
+      startGame: jest.fn(),
+      unStartGame: jest.fn(),
     }
     factory = new LobbyCommandFactory(gameManager)
   })

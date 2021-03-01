@@ -2,7 +2,7 @@ import CommandDTO from '../CommandDTO'
 import ICommand from '../ICommand'
 import ICommandFactory from '../ICommandFactory'
 import HostNewGameCommand from './HostNewGameCommand'
-import IGameManager from './IGameManager'
+import IGameManager from '../../../Entities/GameManager/IGameManager'
 import HostNewGameCommandDTO from './LobbyCommandDTOs/HostNewGameCommandDTO'
 
 class LobbyCommandFactory implements ICommandFactory {
