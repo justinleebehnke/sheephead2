@@ -1,4 +1,4 @@
-import IGame from '../../Interfaces/IGame'
+import IGame from '../Interfaces/IGame'
 import PlayAgainCommand from '../PlayAgainCommand'
 
 describe('Play Again Command', () => {

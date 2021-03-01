@@ -1,10 +1,10 @@
-import BuryCommandDTO from '../InterfaceAdapters/CommandExecutor/GameCommandDTOs/BuryCommandDTO'
+import BuryCommandDTO from '../InterfaceAdapters/CommandExecutor/GameCommands/GameCommandDTOs/BuryCommandDTO'
 import IReadOnlyGameModel from '../Entities/ReadOnlyEntities/IReadOnlyGameModel'
 import IReadOnlyRound from '../Entities/ReadOnlyEntities/IReadOnlyRound'
 import ICardRanker from '../Entities/ICardRanker'
 import ICommandInterface from '../InterfaceAdapters/ICommandInterface'
+import PlayCommandDTO from '../InterfaceAdapters/CommandExecutor/GameCommands/GameCommandDTOs/PlayCommandDTO'
 import Player from '../Entities/Player'
-import PlayCommandDTO from '../InterfaceAdapters/CommandExecutor/GameCommandDTOs/PlayCommandDTO'
 import UniqueIdentifier from '../Utilities/UniqueIdentifier'
 import ISubscriber from '../Entities/ISubscriber'
 

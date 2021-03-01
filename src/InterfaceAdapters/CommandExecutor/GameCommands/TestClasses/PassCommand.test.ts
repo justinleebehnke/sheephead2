@@ -1,6 +1,6 @@
-import ICommand from '../ICommand'
-import IGame from '../../Interfaces/IGame'
-import IRound from '../../Interfaces/IRound'
+import ICommand from '../../ICommand'
+import IGame from '../Interfaces/IGame'
+import IRound from '../Interfaces/IRound'
 import PassCommand from '../PassCommand'
 
 describe('Pass Command', () => {

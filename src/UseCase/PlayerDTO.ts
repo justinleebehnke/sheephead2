@@ -1,8 +1,8 @@
 import UniqueIdentifier from '../Utilities/UniqueIdentifier'
 
 interface PlayerDTO {
-  getId(): UniqueIdentifier
-  getName(): string
+  id: UniqueIdentifier
+  name: string
 }
 
 export default PlayerDTO

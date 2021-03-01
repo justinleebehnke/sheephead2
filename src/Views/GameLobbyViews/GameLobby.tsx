@@ -5,9 +5,9 @@ import FormControl from 'react-bootstrap/FormControl'
 import InputGroup from 'react-bootstrap/InputGroup'
 import Table from 'react-bootstrap/Table'
 import BellePlaineRulesCardRanker from '../../Entities/BellePlaineRulesCardRanker'
+import CommandExecutor from '../../InterfaceAdapters/CommandExecutor/CommandExecutor'
 import CPUPlayer from '../../UseCase/CPUPlayer'
 import Game from '../../Entities/Game'
-import GameCommandExecutor from '../../InterfaceAdapters/CommandExecutor/GameCommandExecutor'
 import GameCommandFactory from '../../InterfaceAdapters/CommandExecutor/GameCommands/GameCommandFactory'
 import GameBoard from './../GamePlayViews/GameBoard'
 import GameBoardPresenter from '../../InterfaceAdapters/GameBoardPresenter/GameBoardPresenter'
@@ -60,7 +60,7 @@ class GameLobby extends Component<{}, State> {
       Date.now()
     )
     const commandInterface = new LocalGameCommandInterface(
-      new GameCommandExecutor(new GameCommandFactory(game))
+      new CommandExecutor(new GameCommandFactory(game))
     )
 
     const playerNames: string[] = [new RandomName().getName()]

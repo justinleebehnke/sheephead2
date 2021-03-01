@@ -1,4 +1,4 @@
-import CommandDTO from './CommandDTO'
+import CommandDTO from '../../CommandDTO'
 
 interface PlayCommandDTO extends CommandDTO {
   name: 'play'
