@@ -10,6 +10,8 @@ import RemovePlayerFromGameCommandDTO from './LobbyCommandDTOs/RemovePlayerFromG
 import RemovePlayerFromGameCommand from './RemovePlayerFromGameCommand'
 import StartGameCommand from './StartGameCommand'
 import StartGameCommandDTO from './LobbyCommandDTOs/StartGameCommandDTO'
+import UnStartGameCommand from './UnStartGameCommand'
+import UnStartGameCommandDTO from './LobbyCommandDTOs/UnStartGameCommandDTO'
 
 class LobbyCommandFactory implements ICommandFactory {
   constructor(private readonly gameManager: IGameManager) {}
@@ -41,6 +43,9 @@ class LobbyCommandFactory implements ICommandFactory {
         firstDealerIndex: commandDTO.params.firstDealerIndex,
       })
     }
+    if (this.isUnStartGameCommandDTO(commandDTO)) {
+      return new UnStartGameCommand(this.gameManager, commandDTO.params.hostId)
+    }
     throw new Error(`Lobby Command not recognized: ${JSON.stringify(commandDTO)}`)
   }
 
@@ -60,6 +65,10 @@ class LobbyCommandFactory implements ICommandFactory {
 
   private isStartGameCommandDTO(commandDTO: CommandDTO): commandDTO is StartGameCommandDTO {
     return commandDTO.name === 'startGame'
+  }
+
+  private isUnStartGameCommandDTO(commandDTO: CommandDTO): commandDTO is UnStartGameCommandDTO {
+    return commandDTO.name === 'unStartGame'
   }
 }
 

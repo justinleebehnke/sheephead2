@@ -7,6 +7,7 @@ import LobbyCommandFactory from '../LobbyCommandFactory'
 import RemovePlayerFromGameCommand from '../RemovePlayerFromGameCommand'
 import StartGameCommand from '../StartGameCommand'
 import UniqueIdentifier from '../../../../Utilities/UniqueIdentifier'
+import UnStartGameCommand from '../UnStartGameCommand'
 
 describe('Lobby Command Factory', () => {
   let gameManager: IGameManager
@@ -96,6 +97,19 @@ describe('Lobby Command Factory', () => {
         },
       })
     ).toEqual(new StartGameCommand(gameManager, hostId, gameConfig))
+  })
+
+  it('Should build an un start game command when given that DTO', () => {
+    const hostId = new UniqueIdentifier().getId()
+
+    expect(
+      factory.getCommand({
+        name: 'unStartGame',
+        params: {
+          hostId,
+        },
+      })
+    ).toEqual(new UnStartGameCommand(gameManager, hostId))
   })
 })
 
