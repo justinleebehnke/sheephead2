@@ -1,6 +1,6 @@
-import UniqueIdentifier from '../../../Utilities/UniqueIdentifier'
 import ICommand from '../ICommand'
 import IGameManager from '../../../Entities/GameManager/IGameManager'
+import UniqueIdentifier from '../../../Utilities/UniqueIdentifier'
 
 class HostNewGameCommand implements ICommand {
   private readonly hostId: UniqueIdentifier
