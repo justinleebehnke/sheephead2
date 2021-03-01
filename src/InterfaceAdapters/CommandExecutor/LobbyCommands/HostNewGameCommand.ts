@@ -14,7 +14,7 @@ class HostNewGameCommand implements ICommand {
   }
 
   public execute(): void {
-    this.gameManager.createGame(this.hostName, this.hostId)
+    this.gameManager.createGame({ name: this.hostName, id: this.hostId })
   }
 }
 

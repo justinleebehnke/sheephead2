@@ -7,7 +7,12 @@ describe('Host New Game Command', () => {
 
   beforeEach(() => {
     gameManager = {
+      addPlayerToGame: jest.fn(),
       createGame: jest.fn(),
+      removePlayerFromGame: jest.fn(),
+      setGameConfig: jest.fn(),
+      startGame: jest.fn(),
+      unStartGame: jest.fn(),
     }
   })
 
@@ -18,10 +23,10 @@ describe('Host New Game Command', () => {
       'c568788e-7e5b-47ad-a0e0-375e1f3996a4'
     )
     hostNewGameCommand.execute()
-    expect(gameManager.createGame).toHaveBeenCalledWith(
-      'James',
-      new UniqueIdentifier('c568788e-7e5b-47ad-a0e0-375e1f3996a4')
-    )
+    expect(gameManager.createGame).toHaveBeenCalledWith({
+      name: 'James',
+      id: new UniqueIdentifier('c568788e-7e5b-47ad-a0e0-375e1f3996a4'),
+    })
   })
 })
 
