@@ -1,7 +1,7 @@
 import BuryCommand from '../BuryCommand'
-import IGame from '../../Interfaces/IGame'
-import IPlayer from '../../Interfaces/IPlayer'
-import IRound from '../../Interfaces/IRound'
+import IGame from '../Interfaces/IGame'
+import IPlayer from '../Interfaces/IPlayer'
+import IRound from '../Interfaces/IRound'
 
 describe('Bury Command', () => {
   let game: IGame

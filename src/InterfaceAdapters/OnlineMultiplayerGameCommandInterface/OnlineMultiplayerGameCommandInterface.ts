@@ -1,4 +1,4 @@
-import CommandDTO from '../CommandExecutor/GameCommandDTOs/CommandDTO'
+import CommandDTO from '../CommandExecutor/CommandDTO'
 import ICommandCommunicatorResponse from '../ICommandCommunicatorResponse'
 import ICommandExecutor from '../CommandExecutor/ICommandExecutor'
 import ICommandInterface from '../ICommandInterface'

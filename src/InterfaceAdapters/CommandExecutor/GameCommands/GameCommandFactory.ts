@@ -1,15 +1,15 @@
 import BuryCommand from './BuryCommand'
-import BuryCommandDTO from '../GameCommandDTOs/BuryCommandDTO'
-import ICommand from './ICommand'
-import CommandDTO from '../GameCommandDTOs/CommandDTO'
-import IGame from '../Interfaces/IGame'
-import IGameCommandFactory from './IGameCommandFactory'
+import BuryCommandDTO from './GameCommandDTOs/BuryCommandDTO'
+import ICommand from '../ICommand'
+import CommandDTO from '../CommandDTO'
+import IGame from './Interfaces/IGame'
+import ICommandFactory from '../ICommandFactory'
 import PassCommand from './PassCommand'
 import PlayAgainCommand from './PlayAgainCommand'
 import PlayCommand from './PlayCommand'
-import PlayCommandDTO from '../GameCommandDTOs/PlayCommandDTO'
+import PlayCommandDTO from './GameCommandDTOs/PlayCommandDTO'
 
-class GameCommandFactory implements IGameCommandFactory {
+class GameCommandFactory implements ICommandFactory {
   private readonly game: IGame
 
   constructor(game: IGame) {

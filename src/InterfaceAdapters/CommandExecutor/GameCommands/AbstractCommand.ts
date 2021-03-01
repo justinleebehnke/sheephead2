@@ -1,5 +1,5 @@
-import ICommand from './ICommand'
-import IGame from '../Interfaces/IGame'
+import ICommand from '../ICommand'
+import IGame from './Interfaces/IGame'
 
 abstract class AbstractCommand implements ICommand {
   constructor(private readonly commandName: string, protected readonly game: IGame) {}

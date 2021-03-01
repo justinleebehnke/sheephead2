@@ -1,7 +1,7 @@
-import IGame from '../../Interfaces/IGame'
-import IPlayer from '../../Interfaces/IPlayer'
-import IRound from '../../Interfaces/IRound'
-import ICommand from '../ICommand'
+import IGame from '../Interfaces/IGame'
+import IPlayer from '../Interfaces/IPlayer'
+import IRound from '../Interfaces/IRound'
+import ICommand from '../../ICommand'
 import PlayCommand from '../PlayCommand'
 
 describe('Play Command', () => {

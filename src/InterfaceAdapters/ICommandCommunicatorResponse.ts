@@ -1,4 +1,4 @@
-import CommandDTO from './CommandExecutor/GameCommandDTOs/CommandDTO'
+import CommandDTO from './CommandExecutor/CommandDTO'
 
 interface ICommandCommunicatorResponse {
   indexOfNextCommand: number
