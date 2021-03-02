@@ -6,6 +6,7 @@ describe('Game Manager', () => {
   const realDate = Date.now
   let gameManager: GameManager
   let hostInfo: PlayerDTO
+  let firstJoinerInfo: PlayerDTO
 
   beforeEach(() => {
     gameManager = new GameManager()
@@ -13,6 +14,10 @@ describe('Game Manager', () => {
     hostInfo = {
       id: new UniqueIdentifier(),
       name: 'Jules Winnefield',
+    }
+    firstJoinerInfo = {
+      id: new UniqueIdentifier(),
+      name: 'Vincent Vega',
     }
   })
 
@@ -38,6 +43,19 @@ describe('Game Manager', () => {
       'Same person cannot host two games at once'
     )
   })
+
+  it('Should allow someone else to join a game', () => {
+    gameManager.createGame(hostInfo)
+    gameManager.addPlayerToGame(hostInfo.id, firstJoinerInfo)
+    expect(gameManager.getGameDataByHostId(hostInfo.id)?.players).toEqual([
+      hostInfo,
+      firstJoinerInfo,
+    ])
+  })
+
+  // if the host leaves a game, that game should not be found
+  // if the host leaves a game they should be able to create a new game
+  // if a person is in a game, they should not be able to host a game
 })
 
 export {}

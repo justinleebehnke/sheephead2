@@ -17,7 +17,7 @@ class GameManager implements IGameManager {
   }
 
   public addPlayerToGame(hostId: UniqueIdentifier, playerInfo: PlayerDTO): void {
-    throw new Error('Method not implemented.')
+    this.hostIdToGameData.get(hostId.getId())?.players.push(playerInfo)
   }
 
   public createGame(hostInfo: PlayerDTO): void {
