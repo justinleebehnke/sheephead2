@@ -35,6 +35,7 @@ describe('Game Manager', () => {
       gameManager.createGame(hostInfo)
       expect(gameManager.getGameDataByHostId(hostInfo.id)).toEqual({
         hostId: hostInfo.id,
+        isStarted: false,
         config: {
           shuffleSeed: new Date('2020-10-01').getTime(),
           firstDealerIndex: 0,
@@ -168,6 +169,24 @@ describe('Game Manager', () => {
       expect(() => gameManager.setGameConfig(hostInfo.id, config1)).toThrow(
         'Cannot set config of non-existent game'
       )
+    })
+  })
+
+  describe('Start Game', () => {
+    it('Should mark the game as started', () => {
+      gameManager.createGame(hostInfo)
+      gameManager.startGame(hostInfo.id)
+      expect(gameManager.getGameDataByHostId(hostInfo.id)?.isStarted).toBe(true)
+    })
+    it('Should throw an error if trying to start an already started game', () => {
+      gameManager.createGame(hostInfo)
+      gameManager.startGame(hostInfo.id)
+      expect(() => gameManager.startGame(hostInfo.id)).toThrow(
+        'The requested game is already started'
+      )
+    })
+    it('Should throw an error if the game is non-existent', () => {
+      expect(() => gameManager.startGame(hostInfo.id)).toThrow('Cannot start non-existent game')
     })
   })
 })

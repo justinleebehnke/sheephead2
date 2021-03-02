@@ -6,6 +6,7 @@ import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
 interface GameData {
   config: GameConfigurationDTO
   hostId: UniqueIdentifier
+  isStarted: boolean
   players: PlayerDTO[] // host is the player at index 0
 }
 
@@ -39,12 +40,13 @@ class GameManager implements IGameManager {
     }
 
     this.hostIdToGameData.set(hostInfo.id.getId(), {
-      hostId: hostInfo.id,
-      players: [hostInfo],
       config: {
         shuffleSeed: Date.now(),
         firstDealerIndex: 0,
       },
+      hostId: hostInfo.id,
+      isStarted: false,
+      players: [hostInfo],
     })
   }
 
@@ -83,7 +85,15 @@ class GameManager implements IGameManager {
   }
 
   public startGame(hostId: UniqueIdentifier): void {
-    throw new Error('Method not implemented.')
+    const game = this.hostIdToGameData.get(hostId.getId())
+    if (game) {
+      if (game.isStarted) {
+        throw Error('The requested game is already started')
+      }
+      game.isStarted = true
+    } else {
+      throw Error('Cannot start non-existent game')
+    }
   }
 
   public unStartGame(hostId: UniqueIdentifier): void {
