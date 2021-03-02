@@ -44,7 +44,30 @@ describe('Game Manager', () => {
         'Same person cannot host two games at once'
       )
     })
+
+    it('Should allow the host to create a new game even if they just left a game', () => {
+      gameManager.createGame(hostInfo)
+      gameManager.removePlayerFromGame(hostInfo.id, hostInfo.id)
+      gameManager.createGame(hostInfo)
+      expect(gameManager.getGameDataByHostId(hostInfo.id)).toBeDefined()
+    })
+
+    it('Should throw an error if a person is a player in a game and they try to host a game', () => {
+      gameManager.createGame(hostInfo)
+      gameManager.addPlayerToGame(hostInfo.id, firstJoinerInfo)
+      expect(() => gameManager.createGame(firstJoinerInfo)).toThrow(
+        'A player cannot be in two games, player cannot create a new game without leaving the first'
+      )
+    })
   })
+
+  // people cannot join two games
+  // you cannot join the same game twice player twice (as player or as host)
+  // you cannot join a game that you are already in
+  // a host of one game cannot join another
+  // when a game is destroyed all players must be safe
+  // if you try to join a game that doesn't exist it should throw an error
+  // if a person is in a game, they should not be able to host a game
 
   describe('Join Game', () => {
     it('Should allow someone else to join a game', () => {
@@ -77,11 +100,13 @@ describe('Game Manager', () => {
         "Cannot remove player from game because that player is not in the host's game"
       )
     })
-  })
 
-  // if the host leaves a game, that game should not be found
-  // if the host leaves a game they should be able to create a new game
-  // if a person is in a game, they should not be able to host a game
+    it('Should destroy the game if the host leaves the game', () => {
+      gameManager.createGame(hostInfo)
+      gameManager.removePlayerFromGame(hostInfo.id, hostInfo.id)
+      expect(gameManager.getGameDataByHostId(hostInfo.id)).toBeUndefined()
+    })
+  })
 })
 
 export {}

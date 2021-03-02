@@ -10,7 +10,7 @@ interface GameData {
 }
 
 class GameManager implements IGameManager {
-  private hostIdToGameData: Map<string, GameData>
+  private readonly hostIdToGameData: Map<string, GameData>
 
   constructor() {
     this.hostIdToGameData = new Map()
@@ -24,6 +24,13 @@ class GameManager implements IGameManager {
     if (this.hostIdToGameData.has(hostInfo.id.getId())) {
       throw Error('Same person cannot host two games at once')
     }
+
+    if (this.playerIsInAGame(hostInfo.id)) {
+      throw Error(
+        'A player cannot be in two games, player cannot create a new game without leaving the first'
+      )
+    }
+
     this.hostIdToGameData.set(hostInfo.id.getId(), {
       hostId: hostInfo.id,
       players: [hostInfo],
@@ -34,6 +41,16 @@ class GameManager implements IGameManager {
     })
   }
 
+  private playerIsInAGame(playerId: UniqueIdentifier): boolean {
+    let playerIsFoundInGame = false
+    this.hostIdToGameData.forEach((game: GameData) => {
+      if (game.players.some((player: PlayerDTO) => player.id.equals(playerId))) {
+        playerIsFoundInGame = true
+      }
+    })
+    return playerIsFoundInGame
+  }
+
   public removePlayerFromGame(playerId: UniqueIdentifier, hostId: UniqueIdentifier): void {
     const gameData = this.hostIdToGameData.get(hostId.getId())
     if (!gameData) {
@@ -42,7 +59,11 @@ class GameManager implements IGameManager {
     if (!gameData.players.some((player: PlayerDTO) => player.id.equals(playerId))) {
       throw Error("Cannot remove player from game because that player is not in the host's game")
     }
-    gameData.players = gameData.players.filter((player: PlayerDTO) => !player.id.equals(playerId))
+    if (playerId.equals(gameData.hostId)) {
+      this.hostIdToGameData.delete(hostId.getId())
+    } else {
+      gameData.players = gameData.players.filter((player: PlayerDTO) => !player.id.equals(playerId))
+    }
   }
 
   public setGameConfig(hostId: UniqueIdentifier, gameConfig: GameConfigurationDTO): void {
