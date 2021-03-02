@@ -17,7 +17,14 @@ class GameManager implements IGameManager {
   }
 
   public addPlayerToGame(hostId: UniqueIdentifier, playerInfo: PlayerDTO): void {
-    this.hostIdToGameData.get(hostId.getId())?.players.push(playerInfo)
+    if (this.playerIsInAGame(playerInfo.id)) {
+      throw Error('A player cannot be in two games')
+    }
+    const game = this.hostIdToGameData.get(hostId.getId())
+    if (!game) {
+      throw Error('Cannot add player to nonexistent game')
+    }
+    game.players.push(playerInfo)
   }
 
   public createGame(hostInfo: PlayerDTO): void {

@@ -7,6 +7,7 @@ describe('Game Manager', () => {
   let gameManager: GameManager
   let hostInfo: PlayerDTO
   let firstJoinerInfo: PlayerDTO
+  let secondJoinerInfo: PlayerDTO
 
   beforeEach(() => {
     gameManager = new GameManager()
@@ -18,6 +19,10 @@ describe('Game Manager', () => {
     firstJoinerInfo = {
       id: new UniqueIdentifier(),
       name: 'Vincent Vega',
+    }
+    secondJoinerInfo = {
+      id: new UniqueIdentifier(),
+      name: 'Mia Wallace',
     }
   })
 
@@ -61,14 +66,6 @@ describe('Game Manager', () => {
     })
   })
 
-  // people cannot join two games
-  // you cannot join the same game twice player twice (as player or as host)
-  // you cannot join a game that you are already in
-  // a host of one game cannot join another
-  // when a game is destroyed all players must be safe
-  // if you try to join a game that doesn't exist it should throw an error
-  // if a person is in a game, they should not be able to host a game
-
   describe('Join Game', () => {
     it('Should allow someone else to join a game', () => {
       gameManager.createGame(hostInfo)
@@ -77,6 +74,34 @@ describe('Game Manager', () => {
         hostInfo,
         firstJoinerInfo,
       ])
+    })
+    it('Should throw an error if the same person tries to join a second game', () => {
+      gameManager.createGame(hostInfo)
+      gameManager.createGame(secondJoinerInfo)
+      gameManager.addPlayerToGame(hostInfo.id, firstJoinerInfo)
+      expect(() => {
+        gameManager.addPlayerToGame(secondJoinerInfo.id, firstJoinerInfo)
+      }).toThrow('A player cannot be in two games')
+    })
+    it('Should throw an error if the same person tries to join a the same game', () => {
+      gameManager.createGame(hostInfo)
+      gameManager.addPlayerToGame(hostInfo.id, firstJoinerInfo)
+      expect(() => {
+        gameManager.addPlayerToGame(hostInfo.id, firstJoinerInfo)
+      }).toThrow('A player cannot be in two games')
+    })
+    it('Should throw an error if the host tries to join their own game', () => {
+      gameManager.createGame(hostInfo)
+      expect(() => {
+        gameManager.addPlayerToGame(hostInfo.id, hostInfo)
+      }).toThrow('A player cannot be in two games')
+    })
+    it('Should throw an error if the host of one game tries to join another', () => {
+      gameManager.createGame(hostInfo)
+      gameManager.createGame(secondJoinerInfo)
+      expect(() => {
+        gameManager.addPlayerToGame(secondJoinerInfo.id, hostInfo)
+      }).toThrow('A player cannot be in two games')
     })
   })
 
@@ -100,11 +125,22 @@ describe('Game Manager', () => {
         "Cannot remove player from game because that player is not in the host's game"
       )
     })
-
     it('Should destroy the game if the host leaves the game', () => {
       gameManager.createGame(hostInfo)
       gameManager.removePlayerFromGame(hostInfo.id, hostInfo.id)
       expect(gameManager.getGameDataByHostId(hostInfo.id)).toBeUndefined()
+    })
+    it('Should allow all players to join new games if the host of the original game left', () => {
+      gameManager.createGame(hostInfo)
+      gameManager.addPlayerToGame(hostInfo.id, firstJoinerInfo)
+      gameManager.removePlayerFromGame(hostInfo.id, hostInfo.id)
+      gameManager.createGame(firstJoinerInfo)
+      expect(gameManager.getGameDataByHostId(firstJoinerInfo.id)).toBeDefined()
+    })
+    it("Should throw an error if you try to join a game that doesn't exist", () => {
+      expect(() => gameManager.addPlayerToGame(hostInfo.id, firstJoinerInfo)).toThrow(
+        'Cannot add player to nonexistent game'
+      )
     })
   })
 })
