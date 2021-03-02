@@ -1,6 +1,6 @@
+import GameManager from './GameManager'
 import PlayerDTO from '../../UseCase/PlayerDTO'
 import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
-import GameManager from './GameManager'
 
 describe('Game Manager', () => {
   const realDate = Date.now
@@ -140,6 +140,33 @@ describe('Game Manager', () => {
     it("Should throw an error if you try to join a game that doesn't exist", () => {
       expect(() => gameManager.addPlayerToGame(hostInfo.id, firstJoinerInfo)).toThrow(
         'Cannot add player to nonexistent game'
+      )
+    })
+  })
+
+  describe('Setting The Game Config', () => {
+    it('Should update the game config to what it was set to', () => {
+      const config1 = { shuffleSeed: 123456789, firstDealerIndex: 3 }
+      const config2 = { shuffleSeed: 65345232, firstDealerIndex: 2 }
+
+      gameManager.createGame(hostInfo)
+      gameManager.setGameConfig(hostInfo.id, config1)
+      const serializedConfig1 = JSON.stringify(gameManager.getGameDataByHostId(hostInfo.id)?.config)
+
+      gameManager.setGameConfig(hostInfo.id, config2)
+      expect(JSON.stringify(gameManager.getGameDataByHostId(hostInfo.id)?.config)).not.toEqual(
+        serializedConfig1
+      )
+
+      gameManager.setGameConfig(hostInfo.id, config1)
+      expect(serializedConfig1).toEqual(
+        JSON.stringify(gameManager.getGameDataByHostId(hostInfo.id)?.config)
+      )
+    })
+    it('Should throw an error if trying to set the config of a non-existent game', () => {
+      const config1 = { shuffleSeed: 123456789, firstDealerIndex: 3 }
+      expect(() => gameManager.setGameConfig(hostInfo.id, config1)).toThrow(
+        'Cannot set config of non-existent game'
       )
     })
   })

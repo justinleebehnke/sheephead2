@@ -74,7 +74,12 @@ class GameManager implements IGameManager {
   }
 
   public setGameConfig(hostId: UniqueIdentifier, gameConfig: GameConfigurationDTO): void {
-    throw new Error('Method not implemented.')
+    const game = this.hostIdToGameData.get(hostId.getId())
+    if (game) {
+      game.config = gameConfig
+    } else {
+      throw Error('Cannot set config of non-existent game')
+    }
   }
 
   public startGame(hostId: UniqueIdentifier): void {
