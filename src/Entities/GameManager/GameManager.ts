@@ -35,7 +35,14 @@ class GameManager implements IGameManager {
   }
 
   public removePlayerFromGame(playerId: UniqueIdentifier, hostId: UniqueIdentifier): void {
-    throw new Error('Method not implemented.')
+    const gameData = this.hostIdToGameData.get(hostId.getId())
+    if (!gameData) {
+      throw Error('Cannot remove player from game because hostId did not produce a game')
+    }
+    if (!gameData.players.some((player: PlayerDTO) => player.id.equals(playerId))) {
+      throw Error("Cannot remove player from game because that player is not in the host's game")
+    }
+    gameData.players = gameData.players.filter((player: PlayerDTO) => !player.id.equals(playerId))
   }
 
   public setGameConfig(hostId: UniqueIdentifier, gameConfig: GameConfigurationDTO): void {
