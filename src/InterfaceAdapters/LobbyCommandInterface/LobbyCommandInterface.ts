@@ -4,14 +4,12 @@ import ICommandExecutor from '../CommandExecutor/ICommandExecutor'
 import ICommandInterface from '../ICommandInterface'
 import IFetch from '../IFetch'
 
-class OnlineMultiplayerGameCommandInterface implements ICommandInterface {
+class LobbyCommandInterface implements ICommandInterface {
   private indexOfNextCommand: number
-
   constructor(
     private readonly pollingFrequency: number,
     private readonly fetcher: IFetch,
     private readonly baseRoute: string,
-    private readonly hostId: string,
     private readonly commandExecutor: ICommandExecutor
   ) {
     this.indexOfNextCommand = 0
@@ -19,15 +17,13 @@ class OnlineMultiplayerGameCommandInterface implements ICommandInterface {
   }
 
   private async getCommands(): Promise<void> {
-    const response = await this.fetcher.get(
-      `${this.baseRoute}/${this.hostId}/${this.indexOfNextCommand}`
-    )
+    const response = await this.fetcher.get(`${this.baseRoute}/${this.indexOfNextCommand}`)
     this.handleResponse(response)
     setTimeout(() => this.getCommands(), this.pollingFrequency)
   }
 
   public async giveCommand(command: CommandDTO): Promise<void> {
-    this.fetcher.post(`${this.baseRoute}/${this.hostId}`, command)
+    this.fetcher.post(`${this.baseRoute}`, command)
   }
 
   private handleResponse(response: object): void {
@@ -52,4 +48,4 @@ class OnlineMultiplayerGameCommandInterface implements ICommandInterface {
   }
 }
 
-export default OnlineMultiplayerGameCommandInterface
+export default LobbyCommandInterface
