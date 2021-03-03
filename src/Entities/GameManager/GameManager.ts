@@ -1,14 +1,8 @@
 import GameConfigurationDTO from './GameConfigurationDTO'
+import GameData from './GameData'
 import IGameManager from './IGameManager'
 import PlayerDTO from '../../UseCase/PlayerDTO'
 import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
-
-interface GameData {
-  config: GameConfigurationDTO
-  hostId: UniqueIdentifier
-  isStarted: boolean
-  players: PlayerDTO[] // host is the player at index 0
-}
 
 class GameManager implements IGameManager {
   private readonly hostIdToGameData: Map<string, GameData>
@@ -97,7 +91,15 @@ class GameManager implements IGameManager {
   }
 
   public unStartGame(hostId: UniqueIdentifier): void {
-    throw new Error('Method not implemented.')
+    const game = this.hostIdToGameData.get(hostId.getId())
+    if (game) {
+      if (!game.isStarted) {
+        throw Error('The requested game is already not started')
+      }
+      game.isStarted = false
+    } else {
+      throw Error('Cannot un start non-existent game')
+    }
   }
 
   public getGameDataByHostId(hostId: UniqueIdentifier): GameData | undefined {

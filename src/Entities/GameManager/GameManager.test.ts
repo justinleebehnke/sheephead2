@@ -189,6 +189,26 @@ describe('Game Manager', () => {
       expect(() => gameManager.startGame(hostInfo.id)).toThrow('Cannot start non-existent game')
     })
   })
+
+  describe('Un Start Game', () => {
+    it('Should mark the game as not started', () => {
+      gameManager.createGame(hostInfo)
+      gameManager.startGame(hostInfo.id)
+      gameManager.unStartGame(hostInfo.id)
+      expect(gameManager.getGameDataByHostId(hostInfo.id)?.isStarted).toBe(false)
+    })
+    it('Should throw an error if trying to un start a not started game', () => {
+      gameManager.createGame(hostInfo)
+      expect(() => gameManager.unStartGame(hostInfo.id)).toThrow(
+        'The requested game is already not started'
+      )
+    })
+    it('Should throw an error if the game is non-existent', () => {
+      expect(() => gameManager.unStartGame(hostInfo.id)).toThrow(
+        'Cannot un start non-existent game'
+      )
+    })
+  })
 })
 
 export {}
