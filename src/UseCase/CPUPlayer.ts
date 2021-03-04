@@ -49,6 +49,7 @@ class CPUPlayer extends Player implements ISubscriber {
   private game: IReadOnlyGameModel
   private cardRanker: ICardRanker
   private commandInterface: ICommandInterface
+  private alreadyReportedReadiness: boolean
 
   constructor(
     name: string,
@@ -62,10 +63,15 @@ class CPUPlayer extends Player implements ISubscriber {
     this.game.addSubscriber(this)
     this.cardRanker = cardRanker
     this.commandInterface = commandInterface
+    this.alreadyReportedReadiness = false
   }
 
   public update(): void {
+    if (this.isRoundOver()) {
+      this.reportReadiness()
+    }
     if (this.isTurn()) {
+      this.alreadyReportedReadiness = false
       // this is a hack to solve a problem I don't understand
       // without this fake pause, the CPU players will all try to play out of turn
       // somehow the update is being triggered during someone's turn and then immediately being triggered again making it someone elses turn
@@ -76,6 +82,22 @@ class CPUPlayer extends Player implements ISubscriber {
           console.log('NOT MY TURN ANYMORE', this.getName())
         }
       })
+    }
+  }
+
+  private isRoundOver(): boolean {
+    return this.game.getCurrentRound()?.isOver() || false
+  }
+
+  private reportReadiness(): void {
+    if (!this.alreadyReportedReadiness) {
+      this.commandInterface.giveCommand({
+        name: 'playAgain',
+        params: {
+          playerId: this.getId(),
+        },
+      })
+      this.alreadyReportedReadiness = true
     }
   }
 

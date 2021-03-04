@@ -1,10 +1,13 @@
 import IGame from '../Interfaces/IGame'
 import PlayAgainCommand from '../PlayAgainCommand'
+import UniqueIdentifier from '../../../../Utilities/UniqueIdentifier'
 
 describe('Play Again Command', () => {
   let game: IGame
+  let playerId: UniqueIdentifier
 
   beforeEach(() => {
+    playerId = new UniqueIdentifier()
     game = {
       getCurrentRound: jest.fn(),
       playAgain: jest.fn(),
@@ -12,8 +15,8 @@ describe('Play Again Command', () => {
   })
 
   it('Should call play again on the game', () => {
-    new PlayAgainCommand(game).execute()
-    expect(game.playAgain).toHaveBeenCalled()
+    new PlayAgainCommand(game, playerId.getId()).execute()
+    expect(game.playAgain).toHaveBeenCalledWith(playerId)
   })
 })
 

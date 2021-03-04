@@ -4,11 +4,14 @@ import IGame from '../Interfaces/IGame'
 import PassCommand from '../PassCommand'
 import PlayAgainCommand from '../PlayAgainCommand'
 import PlayCommand from '../PlayCommand'
+import UniqueIdentifier from '../../../../Utilities/UniqueIdentifier'
 
 describe('Game Command Factory', () => {
   let gameCommandFactory: GameCommandFactory
   let game: IGame
+  let playerId: UniqueIdentifier
   beforeEach(() => {
+    playerId = new UniqueIdentifier()
     gameCommandFactory = new GameCommandFactory(game)
   })
 
@@ -30,9 +33,9 @@ describe('Game Command Factory', () => {
   })
 
   it('Should create a Play Again Command when given a PlayAgainCommandDTO', () => {
-    expect(gameCommandFactory.getCommand({ name: 'playAgain', params: null })).toEqual(
-      new PlayAgainCommand(game)
-    )
+    expect(
+      gameCommandFactory.getCommand({ name: 'playAgain', params: { playerId: playerId.getId() } })
+    ).toEqual(new PlayAgainCommand(game, playerId.getId()))
   })
 })
 
