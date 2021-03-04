@@ -4,6 +4,7 @@ import ICommandInterface from '../ICommandInterface'
 import IGameBoardModel from '../IGameBoardModel'
 import IGameBoardPresenter from '../../Views/GamePlayViews/IGameBoardPresenter'
 import ISubscriber from '../../Entities/ISubscriber'
+import PlayerData from '../../Views/GamePlayViews/EndOfRoundReport/PlayerData'
 
 class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
   private readonly commandInterface: ICommandInterface
@@ -96,9 +97,15 @@ class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
   }
 
   public playAgain(): void {
+    const localPlayerData = this.model.getDataForLocalPlayer()
+    const localPlayerInfo = this.model
+      .getPlayersData()
+      .find((player: PlayerData) => player.name === localPlayerData.name)
     this.commandInterface.giveCommand({
       name: 'playAgain',
-      params: null,
+      params: {
+        playerId: localPlayerInfo?.id,
+      },
     })
   }
 }
