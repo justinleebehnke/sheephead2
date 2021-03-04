@@ -11,6 +11,19 @@ class Game implements ISubscriber, IReadOnlyGameModel {
   private currentRound: Round | null
   private subscribers: ISubscriber[]
   private shuffleSeed: number
+  private readonly idsOfPlayersThatAreReadyToPlayAgain: Set<string>
+
+  public constructor(players: Player[], dealerIndex: number, shuffleSeed: number) {
+    this.players = players
+    this.currentDealer = dealerIndex
+    this.currentRound = null
+    this.subscribers = []
+    this.shuffleSeed = shuffleSeed
+    this.idsOfPlayersThatAreReadyToPlayAgain = new Set()
+    if (players.length === 4) {
+      this.playRound()
+    }
+  }
 
   public addSubscriber(newSubscriber: ISubscriber): void {
     this.subscribers.push(newSubscriber)
@@ -26,17 +39,6 @@ class Game implements ISubscriber, IReadOnlyGameModel {
 
   public update(): void {
     this.notifySubscribers()
-  }
-
-  public constructor(players: Player[], dealerIndex: number, shuffleSeed: number) {
-    this.players = players
-    this.currentDealer = dealerIndex
-    this.currentRound = null
-    this.subscribers = []
-    this.shuffleSeed = shuffleSeed
-    if (players.length === 4) {
-      this.playRound()
-    }
   }
 
   public getIndexOfPlayerById(id: UniqueIdentifier): number {
@@ -91,10 +93,14 @@ class Game implements ISubscriber, IReadOnlyGameModel {
     this.notifySubscribers()
   }
 
-  public playAgain(): void {
-    this.currentRound?.removeSubscriber(this)
-    this.setNextDealer()
-    this.playRound()
+  public playAgain(playerId: UniqueIdentifier): void {
+    this.idsOfPlayersThatAreReadyToPlayAgain.add(playerId.getId())
+    if (this.idsOfPlayersThatAreReadyToPlayAgain.size === this.players.length) {
+      this.idsOfPlayersThatAreReadyToPlayAgain.clear()
+      this.currentRound?.removeSubscriber(this)
+      this.setNextDealer()
+      this.playRound()
+    }
   }
 
   private setNextDealer(): void {

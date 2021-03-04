@@ -181,7 +181,9 @@ describe('Game Board Presenter', () => {
       presenter.playAgain()
       expect(commandInterface.giveCommand).toHaveBeenCalledWith({
         name: 'playAgain',
-        params: null,
+        params: {
+          playerId: 'georges-id',
+        },
       })
     })
   })

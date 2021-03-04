@@ -14,7 +14,15 @@ type Props = {
   endOfGamePresenter: EndOfRoundPresenter
 }
 
-class EndOfRoundReport extends Component<Props> {
+type State = {
+  hasClickedReadyToPlayAgain: boolean
+}
+
+class EndOfRoundReport extends Component<Props, State> {
+  state = {
+    hasClickedReadyToPlayAgain: false,
+  }
+
   render() {
     const report = this.props.endOfRoundData.endOfRoundReport
     const players = this.props.endOfRoundData.players
@@ -125,14 +133,23 @@ class EndOfRoundReport extends Component<Props> {
             </Table>
           </Modal.Body>
           <Modal.Footer>
-            <Button
-              variant='primary'
-              onClick={() => {
-                this.props.endOfGamePresenter.playAgain()
-              }}
-            >
-              Play Another Round
-            </Button>
+            {!this.state.hasClickedReadyToPlayAgain && (
+              <Button
+                variant='primary'
+                onClick={() => {
+                  this.props.endOfGamePresenter.playAgain()
+                  this.setState({ hasClickedReadyToPlayAgain: true })
+                }}
+              >
+                Play Another Round
+              </Button>
+            )}
+            {this.state.hasClickedReadyToPlayAgain && (
+              <div className='ready'>
+                Got it. <br />
+                We'll start the next round as soon as everyone else is ready.
+              </div>
+            )}
           </Modal.Footer>
         </Modal>
       )
