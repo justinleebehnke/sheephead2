@@ -1,12 +1,13 @@
-import GameData from '../../../Entities/GameManager/GameData'
-import ISubscriber from '../../../Entities/ISubscriber'
 import AddPlayerToGameCommandDTO from '../../../InterfaceAdapters/CommandExecutor/LobbyCommands/LobbyCommandDTOs/AddPlayerToGameCommandDTO'
+import GameData from '../../../Entities/GameManager/GameData'
 import ICommandInterface from '../../../InterfaceAdapters/ICommandInterface'
-import UniqueIdentifier from '../../../Utilities/UniqueIdentifier'
-import ILocalPlayerInfoManager from '../LobbyEntranceView/ILocalPlayerInfoManager'
 import IGameList from './IGameList'
+import ILocalPlayerInfoManager from '../LobbyEntranceView/ILocalPlayerInfoManager'
+import INotifier from '../LobbyEntranceView/INotifier'
+import ISubscriber from '../../../Entities/ISubscriber'
 import JoinableGameData from './JoinableGameData'
 import JoinableGamesPresenter from './JoinableGamesPresenter'
+import UniqueIdentifier from '../../../Utilities/UniqueIdentifier'
 
 describe('Joinable Games Presenter', () => {
   let presenter: JoinableGamesPresenter
@@ -21,8 +22,12 @@ describe('Joinable Games Presenter', () => {
     id: UniqueIdentifier
   }
   let localPlayerInfoManager: ILocalPlayerInfoManager
+  let notifier: INotifier
 
   beforeEach(() => {
+    notifier = {
+      notify: jest.fn(),
+    }
     const hostId = new UniqueIdentifier()
     const hostId2 = new UniqueIdentifier()
     localPlayerInfo = {
@@ -110,7 +115,12 @@ describe('Joinable Games Presenter', () => {
       update: jest.fn(),
     }
     joinableGames = [{ hostId: hostId3, playerNames: ['George', 'Lucas', 'Oswald'] }]
-    presenter = new JoinableGamesPresenter(commandInterface, gameList, localPlayerInfoManager)
+    presenter = new JoinableGamesPresenter(
+      commandInterface,
+      gameList,
+      localPlayerInfoManager,
+      notifier
+    )
     presenter.setView(view)
   })
 
@@ -118,7 +128,7 @@ describe('Joinable Games Presenter', () => {
     expect(presenter.getJoinableGameData()).toEqual(joinableGames)
   })
   it('Should send a join game command with the host id and everything that is needed', () => {
-    presenter.joinGame(hostId3)
+    presenter.joinGame(hostId3.getId())
     const addPlayerCommand: AddPlayerToGameCommandDTO = {
       name: 'addPlayer',
       params: {
@@ -134,8 +144,53 @@ describe('Joinable Games Presenter', () => {
     presenter.gameListUpdated()
     expect(view.update).toHaveBeenCalled()
   })
-  // if there is no name, if the string is invalid
-  // we should handle that here
+  it('Should throw an error if the local player id is not something that can be made into a valid unique id (this should have been handled elsewhere)', () => {
+    localPlayerInfoManager.getPlayerId = () => 'I will not become an Id'
+    presenter = new JoinableGamesPresenter(
+      commandInterface,
+      gameList,
+      localPlayerInfoManager,
+      notifier
+    )
+    expect(() => presenter.joinGame(hostId3.getId())).toThrow(
+      'Cannot join game because local player id is not valid'
+    )
+  })
+  it('Should alert the user to enter their name saying that you cannot join a game unless you have entered your name', () => {
+    localPlayerInfoManager.getPlayerName = () => ''
+    presenter = new JoinableGamesPresenter(
+      commandInterface,
+      gameList,
+      localPlayerInfoManager,
+      notifier
+    )
+    presenter.joinGame(hostId3.getId())
+    expect(notifier.notify).toHaveBeenCalledWith('Please enter your name before joining a game')
+  })
+  it('Should throw an error if the host id is not a valid Unique Id', () => {
+    localPlayerInfoManager.getPlayerName = () => ''
+    presenter = new JoinableGamesPresenter(
+      commandInterface,
+      gameList,
+      localPlayerInfoManager,
+      notifier
+    )
+    expect(() => presenter.joinGame('i am not a valid host id')).toThrow(
+      'Cannot join game because host id was invalid'
+    )
+  })
+  it('Should throw an error the host id received is not the host of a joinable game', () => {
+    localPlayerInfoManager.getPlayerName = () => ''
+    presenter = new JoinableGamesPresenter(
+      commandInterface,
+      gameList,
+      localPlayerInfoManager,
+      notifier
+    )
+    expect(() => presenter.joinGame(localPlayerInfo.id.getId())).toThrow(
+      'The game for that host id either is not joinable or does not exist'
+    )
+  })
 })
 
 export {}

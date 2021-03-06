@@ -1,10 +1,9 @@
-import JoinableGameData from './JoinableGameData'
-import UniqueIdentifier from '../../../Utilities/UniqueIdentifier'
 import ISubscriber from '../../../Entities/ISubscriber'
+import JoinableGameData from './JoinableGameData'
 
 interface IJoinableGamesPresenter {
   getJoinableGameData(): JoinableGameData[]
-  joinGame(hostId: UniqueIdentifier): void
+  joinGame(hostId: string): void
   setView(view: ISubscriber): void
 }
 
