@@ -1,7 +1,9 @@
 import GameData from '../../../Entities/GameManager/GameData'
 import ISubscriber from '../../../Entities/ISubscriber'
+import AddPlayerToGameCommandDTO from '../../../InterfaceAdapters/CommandExecutor/LobbyCommands/LobbyCommandDTOs/AddPlayerToGameCommandDTO'
 import ICommandInterface from '../../../InterfaceAdapters/ICommandInterface'
 import UniqueIdentifier from '../../../Utilities/UniqueIdentifier'
+import ILocalPlayerInfoManager from '../LobbyEntranceView/ILocalPlayerInfoManager'
 import IGameList from './IGameList'
 import JoinableGameData from './JoinableGameData'
 import JoinableGamesPresenter from './JoinableGamesPresenter'
@@ -13,11 +15,27 @@ describe('Joinable Games Presenter', () => {
   let commandInterface: ICommandInterface
   let view: ISubscriber
   let allGames: GameData[]
+  let hostId3: UniqueIdentifier
+  let localPlayerInfo: {
+    name: string
+    id: UniqueIdentifier
+  }
+  let localPlayerInfoManager: ILocalPlayerInfoManager
 
   beforeEach(() => {
     const hostId = new UniqueIdentifier()
     const hostId2 = new UniqueIdentifier()
-    const hostId3 = new UniqueIdentifier()
+    localPlayerInfo = {
+      id: new UniqueIdentifier(),
+      name: 'Winston "The Wolf" Wolf',
+    }
+    localPlayerInfoManager = {
+      getPlayerId: () => localPlayerInfo.id.getId(),
+      getPlayerName: () => localPlayerInfo.name,
+      setPlayerId: () => {},
+      setPlayerName: () => {},
+    }
+    hostId3 = new UniqueIdentifier()
     allGames = [
       {
         hostId,
@@ -92,19 +110,32 @@ describe('Joinable Games Presenter', () => {
       update: jest.fn(),
     }
     joinableGames = [{ hostId: hostId3, playerNames: ['George', 'Lucas', 'Oswald'] }]
-    presenter = new JoinableGamesPresenter(commandInterface, gameList)
+    presenter = new JoinableGamesPresenter(commandInterface, gameList, localPlayerInfoManager)
     presenter.setView(view)
   })
 
   it('Should show only the games that are not started AND have fewer than four players', () => {
     expect(presenter.getJoinableGameData()).toEqual(joinableGames)
   })
-  it('Should send a join game command with the host id and everything that is needed', () => {})
+  it('Should send a join game command with the host id and everything that is needed', () => {
+    presenter.joinGame(hostId3)
+    const addPlayerCommand: AddPlayerToGameCommandDTO = {
+      name: 'addPlayer',
+      params: {
+        hostId: hostId3.getId(),
+        playerId: localPlayerInfo.id.getId(),
+        playerName: localPlayerInfo.name,
+      },
+    }
+    expect(commandInterface.giveCommand).toHaveBeenCalledWith(addPlayerCommand)
+  })
   it('Should observe the game manager and update the view whenever the game manager says that it has changed', () => {
     expect(gameList.subscribe).toHaveBeenCalledWith(presenter)
     presenter.gameListUpdated()
     expect(view.update).toHaveBeenCalled()
   })
+  // if there is no name, if the string is invalid
+  // we should handle that here
 })
 
 export {}

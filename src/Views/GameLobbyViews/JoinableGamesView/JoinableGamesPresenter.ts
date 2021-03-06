@@ -1,12 +1,14 @@
-import IJoinableGamesPresenter from './IJoinableGamesPresenter'
-import JoinableGameData from './JoinableGameData'
-import UniqueIdentifier from '../../../Utilities/UniqueIdentifier'
-import ISubscriber from '../../../Entities/ISubscriber'
+import AddPlayerToGameCommandDTO from '../../../InterfaceAdapters/CommandExecutor/LobbyCommands/LobbyCommandDTOs/AddPlayerToGameCommandDTO'
+import GameData from '../../../Entities/GameManager/GameData'
 import ICommandInterface from '../../../InterfaceAdapters/ICommandInterface'
 import IGameList from './IGameList'
 import IGameListSubscriber from './IGameListSubscriber'
-import GameData from '../../../Entities/GameManager/GameData'
+import IJoinableGamesPresenter from './IJoinableGamesPresenter'
+import ILocalPlayerInfoManager from '../LobbyEntranceView/ILocalPlayerInfoManager'
+import ISubscriber from '../../../Entities/ISubscriber'
+import JoinableGameData from './JoinableGameData'
 import PlayerDTO from '../../../UseCase/PlayerDTO'
+import UniqueIdentifier from '../../../Utilities/UniqueIdentifier'
 
 const NUM_PLAYERS = 4
 
@@ -15,7 +17,8 @@ class JoinableGamesPresenter implements IJoinableGamesPresenter, IGameListSubscr
 
   constructor(
     private readonly lobbyCommand: ICommandInterface,
-    private readonly gameList: IGameList
+    private readonly gameList: IGameList,
+    private readonly localPlayerInfoManager: ILocalPlayerInfoManager
   ) {
     this.gameList.subscribe(this)
   }
@@ -41,7 +44,19 @@ class JoinableGamesPresenter implements IJoinableGamesPresenter, IGameListSubscr
   }
 
   public joinGame(hostId: UniqueIdentifier): void {
-    throw new Error('Method not implemented.')
+    const localPlayerId = this.localPlayerInfoManager.getPlayerId()
+    const localPlayerName = this.localPlayerInfoManager.getPlayerName()
+
+    const addPlayerCommand: AddPlayerToGameCommandDTO = {
+      name: 'addPlayer',
+      params: {
+        hostId: hostId.getId(),
+        playerId: localPlayerId,
+        playerName: localPlayerName,
+      },
+    }
+
+    this.lobbyCommand.giveCommand(addPlayerCommand)
   }
 }
 
