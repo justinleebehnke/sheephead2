@@ -12,7 +12,7 @@ class UniqueIdentifier {
   constructor(id?: string) {
     if (id === undefined) {
       this.id = v4()
-    } else if (validate(id)) {
+    } else if (UniqueIdentifier.isValidIdString(id)) {
       this.id = id
     } else {
       throw Error(`Id: "${id}" is not a valid UniqueIdentifier`)
@@ -28,6 +28,10 @@ class UniqueIdentifier {
       return compare.getId() === this.getId()
     }
     return false
+  }
+
+  public static isValidIdString(id: string): boolean {
+    return validate(id)
   }
 }
 
