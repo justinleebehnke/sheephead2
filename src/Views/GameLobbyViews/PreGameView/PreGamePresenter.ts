@@ -5,8 +5,8 @@ import ILocalPlayerInfoManager from '../LobbyEntranceView/ILocalPlayerInfoManage
 import ISubscriber from '../../../Entities/ISubscriber'
 import PlayerData from '../../GamePlayViews/EndOfRoundReport/PlayerData'
 import PlayerDTO from '../../../UseCase/PlayerDTO'
-import UniqueIdentifier from '../../../Utilities/UniqueIdentifier'
 import RemovePlayerFromGameCommandDTO from '../../../InterfaceAdapters/CommandExecutor/LobbyCommands/LobbyCommandDTOs/RemovePlayerFromGameCommandDTO'
+import UniqueIdentifier from '../../../Utilities/UniqueIdentifier'
 
 class PreGamePresenter implements IGameListSubscriber {
   private view: ISubscriber | undefined
@@ -80,7 +80,17 @@ class PreGamePresenter implements IGameListSubscriber {
         playerId,
       },
     }
+    this.commandInterface.giveCommand(removePlayerCommand)
+  }
 
+  public leaveGame(): void {
+    const removePlayerCommand: RemovePlayerFromGameCommandDTO = {
+      name: 'removePlayer',
+      params: {
+        hostId: this.hostId.getId(),
+        playerId: this.localPlayerInfoManager.getPlayerId(),
+      },
+    }
     this.commandInterface.giveCommand(removePlayerCommand)
   }
 }

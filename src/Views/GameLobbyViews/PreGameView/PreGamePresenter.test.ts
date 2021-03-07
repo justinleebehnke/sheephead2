@@ -161,8 +161,17 @@ describe('PreGamePresenter', () => {
   })
 
   describe('leaveGame', () => {
-    // send a leave game ocmmand
-    // it should create a removePlayerFromGame command with the local player info
+    it('Should create a remove player from game command with the local players info', () => {
+      const removePlayerCommand: RemovePlayerFromGameCommandDTO = {
+        name: 'removePlayer',
+        params: {
+          hostId: hostId.getId(),
+          playerId: localPlayerId.getId(),
+        },
+      }
+      presenter.leaveGame()
+      expect(commandInterface.giveCommand).toHaveBeenCalledWith(removePlayerCommand)
+    })
   })
 
   describe('startGame', () => {
