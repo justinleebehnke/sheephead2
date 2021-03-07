@@ -1,6 +1,6 @@
 import GameData from '../../../Entities/GameManager/GameData'
-import UniqueIdentifier from '../../../Utilities/UniqueIdentifier'
 import IGameListSubscriber from './IGameListSubscriber'
+import UniqueIdentifier from '../../../Utilities/UniqueIdentifier'
 
 interface IGameList {
   subscribe(subscriber: IGameListSubscriber): void

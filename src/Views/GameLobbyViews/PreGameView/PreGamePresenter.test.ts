@@ -69,11 +69,11 @@ describe('PreGamePresenter', () => {
         localPlayerInfoManager,
         commandInterface
       )
-      expect(presenter.isHosting()).toBe(true)
+      expect(presenter.isHosting).toBe(true)
     })
     it('Should return false if the local player is not the host', () => {
       presenter = new PreGamePresenter(gameList, hostId, localPlayerInfoManager, commandInterface)
-      expect(presenter.isHosting()).toBe(false)
+      expect(presenter.isHosting).toBe(false)
     })
   })
 
@@ -126,7 +126,7 @@ describe('PreGamePresenter', () => {
 
   describe('getFirstDealerIndex', () => {
     it('Should throw an error if someone other than the host is asking', () => {
-      expect(presenter.isHosting()).toBe(false)
+      expect(presenter.isHosting).toBe(false)
       expect(() => presenter.getFirstDealerIndex()).toThrow(
         'Only the host may read the index of the first dealer'
       ) // this will likely be changed in the future when a 'configUpdate' lobby command is made

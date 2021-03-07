@@ -8,8 +8,9 @@ import PlayerDTO from '../../../UseCase/PlayerDTO'
 import RemovePlayerFromGameCommandDTO from '../../../InterfaceAdapters/CommandExecutor/LobbyCommands/LobbyCommandDTOs/RemovePlayerFromGameCommandDTO'
 import UniqueIdentifier from '../../../Utilities/UniqueIdentifier'
 import StartGameCommandDTO from '../../../InterfaceAdapters/CommandExecutor/LobbyCommands/LobbyCommandDTOs/StartGameCommandDTO'
+import IPreGamePresenter from './IPreGamePresenter'
 
-class PreGamePresenter implements IGameListSubscriber {
+class PreGamePresenter implements IGameListSubscriber, IPreGamePresenter {
   private view: ISubscriber | undefined
   private firstDealerIndex: number
 
@@ -37,7 +38,7 @@ class PreGamePresenter implements IGameListSubscriber {
     })
   }
 
-  public isHosting(): boolean {
+  public get isHosting(): boolean {
     return this.hostId.equals(new UniqueIdentifier(this.localPlayerInfoManager.getPlayerId()))
   }
 
@@ -51,7 +52,7 @@ class PreGamePresenter implements IGameListSubscriber {
   }
 
   public setFirstDealerIndex(index: number): void {
-    if (!this.isHosting()) {
+    if (!this.isHosting) {
       throw Error('Only the host may set the dealer index')
     }
     if (index < 0 || index > 3) {
@@ -62,14 +63,14 @@ class PreGamePresenter implements IGameListSubscriber {
   }
 
   public getFirstDealerIndex(): number {
-    if (!this.isHosting()) {
+    if (!this.isHosting) {
       throw Error('Only the host may read the index of the first dealer')
     }
     return this.firstDealerIndex
   }
 
   public removePlayer(playerId: string): any {
-    if (!this.isHosting()) {
+    if (!this.isHosting) {
       throw new Error('Only the host may remove a player')
     }
 
@@ -95,7 +96,7 @@ class PreGamePresenter implements IGameListSubscriber {
   }
 
   public startGame(): void {
-    if (!this.isHosting()) {
+    if (!this.isHosting) {
       throw new Error('Only the host may start the game')
     }
     const startGameCommand: StartGameCommandDTO = {
