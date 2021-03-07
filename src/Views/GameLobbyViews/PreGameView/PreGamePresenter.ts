@@ -7,6 +7,7 @@ import PlayerData from '../../GamePlayViews/EndOfRoundReport/PlayerData'
 import PlayerDTO from '../../../UseCase/PlayerDTO'
 import RemovePlayerFromGameCommandDTO from '../../../InterfaceAdapters/CommandExecutor/LobbyCommands/LobbyCommandDTOs/RemovePlayerFromGameCommandDTO'
 import UniqueIdentifier from '../../../Utilities/UniqueIdentifier'
+import StartGameCommandDTO from '../../../InterfaceAdapters/CommandExecutor/LobbyCommands/LobbyCommandDTOs/StartGameCommandDTO'
 
 class PreGamePresenter implements IGameListSubscriber {
   private view: ISubscriber | undefined
@@ -19,7 +20,7 @@ class PreGamePresenter implements IGameListSubscriber {
     private readonly commandInterface: ICommandInterface
   ) {
     this.gameList.subscribe(this)
-    this.firstDealerIndex = -1
+    this.firstDealerIndex = 0
   }
 
   public gameListUpdated(): void {
@@ -42,7 +43,6 @@ class PreGamePresenter implements IGameListSubscriber {
 
   public getDealerSelectDropDownData(): { value: number; displayedValue: string }[] {
     return [
-      { value: -1, displayedValue: 'Random' },
       { value: 0, displayedValue: 'Host (You)' },
       { value: 1, displayedValue: 'Player 2' },
       { value: 2, displayedValue: 'Player 3' },
@@ -54,8 +54,8 @@ class PreGamePresenter implements IGameListSubscriber {
     if (!this.isHosting()) {
       throw Error('Only the host may set the dealer index')
     }
-    if (index < -1 || index > 3) {
-      throw Error('Value must be between -1 and 3')
+    if (index < 0 || index > 3) {
+      throw Error('Value must be between 0 and 3')
     }
     this.firstDealerIndex = index
     this.view?.update()
@@ -92,6 +92,21 @@ class PreGamePresenter implements IGameListSubscriber {
       },
     }
     this.commandInterface.giveCommand(removePlayerCommand)
+  }
+
+  public startGame(): void {
+    if (!this.isHosting()) {
+      throw new Error('Only the host may start the game')
+    }
+    const startGameCommand: StartGameCommandDTO = {
+      name: 'startGame',
+      params: {
+        hostId: this.hostId.getId(),
+        shuffleSeed: new Date(Date.now()).getTime(),
+        firstDealerIndex: this.firstDealerIndex,
+      },
+    }
+    this.commandInterface.giveCommand(startGameCommand)
   }
 }
 

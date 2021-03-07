@@ -5,6 +5,7 @@ import ILocalPlayerInfoManager from '../LobbyEntranceView/ILocalPlayerInfoManage
 import ISubscriber from '../../../Entities/ISubscriber'
 import PreGamePresenter from './PreGamePresenter'
 import RemovePlayerFromGameCommandDTO from '../../../InterfaceAdapters/CommandExecutor/LobbyCommands/LobbyCommandDTOs/RemovePlayerFromGameCommandDTO'
+import StartGameCommandDTO from '../../../InterfaceAdapters/CommandExecutor/LobbyCommands/LobbyCommandDTOs/StartGameCommandDTO'
 import UniqueIdentifier from '../../../Utilities/UniqueIdentifier'
 
 describe('PreGamePresenter', () => {
@@ -35,7 +36,7 @@ describe('PreGamePresenter', () => {
       isStarted: false,
       hostId,
       config: {
-        firstDealerIndex: -1,
+        firstDealerIndex: 0,
         shuffleSeed: 1234543,
       },
       players: [{ id: hostId, name: 'Marsellus Wallace' }],
@@ -79,7 +80,6 @@ describe('PreGamePresenter', () => {
   describe('Get Dealer Select Values', () => {
     it('Should return the appropriate values in the appropriate order', () => {
       expect(presenter.getDealerSelectDropDownData()).toEqual([
-        { value: -1, displayedValue: 'Random' },
         { value: 0, displayedValue: 'Host (You)' },
         { value: 1, displayedValue: 'Player 2' },
         { value: 2, displayedValue: 'Player 3' },
@@ -119,8 +119,8 @@ describe('PreGamePresenter', () => {
         localPlayerInfoManager,
         commandInterface
       )
-      expect(() => presenter.setFirstDealerIndex(-2)).toThrow('Value must be between -1 and 3')
-      expect(() => presenter.setFirstDealerIndex(4)).toThrow('Value must be between -1 and 3')
+      expect(() => presenter.setFirstDealerIndex(-1)).toThrow('Value must be between 0 and 3')
+      expect(() => presenter.setFirstDealerIndex(4)).toThrow('Value must be between 0 and 3')
     })
   })
 
@@ -175,10 +175,29 @@ describe('PreGamePresenter', () => {
   })
 
   describe('startGame', () => {
-    // when you are hosting you can start the game
-    // throw error if not host
-    // throw error if there are not 4 players
-    // if the current index is -1 choose a random index before sending the command (do not send -1) everyone else needs to know who the real first dealer is
+    it('Should throw an error not hosting', () => {
+      expect(() => presenter.startGame()).toThrow('Only the host may start the game')
+    })
+
+    it('Should choose correctly build a start game command based on who started', () => {
+      presenter = new PreGamePresenter(
+        gameList,
+        localPlayerId,
+        localPlayerInfoManager,
+        commandInterface
+      )
+      presenter.setFirstDealerIndex(1)
+      presenter.startGame()
+      const startGameCommand: StartGameCommandDTO = {
+        name: 'startGame',
+        params: {
+          shuffleSeed: new Date(Date.now()).getTime(),
+          firstDealerIndex: 1,
+          hostId: localPlayerId.getId(),
+        },
+      }
+      expect(commandInterface.giveCommand).toHaveBeenCalledWith(startGameCommand)
+    })
   })
 })
 
