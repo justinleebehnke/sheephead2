@@ -107,6 +107,7 @@ describe('Joinable Games Presenter', () => {
     gameList = {
       subscribe: jest.fn(),
       getAllGames: jest.fn().mockReturnValue(allGames),
+      getGameByHostId: jest.fn(),
     }
     commandInterface = {
       giveCommand: jest.fn(),
