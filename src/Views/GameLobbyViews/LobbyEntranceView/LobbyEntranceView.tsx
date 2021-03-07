@@ -9,6 +9,10 @@ type Props = {
 }
 
 class LobbyEntranceView extends Component<Props> {
+  componentDidMount(): void {
+    this.props.presenter.setView(this)
+  }
+
   render(): ReactElement {
     return (
       <div id='lobby-entrance'>
@@ -21,7 +25,7 @@ class LobbyEntranceView extends Component<Props> {
             <FormControl
               required
               onBlur={() => this.props.presenter.nameInputBlurred()}
-              onChange={this.updateName}
+              onChange={(event) => this.updateName(event)}
               aria-label='Large'
               aria-describedby='inputGroup-sizing-sm'
               value={this.props.presenter.getLocalPlayerName()}
@@ -38,6 +42,10 @@ class LobbyEntranceView extends Component<Props> {
   private updateName(event: React.ChangeEvent): void {
     const target = event.target as HTMLInputElement
     this.props.presenter.setLocalPlayerName(target.value)
+  }
+
+  public update(): void {
+    this.setState({})
   }
 }
 
