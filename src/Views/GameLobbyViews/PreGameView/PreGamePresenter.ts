@@ -69,7 +69,7 @@ class PreGamePresenter implements IGameListSubscriber {
   }
 
   public removePlayer(playerId: string): any {
-    if (!this.isHosting) {
+    if (!this.isHosting()) {
       throw new Error('Only the host may remove a player')
     }
 

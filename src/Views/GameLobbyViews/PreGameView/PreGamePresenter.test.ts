@@ -143,7 +143,7 @@ describe('PreGamePresenter', () => {
       const removePlayerCommand: RemovePlayerFromGameCommandDTO = {
         name: 'removePlayer',
         params: {
-          hostId: hostId.getId(),
+          hostId: localPlayerId.getId(),
           playerId: otherPlayerId.getId(),
         },
       }
