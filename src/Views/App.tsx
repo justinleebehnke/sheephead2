@@ -16,6 +16,7 @@ import HostPreGameView from './GameLobbyViews/PreGameView/HostPreGameView'
 import PreGamePresenter from './GameLobbyViews/PreGameView/PreGamePresenter'
 import UniqueIdentifier from '../Utilities/UniqueIdentifier'
 import ICommandInterface from '../InterfaceAdapters/ICommandInterface'
+import PlayerPreGameView from './GameLobbyViews/PreGameView/PlayerPreGameView'
 
 class App extends Component {
   private readonly gameManager: GameManager
@@ -77,7 +78,20 @@ class App extends Component {
             }
           />
         )}
-        {this.presenter.isShowingPreGameAsNonHost && <div>I am the PreGame as NOT HOST View</div>}
+        {this.presenter.isShowingPreGameAsNonHost && (
+          <PlayerPreGameView
+            presenter={
+              new PreGamePresenter(
+                this.gameManager,
+                this.gameManager.getGameByPlayerId(
+                  new UniqueIdentifier(this.playerInfoManager.getPlayerId())
+                )?.hostId || new UniqueIdentifier(),
+                this.playerInfoManager,
+                this.lobbyCommandInterface
+              )
+            }
+          />
+        )}
         {this.presenter.isShowingGame && <div>I am the GAME VIEW</div>}
       </section>
     )

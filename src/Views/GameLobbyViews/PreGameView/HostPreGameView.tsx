@@ -46,10 +46,10 @@ class HostPreGameView extends Component<Props> {
           </thead>
           <tbody>
             <tr>
-              <td>{`${this.props.presenter.getPlayers()[0].name} (You)`}</td>
-              <td className='light'>{'Computer by default'}</td>
-              <td className='light'>{'Computer by default'}</td>
-              <td className='light'>{'Computer by default'}</td>
+              <td>{`${this.props.presenter.getPlayers()[0]?.name} (You)`}</td>
+              <td>{`${this.props.presenter.getPlayers()[1]?.name || 'waiting...'}`}</td>
+              <td>{`${this.props.presenter.getPlayers()[2]?.name || 'waiting...'}`}</td>
+              <td>{`${this.props.presenter.getPlayers()[3]?.name || 'waiting...'}`}</td>
             </tr>
           </tbody>
         </Table>
@@ -59,7 +59,12 @@ class HostPreGameView extends Component<Props> {
             <Button variant='outline-primary' onClick={() => this.props.presenter.leaveGame()}>
               Leave
             </Button>{' '}
-            <Button onClick={() => this.props.presenter.startGame()}>Start Game</Button>
+            <Button
+              disabled={this.props.presenter.getPlayers().length < 4}
+              onClick={() => this.props.presenter.startGame()}
+            >
+              Start Game
+            </Button>
           </div>
         </div>
       </div>
