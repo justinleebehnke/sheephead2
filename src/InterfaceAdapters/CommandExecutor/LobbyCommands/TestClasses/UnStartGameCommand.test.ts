@@ -15,6 +15,8 @@ describe('UnStart Game Command', () => {
       setGameConfig: jest.fn(),
       startGame: jest.fn(),
       unStartGame: jest.fn(),
+      subscribe: jest.fn(),
+      getGameByPlayerId: jest.fn(),
     }
   })
 

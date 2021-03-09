@@ -13,6 +13,8 @@ describe('Host New Game Command', () => {
       setGameConfig: jest.fn(),
       startGame: jest.fn(),
       unStartGame: jest.fn(),
+      getGameByPlayerId: jest.fn(),
+      subscribe: jest.fn(),
     }
   })
 

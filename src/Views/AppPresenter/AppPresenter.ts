@@ -1,5 +1,5 @@
 import IAppPresenter from './IAppPresenter'
-import IGameManager from './IGameManager'
+import IGameManager from '../../Entities/GameManager/IGameManager'
 import IGameManagerSubscriber from './IGameManagerSubscriber'
 import ILocalPlayerInfoManager from '../GameLobbyViews/LobbyEntranceView/ILocalPlayerInfoManager'
 import ISubscriber from '../../Entities/ISubscriber'

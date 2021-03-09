@@ -1,14 +1,29 @@
 import GameConfigurationDTO from './GameConfigurationDTO'
 import GameData from './GameData'
 import IGameManager from './IGameManager'
+import IGameManagerSubscriber from '../../Views/AppPresenter/IGameManagerSubscriber'
 import PlayerDTO from '../../UseCase/PlayerDTO'
 import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
 
 class GameManager implements IGameManager {
   private readonly hostIdToGameData: Map<string, GameData>
+  private subscriber: IGameManagerSubscriber | undefined
 
   constructor() {
     this.hostIdToGameData = new Map()
+  }
+
+  public getGameByPlayerId(playerId: UniqueIdentifier): GameData | undefined {
+    const games: GameData[] = Array.from(this.hostIdToGameData.values())
+    return games.find((game) => game.players.some((player) => player.id.equals(playerId)))
+  }
+
+  public subscribe(subscriber: IGameManagerSubscriber): void {
+    this.subscriber = subscriber
+  }
+
+  private updateSubscriber(): void {
+    this.subscriber?.gameUpdated()
   }
 
   public addPlayerToGame(hostId: UniqueIdentifier, playerInfo: PlayerDTO): void {
@@ -20,6 +35,7 @@ class GameManager implements IGameManager {
       throw Error('Cannot add player to nonexistent game')
     }
     game.players.push(playerInfo)
+    this.updateSubscriber()
   }
 
   public createGame(hostInfo: PlayerDTO): void {
@@ -42,16 +58,11 @@ class GameManager implements IGameManager {
       isStarted: false,
       players: [hostInfo],
     })
+    this.updateSubscriber()
   }
 
   private playerIsInAGame(playerId: UniqueIdentifier): boolean {
-    let playerIsFoundInGame = false
-    this.hostIdToGameData.forEach((game: GameData) => {
-      if (game.players.some((player: PlayerDTO) => player.id.equals(playerId))) {
-        playerIsFoundInGame = true
-      }
-    })
-    return playerIsFoundInGame
+    return !!this.getGameByPlayerId(playerId)
   }
 
   public removePlayerFromGame(playerId: UniqueIdentifier, hostId: UniqueIdentifier): void {
@@ -67,6 +78,7 @@ class GameManager implements IGameManager {
     } else {
       gameData.players = gameData.players.filter((player: PlayerDTO) => !player.id.equals(playerId))
     }
+    this.updateSubscriber()
   }
 
   public setGameConfig(hostId: UniqueIdentifier, gameConfig: GameConfigurationDTO): void {
@@ -76,6 +88,7 @@ class GameManager implements IGameManager {
     } else {
       throw Error('Cannot set config of non-existent game')
     }
+    this.updateSubscriber()
   }
 
   public startGame(hostId: UniqueIdentifier): void {
@@ -88,6 +101,7 @@ class GameManager implements IGameManager {
     } else {
       throw Error('Cannot start non-existent game')
     }
+    this.updateSubscriber()
   }
 
   public unStartGame(hostId: UniqueIdentifier): void {
@@ -100,6 +114,7 @@ class GameManager implements IGameManager {
     } else {
       throw Error('Cannot un start non-existent game')
     }
+    this.updateSubscriber()
   }
 
   public getGameDataByHostId(hostId: UniqueIdentifier): GameData | undefined {
