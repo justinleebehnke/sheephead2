@@ -3,9 +3,12 @@ import Button from 'react-bootstrap/Button'
 import FormControl from 'react-bootstrap/FormControl'
 import InputGroup from 'react-bootstrap/InputGroup'
 import ILobbyEntrancePresenter from './ILobbyEntrancePresenter'
+import IJoinableGamesPresenter from '../JoinableGamesView/IJoinableGamesPresenter'
+import JoinableGamesView from '../JoinableGamesView/JoinableGamesView'
 
 type Props = {
   presenter: ILobbyEntrancePresenter
+  joinableGames: IJoinableGamesPresenter
 }
 
 class LobbyEntranceView extends Component<Props> {
@@ -35,6 +38,8 @@ class LobbyEntranceView extends Component<Props> {
         <Button onClick={() => this.props.presenter.hostNewGame()} id='host-new-game-button'>
           Host a new Game
         </Button>
+        <hr />
+        <JoinableGamesView presenter={this.props.joinableGames} />
       </div>
     )
   }

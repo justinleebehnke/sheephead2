@@ -1,8 +1,6 @@
 import { Component, Fragment, ReactElement } from 'react'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
-import FormControl from 'react-bootstrap/FormControl'
-import InputGroup from 'react-bootstrap/InputGroup'
 import Table from 'react-bootstrap/Table'
 import BellePlaineRulesCardRanker from '../../Entities/BellePlaineRulesCardRanker'
 import CommandExecutor from '../../InterfaceAdapters/CommandExecutor/CommandExecutor'
@@ -17,14 +15,6 @@ import Player from '../../Entities/Player'
 import RandomName from '../../UseCase/RandomName'
 import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
 import './GameLobby.css'
-import LobbyEntranceView from './LobbyEntranceView/LobbyEntranceView'
-import LobbyEntrancePresenter from './LobbyEntranceView/LobbyEntrancePresenter'
-import LocalPlayerInfoManager from './LocalPlayerInfoManager'
-import UserNotifier from './UserNotifier'
-import LobbyCommandInterface from '../../InterfaceAdapters/LobbyCommandInterface/LobbyCommandInterface'
-import Fetcher from '../../Drivers/Fetcher'
-import LobbyCommandFactory from '../../InterfaceAdapters/CommandExecutor/LobbyCommands/LobbyCommandFactory'
-import GameManager from '../../Entities/GameManager/GameManager'
 
 const PAUSE_DURATION_FOR_GAME_EVENTS = 1300
 
@@ -136,19 +126,19 @@ class GameLobby extends Component<{}, State> {
   }
 
   private renderLobby = (): ReactElement => {
-    const gameManager = new GameManager() // TODO someone needs to subscribe to this and detect that the player is now in an active game
+    // const gameManager = new GameManager() // TODO someone needs to subscribe to this and detect that the player is now in an active game
 
-    const presenter = new LobbyEntrancePresenter(
-      new LocalPlayerInfoManager(),
-      new UserNotifier(),
-      new LobbyCommandInterface(
-        1000,
-        new Fetcher(),
-        'http://localhost:2020/lobby',
-        new CommandExecutor(new LobbyCommandFactory(gameManager))
-      )
-    )
-    return <LobbyEntranceView presenter={presenter} />
+    // const presenter = new LobbyEntrancePresenter(
+    //   new LocalPlayerInfoManager(),
+    //   new UserNotifier(),
+    //   new LobbyCommandInterface(
+    //     1000,
+    //     new Fetcher(),
+    //     'http://localhost:2020/lobby',
+    //     new CommandExecutor(new LobbyCommandFactory(gameManager))
+    //   )
+    // )
+    return <div></div> //<LobbyEntranceView presenter={presenter} />
     /*return (
       <div className='lobby'>
         <div className='split'>

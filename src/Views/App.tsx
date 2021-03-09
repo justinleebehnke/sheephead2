@@ -9,6 +9,7 @@ import LobbyCommandInterface from '../InterfaceAdapters/LobbyCommandInterface/Lo
 import LobbyEntrancePresenter from './GameLobbyViews/LobbyEntranceView/LobbyEntrancePresenter'
 import LobbyEntranceView from './GameLobbyViews/LobbyEntranceView/LobbyEntranceView'
 import LocalPlayerInfoManager from './GameLobbyViews/LocalPlayerInfoManager'
+import JoinableGamesPresenter from './GameLobbyViews/JoinableGamesView/JoinableGamesPresenter'
 import UserNotifier from './GameLobbyViews/UserNotifier'
 import './App.css'
 import HostPreGameView from './GameLobbyViews/PreGameView/HostPreGameView'
@@ -51,7 +52,19 @@ class App extends Component {
   render(): ReactElement {
     return (
       <section>
-        {this.presenter.isShowingLobby && <LobbyEntranceView presenter={this.lobbyPresenter} />}
+        {this.presenter.isShowingLobby && (
+          <LobbyEntranceView
+            presenter={this.lobbyPresenter}
+            joinableGames={
+              new JoinableGamesPresenter(
+                this.lobbyCommandInterface,
+                this.gameManager,
+                this.playerInfoManager,
+                new UserNotifier()
+              )
+            }
+          />
+        )}
         {this.presenter.isShowingPreGameAsHost && (
           <HostPreGameView
             presenter={

@@ -14,9 +14,14 @@ class GameManager implements IGameManager {
     this.subscribers = []
   }
 
+  public getAllGames(): GameData[] {
+    return Array.from(this.hostIdToGameData.values())
+  }
+
   public getGameByPlayerId(playerId: UniqueIdentifier): GameData | undefined {
-    const games: GameData[] = Array.from(this.hostIdToGameData.values())
-    return games.find((game) => game.players.some((player) => player.id.equals(playerId)))
+    return this.getAllGames().find((game) =>
+      game.players.some((player) => player.id.equals(playerId))
+    )
   }
 
   public subscribe(subscriber: IGameManagerSubscriber): void {

@@ -1,7 +1,7 @@
 import AddPlayerToGameCommandDTO from '../../../InterfaceAdapters/CommandExecutor/LobbyCommands/LobbyCommandDTOs/AddPlayerToGameCommandDTO'
 import GameData from '../../../Entities/GameManager/GameData'
 import ICommandInterface from '../../../InterfaceAdapters/ICommandInterface'
-import IGameList from './IGameList'
+import IGameManager from '../../../Entities/GameManager/IGameManager'
 import ILocalPlayerInfoManager from '../LobbyEntranceView/ILocalPlayerInfoManager'
 import INotifier from '../LobbyEntranceView/INotifier'
 import ISubscriber from '../../../Entities/ISubscriber'
@@ -12,7 +12,7 @@ import UniqueIdentifier from '../../../Utilities/UniqueIdentifier'
 describe('Joinable Games Presenter', () => {
   let presenter: JoinableGamesPresenter
   let joinableGames: JoinableGameData[]
-  let gameList: IGameList
+  let gameList: IGameManager
   let commandInterface: ICommandInterface
   let view: ISubscriber
   let allGames: GameData[]
@@ -108,6 +108,13 @@ describe('Joinable Games Presenter', () => {
       subscribe: jest.fn(),
       getAllGames: jest.fn().mockReturnValue(allGames),
       getGameByHostId: jest.fn(),
+      getGameByPlayerId: jest.fn(),
+      addPlayerToGame: jest.fn(),
+      createGame: jest.fn(),
+      removePlayerFromGame: jest.fn(),
+      setGameConfig: jest.fn(),
+      startGame: jest.fn(),
+      unStartGame: jest.fn(),
     }
     commandInterface = {
       giveCommand: jest.fn(),
@@ -142,7 +149,7 @@ describe('Joinable Games Presenter', () => {
   })
   it('Should observe the game manager and update the view whenever the game manager says that it has changed', () => {
     expect(gameList.subscribe).toHaveBeenCalledWith(presenter)
-    presenter.gameListUpdated()
+    presenter.gameUpdated()
     expect(view.update).toHaveBeenCalled()
   })
   it('Should throw an error if the local player id is not something that can be made into a valid unique id (this should have been handled elsewhere)', () => {
