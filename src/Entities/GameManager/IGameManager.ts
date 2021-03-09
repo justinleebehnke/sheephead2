@@ -5,6 +5,7 @@ import PlayerDTO from '../../UseCase/PlayerDTO'
 import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
 
 interface IGameManager {
+  getGameByHostId(hostId: UniqueIdentifier): GameData | undefined
   getGameByPlayerId(playerId: UniqueIdentifier): GameData | undefined
   subscribe(subscriber: IGameManagerSubscriber): void
   addPlayerToGame(hostId: UniqueIdentifier, playerInfo: PlayerDTO): void

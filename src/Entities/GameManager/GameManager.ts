@@ -7,10 +7,11 @@ import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
 
 class GameManager implements IGameManager {
   private readonly hostIdToGameData: Map<string, GameData>
-  private subscriber: IGameManagerSubscriber | undefined
+  private readonly subscribers: IGameManagerSubscriber[]
 
   constructor() {
     this.hostIdToGameData = new Map()
+    this.subscribers = []
   }
 
   public getGameByPlayerId(playerId: UniqueIdentifier): GameData | undefined {
@@ -19,11 +20,11 @@ class GameManager implements IGameManager {
   }
 
   public subscribe(subscriber: IGameManagerSubscriber): void {
-    this.subscriber = subscriber
+    this.subscribers.push(subscriber)
   }
 
-  private updateSubscriber(): void {
-    this.subscriber?.gameUpdated()
+  private updateSubscribers(): void {
+    this.subscribers.forEach((sub) => sub.gameUpdated())
   }
 
   public addPlayerToGame(hostId: UniqueIdentifier, playerInfo: PlayerDTO): void {
@@ -35,7 +36,7 @@ class GameManager implements IGameManager {
       throw Error('Cannot add player to nonexistent game')
     }
     game.players.push(playerInfo)
-    this.updateSubscriber()
+    this.updateSubscribers()
   }
 
   public createGame(hostInfo: PlayerDTO): void {
@@ -58,7 +59,7 @@ class GameManager implements IGameManager {
       isStarted: false,
       players: [hostInfo],
     })
-    this.updateSubscriber()
+    this.updateSubscribers()
   }
 
   private playerIsInAGame(playerId: UniqueIdentifier): boolean {
@@ -78,7 +79,7 @@ class GameManager implements IGameManager {
     } else {
       gameData.players = gameData.players.filter((player: PlayerDTO) => !player.id.equals(playerId))
     }
-    this.updateSubscriber()
+    this.updateSubscribers()
   }
 
   public setGameConfig(hostId: UniqueIdentifier, gameConfig: GameConfigurationDTO): void {
@@ -88,7 +89,7 @@ class GameManager implements IGameManager {
     } else {
       throw Error('Cannot set config of non-existent game')
     }
-    this.updateSubscriber()
+    this.updateSubscribers()
   }
 
   public startGame(hostId: UniqueIdentifier): void {
@@ -101,7 +102,7 @@ class GameManager implements IGameManager {
     } else {
       throw Error('Cannot start non-existent game')
     }
-    this.updateSubscriber()
+    this.updateSubscribers()
   }
 
   public unStartGame(hostId: UniqueIdentifier): void {
@@ -114,10 +115,10 @@ class GameManager implements IGameManager {
     } else {
       throw Error('Cannot un start non-existent game')
     }
-    this.updateSubscriber()
+    this.updateSubscribers()
   }
 
-  public getGameDataByHostId(hostId: UniqueIdentifier): GameData | undefined {
+  public getGameByHostId(hostId: UniqueIdentifier): GameData | undefined {
     return this.hostIdToGameData.get(hostId.getId())
   }
 }
