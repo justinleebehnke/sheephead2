@@ -5,6 +5,7 @@ import PassCommand from '../PassCommand'
 import PlayAgainCommand from '../PlayAgainCommand'
 import PlayCommand from '../PlayCommand'
 import UniqueIdentifier from '../../../../Utilities/UniqueIdentifier'
+import PickCommand from '../PickCommand'
 
 describe('Game Command Factory', () => {
   let gameCommandFactory: GameCommandFactory
@@ -36,6 +37,12 @@ describe('Game Command Factory', () => {
     expect(
       gameCommandFactory.getCommand({ name: 'playAgain', params: { playerId: playerId.getId() } })
     ).toEqual(new PlayAgainCommand(game, playerId.getId()))
+  })
+
+  it('Should create a Pick Command when given a pick command dto', () => {
+    expect(gameCommandFactory.getCommand({ name: 'pick', params: null })).toEqual(
+      new PickCommand(game)
+    )
   })
 })
 
