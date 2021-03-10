@@ -3,20 +3,21 @@ import AppPresenter from './AppPresenter/AppPresenter'
 import CommandExecutor from '../InterfaceAdapters/CommandExecutor/CommandExecutor'
 import Fetcher from '../Drivers/Fetcher'
 import GameManager from '../Entities/GameManager/GameManager'
+import GameView from './GamePlayViews/GameBoard'
+import HostPreGameView from './GameLobbyViews/PreGameView/HostPreGameView'
 import IAppPresenter from './AppPresenter/IAppPresenter'
+import ICommandInterface from '../InterfaceAdapters/ICommandInterface'
+import JoinableGamesPresenter from './GameLobbyViews/JoinableGamesView/JoinableGamesPresenter'
 import LobbyCommandFactory from '../InterfaceAdapters/CommandExecutor/LobbyCommands/LobbyCommandFactory'
 import LobbyCommandInterface from '../InterfaceAdapters/LobbyCommandInterface/LobbyCommandInterface'
 import LobbyEntrancePresenter from './GameLobbyViews/LobbyEntranceView/LobbyEntrancePresenter'
 import LobbyEntranceView from './GameLobbyViews/LobbyEntranceView/LobbyEntranceView'
 import LocalPlayerInfoManager from './GameLobbyViews/LocalPlayerInfoManager'
-import JoinableGamesPresenter from './GameLobbyViews/JoinableGamesView/JoinableGamesPresenter'
-import UserNotifier from './GameLobbyViews/UserNotifier'
-import './App.css'
-import HostPreGameView from './GameLobbyViews/PreGameView/HostPreGameView'
+import PlayerPreGameView from './GameLobbyViews/PreGameView/PlayerPreGameView'
 import PreGamePresenter from './GameLobbyViews/PreGameView/PreGamePresenter'
 import UniqueIdentifier from '../Utilities/UniqueIdentifier'
-import ICommandInterface from '../InterfaceAdapters/ICommandInterface'
-import PlayerPreGameView from './GameLobbyViews/PreGameView/PlayerPreGameView'
+import UserNotifier from './GameLobbyViews/UserNotifier'
+import './App.css'
 
 class App extends Component {
   private readonly gameManager: GameManager
@@ -46,7 +47,6 @@ class App extends Component {
   }
 
   update(): void {
-    console.log('this.gameManager :>> ', this.gameManager)
     this.setState({})
   }
 
@@ -92,7 +92,7 @@ class App extends Component {
             }
           />
         )}
-        {this.presenter.isShowingGame && <div>I am the GAME VIEW</div>}
+        {this.presenter.isShowingGame && <GameView presenter={this.presenter.getGamePresenter()} />}
       </section>
     )
   }
