@@ -56,10 +56,6 @@ class Game implements ISubscriber, IReadOnlyGameModel {
     return this.players[index]
   }
 
-  public pick(): void {
-    this.getCurrentRound()?.pick()
-  }
-
   public updateSubscribers(): void {
     this.notifySubscribers()
   }
