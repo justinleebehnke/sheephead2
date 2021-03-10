@@ -152,8 +152,11 @@ class CPUPlayer extends Player implements ISubscriber {
   private pick(): void {
     const round = this.game.getCurrentRound()
     if (round) {
-      this.game.pick()
-      this.bury(round)
+      throw Error('Cannot pick & Bury because we changed the way that works')
+      // send a pick command
+      // TODO wait for the round to update and then bury
+      // because you cannot bury until it's time to do it
+      // this.bury(round)
     }
   }
 

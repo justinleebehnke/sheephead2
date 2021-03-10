@@ -104,7 +104,6 @@ describe('Game Board Model', () => {
           ? mockPlayer3
           : mockPlayer4
       }),
-      pick: jest.fn(),
       addSubscriber: jest.fn(),
       removeSubscriber: jest.fn(),
       updateSubscribers: jest.fn().mockImplementation(() => model.update()),
@@ -151,8 +150,7 @@ describe('Game Board Model', () => {
   })
 
   it('Should update the subscriber whenever something interesting happens', () => {
-    model.pick()
-    expect(mockReadOnlyGameModel.pick).toHaveBeenCalled()
+    model.update()
     expect(mockSubscriber.update).toHaveBeenCalled()
   })
 

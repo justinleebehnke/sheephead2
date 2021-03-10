@@ -4,7 +4,6 @@ import PlayerData from '../Views/GamePlayViews/EndOfRoundReport/PlayerData'
 import PlayerLayoutData from './GamePresenter/PlayerLayoutData'
 
 interface IGameBoardModel extends IObservable {
-  pick(): void
   getDataForLocalPlayer(): PlayerLayoutData
   getDataForPlayerAcross(): PlayerLayoutData
   getDataForPlayerToLeft(): PlayerLayoutData

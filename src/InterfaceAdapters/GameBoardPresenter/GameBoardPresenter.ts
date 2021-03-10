@@ -84,7 +84,10 @@ class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
   }
 
   public pick(): void {
-    this.model.pick()
+    this.commandInterface.giveCommand({
+      name: 'pick',
+      params: null,
+    })
   }
 
   public play(card: string): void {
