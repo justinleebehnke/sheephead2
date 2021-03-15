@@ -18,7 +18,7 @@ import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
 const PAUSE_DURATION_FOR_GAME_EVENTS = 1000
 const POLLING_INTERVAL = 1000
 
-const GAME_PATH = 'http://localhost:2020/game'
+const GAME_PATH = 'http://68.183.105.73:2020/game'
 
 class AppPresenter implements IAppPresenter, IGameManagerSubscriber {
   private view: ISubscriber | undefined

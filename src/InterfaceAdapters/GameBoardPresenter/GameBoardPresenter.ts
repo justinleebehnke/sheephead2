@@ -15,7 +15,7 @@ class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
     this.commandInterface = commandInterface
     this.model = model
     this.model.addSubscriber(this)
-    this.gameStateDelayedUpdater = new DelayedUpdateQueue(delayToUse)
+    this.gameStateDelayedUpdater = new DelayedUpdateQueue(delayToUse, 5)
     this.gameStateDelayedUpdater.push(this.getLiveGameBoardViewData())
   }
 

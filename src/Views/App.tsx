@@ -35,7 +35,7 @@ class App extends Component {
     this.lobbyCommandInterface = new LobbyCommandInterface(
       1000,
       new Fetcher(),
-      'http://localhost:2020/lobby',
+      'http://68.183.105.73:2020/lobby',
       new CommandExecutor(new LobbyCommandFactory(this.gameManager))
     )
     this.lobbyPresenter = new LobbyEntrancePresenter(

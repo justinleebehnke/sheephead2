@@ -5,7 +5,7 @@ import { pause } from '../TestingUtilities'
 describe('Delayed Update Queue', () => {
   it('Should accept a time to expire queue item and correctly implement the basic interface', () => {
     const delayInMilliseconds = 100
-    const dQ: DelayedUpdateQueue<string> = new DelayedUpdateQueue(delayInMilliseconds)
+    const dQ: DelayedUpdateQueue<string> = new DelayedUpdateQueue(delayInMilliseconds, 100)
     expect(dQ.isEmpty()).toBe(true)
     expect(() => dQ.peekLastEnqueued()).toThrow('Cannot peek last entry on empty queue')
     expect(() => dQ.peek()).toThrow('Cannot peek on empty queue')
@@ -19,7 +19,7 @@ describe('Delayed Update Queue', () => {
       update: jest.fn(),
     }
     const delayInMilliseconds = 100
-    const dQ: DelayedUpdateQueue<string> = new DelayedUpdateQueue(delayInMilliseconds)
+    const dQ: DelayedUpdateQueue<string> = new DelayedUpdateQueue(delayInMilliseconds, 100)
     dQ.addSubscriber(subscriber)
     dQ.push('Hello')
     expect(subscriber.update).toHaveBeenCalled()
@@ -30,7 +30,7 @@ describe('Delayed Update Queue', () => {
       update: jest.fn(),
     }
     const delayInMilliseconds = 100
-    const dQ: DelayedUpdateQueue<string> = new DelayedUpdateQueue(delayInMilliseconds)
+    const dQ: DelayedUpdateQueue<string> = new DelayedUpdateQueue(delayInMilliseconds, 100)
     dQ.addSubscriber(subscriber)
     dQ.push('Hello')
     dQ.push('Hello2')
@@ -58,6 +58,19 @@ describe('Delayed Update Queue', () => {
     await pause(delayInMilliseconds)
     expect(subscriber.update).toHaveBeenCalledTimes(5)
     expect(dQ.peek()).toEqual('Hello5')
+  })
+
+  describe('When the queue gets too backed up', () => {
+    it('Should empty all but the last item if the queue gets too big', async () => {
+      const delayInMilliseconds = 100
+      const dQ: DelayedUpdateQueue<string> = new DelayedUpdateQueue(delayInMilliseconds, 5)
+      dQ.push('item')
+      dQ.push('item')
+      dQ.push('item')
+      dQ.push('item')
+      dQ.push('LastItem')
+      expect(dQ.peek()).toEqual('LastItem')
+    })
   })
 })
 
