@@ -28,6 +28,9 @@ class LobbyCommandInterface implements ICommandInterface {
 
   private handleResponse(response: object): void {
     if (this.isCommandCommunicatorResponse(response)) {
+      if (this.indexOfNextCommand > response.indexOfNextCommand) {
+        window.location.reload() // TODO abstract this to an interface, if we know about more commands than the server, the server must have reset
+      }
       if (response.indexOfNextCommand > this.indexOfNextCommand) {
         this.indexOfNextCommand = response.indexOfNextCommand
       }
