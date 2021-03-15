@@ -21,15 +21,19 @@ class HostPreGameView extends Component<Props> {
           <div className='split'>
             <div className='split'>
               <Form.Label>Who should deal first?</Form.Label>
-              <Form.Control
-                as='select'
-                value={this.props.presenter.getFirstDealerIndex()}
-                onChange={this.updateFirstDealerIndex}
-              >
-                <option value={0}>Host (You)</option>
-                <option value={1}>Player 2</option>
-                <option value={2}>Player 3</option>
-                <option value={3}>Player 4</option>
+              <Form.Control as='select' onChange={this.updateFirstDealerIndex}>
+                <option selected={this.props.presenter.getFirstDealerIndex() === 0} value={0}>
+                  Host (You)
+                </option>
+                <option selected={this.props.presenter.getFirstDealerIndex() === 1} value={1}>
+                  Player 2
+                </option>
+                <option selected={this.props.presenter.getFirstDealerIndex() === 2} value={2}>
+                  Player 3
+                </option>
+                <option selected={this.props.presenter.getFirstDealerIndex() === 3} value={3}>
+                  Player 4
+                </option>
               </Form.Control>
             </div>
             <div></div>
