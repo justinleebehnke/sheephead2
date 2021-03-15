@@ -1,13 +1,14 @@
 import ISubscriber from '../../Entities/ISubscriber'
 
 class DelayedUpdateQueue<T> {
-  private readonly delayInMilliseconds: number
-  private readonly internalArray: T[]
+  private internalArray: T[]
   private readonly subscribers: ISubscriber[]
   private timeout: NodeJS.Timeout | undefined
 
-  constructor(delayInMilliseconds: number) {
-    this.delayInMilliseconds = delayInMilliseconds
+  constructor(
+    private readonly delayInMilliseconds: number,
+    private readonly maxElementsInQueueAtOnce: number
+  ) {
     this.internalArray = []
     this.subscribers = []
   }
@@ -57,6 +58,10 @@ class DelayedUpdateQueue<T> {
     }
     if (!wasEmptyBeforeArg && this.timeout === undefined) {
       this.processTimeout()
+    }
+    if (this.maxElementsInQueueAtOnce <= this.internalArray.length) {
+      this.internalArray = [this.peekLastEnqueued()]
+      this.updateSubscribers()
     }
   }
 }

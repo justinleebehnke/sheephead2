@@ -15,7 +15,7 @@ class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
     this.commandInterface = commandInterface
     this.model = model
     this.model.addSubscriber(this)
-    this.gameStateDelayedUpdater = new DelayedUpdateQueue(delayToUse)
+    this.gameStateDelayedUpdater = new DelayedUpdateQueue(delayToUse, 5)
     this.gameStateDelayedUpdater.push(this.getLiveGameBoardViewData())
   }
 
@@ -84,7 +84,10 @@ class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
   }
 
   public pick(): void {
-    this.model.pick()
+    this.commandInterface.giveCommand({
+      name: 'pick',
+      params: null,
+    })
   }
 
   public play(card: string): void {

@@ -1,6 +1,6 @@
 import GameData from '../../../Entities/GameManager/GameData'
 import ICommandInterface from '../../../InterfaceAdapters/ICommandInterface'
-import IGameList from '../JoinableGamesView/IGameList'
+import IGameManager from '../../../Entities/GameManager/IGameManager'
 import ILocalPlayerInfoManager from '../LobbyEntranceView/ILocalPlayerInfoManager'
 import ISubscriber from '../../../Entities/ISubscriber'
 import PreGamePresenter from './PreGamePresenter'
@@ -11,7 +11,7 @@ import UniqueIdentifier from '../../../Utilities/UniqueIdentifier'
 describe('PreGamePresenter', () => {
   let presenter: PreGamePresenter
   let view: ISubscriber
-  let gameList: IGameList
+  let gameList: IGameManager
   let hostId: UniqueIdentifier
   let game: GameData
   let localPlayerInfoManager: ILocalPlayerInfoManager
@@ -45,8 +45,14 @@ describe('PreGamePresenter', () => {
       update: jest.fn(),
     }
     gameList = {
+      addPlayerToGame: jest.fn(),
+      removePlayerFromGame: jest.fn(),
+      createGame: jest.fn(),
+      setGameConfig: jest.fn(),
+      startGame: jest.fn(),
+      unStartGame: jest.fn(),
       subscribe: jest.fn(),
-      getAllGames: jest.fn(),
+      getGameByPlayerId: jest.fn(),
       getGameByHostId: jest.fn().mockReturnValue(game),
     }
     presenter = new PreGamePresenter(gameList, hostId, localPlayerInfoManager, commandInterface)
@@ -56,7 +62,7 @@ describe('PreGamePresenter', () => {
     it('Should subscribe to the game list, and notify the view if the game list updates', () => {
       presenter.setView(view)
       expect(gameList.subscribe).toHaveBeenCalledWith(presenter)
-      presenter.gameListUpdated()
+      presenter.gameUpdated()
       expect(view.update).toHaveBeenCalled()
     })
   })

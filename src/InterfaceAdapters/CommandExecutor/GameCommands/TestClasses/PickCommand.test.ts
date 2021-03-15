@@ -1,10 +1,10 @@
 import ICommand from '../../ICommand'
 import IGame from '../Interfaces/IGame'
 import IRound from '../Interfaces/IRound'
-import PassCommand from '../PassCommand'
+import PickCommand from '../PickCommand'
 
-describe('Pass Command', () => {
-  let passCommand: ICommand
+describe('Pick Command', () => {
+  let pickCommand: ICommand
   let round: IRound
   let game: IGame
 
@@ -20,12 +20,12 @@ describe('Pass Command', () => {
       getCurrentRound: jest.fn().mockReturnValue(round),
       playAgain: jest.fn(),
     }
-    passCommand = new PassCommand(game)
+    pickCommand = new PickCommand(game)
   })
 
-  it('Should correctly execute the pass command', () => {
-    passCommand.execute()
-    expect(round.pass).toHaveBeenCalled()
+  it('Should correctly execute the pick command', () => {
+    pickCommand.execute()
+    expect(round.pick).toHaveBeenCalled()
   })
 
   it('Should throw an exception if there is not current round', () => {
@@ -33,8 +33,8 @@ describe('Pass Command', () => {
       getCurrentRound: jest.fn().mockReturnValue(undefined),
       playAgain: jest.fn(),
     }
-    passCommand = new PassCommand(game)
-    expect(() => passCommand.execute()).toThrow('Cannot pass because there is no current round')
+    pickCommand = new PickCommand(game)
+    expect(() => pickCommand.execute()).toThrow('Cannot pick because there is no current round')
   })
 })
 export {}

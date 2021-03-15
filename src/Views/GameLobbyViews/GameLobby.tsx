@@ -1,8 +1,6 @@
 import { Component, Fragment, ReactElement } from 'react'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
-import FormControl from 'react-bootstrap/FormControl'
-import InputGroup from 'react-bootstrap/InputGroup'
 import Table from 'react-bootstrap/Table'
 import BellePlaineRulesCardRanker from '../../Entities/BellePlaineRulesCardRanker'
 import CommandExecutor from '../../InterfaceAdapters/CommandExecutor/CommandExecutor'
@@ -24,14 +22,29 @@ function getRandomNumberBetweenZeroAndMax(max: number): number {
   return Math.floor(Math.random() * max)
 }
 
-localStorage.setItem('localPlayerId', new UniqueIdentifier().getId())
-
 type State = {
   firstDealerIndex: number
   isHostingGame: boolean
   isInStartedGame: boolean
   localPlayerName: string
 }
+
+// so there is someone that is monitoring changes to the GameManager
+// the GameManager is massive... there can only be one
+// I feel like the Game Manager should be created whenever the local player views the lobby...
+
+// what should be showing...
+// it seems like there should be a screen showing the hosted game?
+
+// so there are 3 screens
+// I have not joined a game screen // I use the GameManager
+// I am in a preGame screen // I use the GameManager
+// I am in a game screen // I DO NOT use the GameManager
+
+// game lobby should create an subscribe to the game
+// well...
+// APP PRESENTER
+// I feel like there is a parent element here that I am forgetting about
 
 class GameLobby extends Component<{}, State> {
   state = {
@@ -113,7 +126,20 @@ class GameLobby extends Component<{}, State> {
   }
 
   private renderLobby = (): ReactElement => {
-    return (
+    // const gameManager = new GameManager() // TODO someone needs to subscribe to this and detect that the player is now in an active game
+
+    // const presenter = new LobbyEntrancePresenter(
+    //   new LocalPlayerInfoManager(),
+    //   new UserNotifier(),
+    //   new LobbyCommandInterface(
+    //     1000,
+    //     new Fetcher(),
+    //     'http://localhost:2020/lobby',
+    //     new CommandExecutor(new LobbyCommandFactory(gameManager))
+    //   )
+    // )
+    return <div></div> //<LobbyEntranceView presenter={presenter} />
+    /*return (
       <div className='lobby'>
         <div className='split'>
           <div>
@@ -146,7 +172,7 @@ class GameLobby extends Component<{}, State> {
           Play Computer
         </Button>
       </div>
-    )
+    )*/
   }
 
   private alertOfRequiredName = (): void => {

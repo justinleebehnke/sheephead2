@@ -1,3 +1,4 @@
+import IGameBoardPresenter from '../GamePlayViews/IGameBoardPresenter'
 import ISubscriber from '../../Entities/ISubscriber'
 
 interface IAppPresenter {
@@ -6,6 +7,7 @@ interface IAppPresenter {
   isShowingPreGameAsHost: boolean
   isShowingPreGameAsNonHost: boolean
   isShowingGame: boolean
+  getGamePresenter(): IGameBoardPresenter
 }
 
 export default IAppPresenter

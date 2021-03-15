@@ -32,11 +32,6 @@ class GameBoardModel implements ISubscriber, IGameBoardModel {
     this.subscriber?.update()
   }
 
-  public pick(): void {
-    this.game.pick()
-    this.subscriber?.update()
-  }
-
   public getHand(): string[] {
     const localPlayer: Player | undefined = this.game.getPlayerById(this.localPlayerId)
     if (localPlayer) {

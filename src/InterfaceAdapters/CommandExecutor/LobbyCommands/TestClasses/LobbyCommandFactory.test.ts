@@ -21,6 +21,8 @@ describe('Lobby Command Factory', () => {
       setGameConfig: jest.fn(),
       startGame: jest.fn(),
       unStartGame: jest.fn(),
+      subscribe: jest.fn(),
+      getGameByPlayerId: jest.fn(),
     }
     factory = new LobbyCommandFactory(gameManager)
   })

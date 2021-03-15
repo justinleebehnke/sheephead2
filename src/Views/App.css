@@ -11,3 +11,23 @@ section {
   overflow: hidden;
   border-radius: 10px;
 }
+
+#reset-button {
+  margin-top: 50vh;
+}
+
+.lobby {
+  background-color: #efefef;
+  margin: auto;
+  padding: 1em;
+  height: 100%;
+}
+
+.split {
+  display: flex;
+  justify-content: space-between;
+}
+
+td.light {
+  color: gray;
+}

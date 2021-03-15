@@ -5,6 +5,7 @@ import ICommand from '../ICommand'
 import ICommandFactory from '../ICommandFactory'
 import IGame from './Interfaces/IGame'
 import PassCommand from './PassCommand'
+import PickCommand from './PickCommand'
 import PlayAgainCommand from './PlayAgainCommand'
 import PlayCommand from './PlayCommand'
 import PlayCommandDTO from './GameCommandDTOs/PlayCommandDTO'
@@ -20,6 +21,9 @@ class GameCommandFactory implements ICommandFactory {
   public getCommand(commandDTO: CommandDTO): ICommand {
     if (commandDTO.name === 'pass') {
       return new PassCommand(this.game)
+    }
+    if (commandDTO.name === 'pick') {
+      return new PickCommand(this.game)
     }
     if (this.isReadyToPlayAgainCommand(commandDTO)) {
       return new PlayAgainCommand(this.game, commandDTO.params.playerId)

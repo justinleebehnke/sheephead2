@@ -30,6 +30,7 @@ class FindingPickerState implements IRoundState {
       this.round.setBlind([])
       this.round.setPickerIndex(this.round.getIndexOfCurrentTurn())
       this.round.setContext(new PickerHasNotBuriedState(this.round))
+      this.round.notifySubscribers()
     }
   }
 

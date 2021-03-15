@@ -1,21 +1,21 @@
 import ICommandInterface from '../../../InterfaceAdapters/ICommandInterface'
-import IGameList from '../JoinableGamesView/IGameList'
-import IGameListSubscriber from '../JoinableGamesView/IGameListSubscriber'
+import IGameManager from '../../../Entities/GameManager/IGameManager'
+import IGameManagerSubscriber from '../../AppPresenter/IGameManagerSubscriber'
 import ILocalPlayerInfoManager from '../LobbyEntranceView/ILocalPlayerInfoManager'
+import IPreGamePresenter from './IPreGamePresenter'
 import ISubscriber from '../../../Entities/ISubscriber'
 import PlayerData from '../../GamePlayViews/EndOfRoundReport/PlayerData'
 import PlayerDTO from '../../../UseCase/PlayerDTO'
 import RemovePlayerFromGameCommandDTO from '../../../InterfaceAdapters/CommandExecutor/LobbyCommands/LobbyCommandDTOs/RemovePlayerFromGameCommandDTO'
 import UniqueIdentifier from '../../../Utilities/UniqueIdentifier'
 import StartGameCommandDTO from '../../../InterfaceAdapters/CommandExecutor/LobbyCommands/LobbyCommandDTOs/StartGameCommandDTO'
-import IPreGamePresenter from './IPreGamePresenter'
 
-class PreGamePresenter implements IGameListSubscriber, IPreGamePresenter {
+class PreGamePresenter implements IGameManagerSubscriber, IPreGamePresenter {
   private view: ISubscriber | undefined
   private firstDealerIndex: number
 
   constructor(
-    private readonly gameList: IGameList,
+    private readonly gameList: IGameManager,
     private readonly hostId: UniqueIdentifier,
     private readonly localPlayerInfoManager: ILocalPlayerInfoManager,
     private readonly commandInterface: ICommandInterface
@@ -24,7 +24,7 @@ class PreGamePresenter implements IGameListSubscriber, IPreGamePresenter {
     this.firstDealerIndex = 0
   }
 
-  public gameListUpdated(): void {
+  public gameUpdated(): void {
     this.view?.update()
   }
 
@@ -33,9 +33,11 @@ class PreGamePresenter implements IGameListSubscriber, IPreGamePresenter {
   }
 
   public getPlayers(): PlayerData[] {
-    return this.gameList.getGameByHostId(this.hostId).players.map((playerData: PlayerDTO) => {
-      return { id: playerData.id.getId(), name: playerData.name }
-    })
+    return (
+      this.gameList.getGameByHostId(this.hostId)?.players.map((playerData: PlayerDTO) => {
+        return { id: playerData.id.getId(), name: playerData.name }
+      }) || []
+    )
   }
 
   public get isHosting(): boolean {

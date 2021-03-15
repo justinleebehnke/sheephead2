@@ -70,7 +70,6 @@ describe('Game Board Presenter', () => {
     model = {
       addSubscriber: jest.fn(),
       removeSubscriber: jest.fn(),
-      pick: jest.fn(),
       getDataForLocalPlayer: jest.fn().mockReturnValue(localPlayerData),
       getDataForPlayerAcross: jest.fn().mockReturnValue(acrossPlayerData),
       getDataForPlayerToLeft: jest.fn().mockReturnValue(leftPlayerData),
@@ -168,7 +167,10 @@ describe('Game Board Presenter', () => {
     })
     it('Should delegate the call to pick to the model', () => {
       presenter.pick()
-      expect(model.pick).toHaveBeenCalled()
+      expect(commandInterface.giveCommand).toHaveBeenCalledWith({
+        name: 'pick',
+        params: null,
+      })
     })
     it('Should delegate the call to play to the command interface object', () => {
       presenter.play('cardA')

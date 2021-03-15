@@ -33,7 +33,7 @@ describe('Game Manager', () => {
   describe('Create Game', () => {
     it('Should be able to give back a game that game has been created', () => {
       gameManager.createGame(hostInfo)
-      expect(gameManager.getGameDataByHostId(hostInfo.id)).toEqual({
+      expect(gameManager.getGameByHostId(hostInfo.id)).toEqual({
         hostId: hostInfo.id,
         isStarted: false,
         config: {
@@ -55,7 +55,7 @@ describe('Game Manager', () => {
       gameManager.createGame(hostInfo)
       gameManager.removePlayerFromGame(hostInfo.id, hostInfo.id)
       gameManager.createGame(hostInfo)
-      expect(gameManager.getGameDataByHostId(hostInfo.id)).toBeDefined()
+      expect(gameManager.getGameByHostId(hostInfo.id)).toBeDefined()
     })
 
     it('Should throw an error if a person is a player in a game and they try to host a game', () => {
@@ -71,10 +71,7 @@ describe('Game Manager', () => {
     it('Should allow someone else to join a game', () => {
       gameManager.createGame(hostInfo)
       gameManager.addPlayerToGame(hostInfo.id, firstJoinerInfo)
-      expect(gameManager.getGameDataByHostId(hostInfo.id)?.players).toEqual([
-        hostInfo,
-        firstJoinerInfo,
-      ])
+      expect(gameManager.getGameByHostId(hostInfo.id)?.players).toEqual([hostInfo, firstJoinerInfo])
     })
     it('Should throw an error if the same person tries to join a second game', () => {
       gameManager.createGame(hostInfo)
@@ -111,7 +108,7 @@ describe('Game Manager', () => {
       gameManager.createGame(hostInfo)
       gameManager.addPlayerToGame(hostInfo.id, firstJoinerInfo)
       gameManager.removePlayerFromGame(firstJoinerInfo.id, hostInfo.id)
-      expect(gameManager.getGameDataByHostId(hostInfo.id)?.players).toEqual([hostInfo])
+      expect(gameManager.getGameByHostId(hostInfo.id)?.players).toEqual([hostInfo])
     })
 
     it("Should throw an error if someone the host id doesn't lead to a game", () => {
@@ -129,14 +126,14 @@ describe('Game Manager', () => {
     it('Should destroy the game if the host leaves the game', () => {
       gameManager.createGame(hostInfo)
       gameManager.removePlayerFromGame(hostInfo.id, hostInfo.id)
-      expect(gameManager.getGameDataByHostId(hostInfo.id)).toBeUndefined()
+      expect(gameManager.getGameByHostId(hostInfo.id)).toBeUndefined()
     })
     it('Should allow all players to join new games if the host of the original game left', () => {
       gameManager.createGame(hostInfo)
       gameManager.addPlayerToGame(hostInfo.id, firstJoinerInfo)
       gameManager.removePlayerFromGame(hostInfo.id, hostInfo.id)
       gameManager.createGame(firstJoinerInfo)
-      expect(gameManager.getGameDataByHostId(firstJoinerInfo.id)).toBeDefined()
+      expect(gameManager.getGameByHostId(firstJoinerInfo.id)).toBeDefined()
     })
     it("Should throw an error if you try to join a game that doesn't exist", () => {
       expect(() => gameManager.addPlayerToGame(hostInfo.id, firstJoinerInfo)).toThrow(
@@ -152,16 +149,16 @@ describe('Game Manager', () => {
 
       gameManager.createGame(hostInfo)
       gameManager.setGameConfig(hostInfo.id, config1)
-      const serializedConfig1 = JSON.stringify(gameManager.getGameDataByHostId(hostInfo.id)?.config)
+      const serializedConfig1 = JSON.stringify(gameManager.getGameByHostId(hostInfo.id)?.config)
 
       gameManager.setGameConfig(hostInfo.id, config2)
-      expect(JSON.stringify(gameManager.getGameDataByHostId(hostInfo.id)?.config)).not.toEqual(
+      expect(JSON.stringify(gameManager.getGameByHostId(hostInfo.id)?.config)).not.toEqual(
         serializedConfig1
       )
 
       gameManager.setGameConfig(hostInfo.id, config1)
       expect(serializedConfig1).toEqual(
-        JSON.stringify(gameManager.getGameDataByHostId(hostInfo.id)?.config)
+        JSON.stringify(gameManager.getGameByHostId(hostInfo.id)?.config)
       )
     })
     it('Should throw an error if trying to set the config of a non-existent game', () => {
@@ -176,7 +173,7 @@ describe('Game Manager', () => {
     it('Should mark the game as started', () => {
       gameManager.createGame(hostInfo)
       gameManager.startGame(hostInfo.id)
-      expect(gameManager.getGameDataByHostId(hostInfo.id)?.isStarted).toBe(true)
+      expect(gameManager.getGameByHostId(hostInfo.id)?.isStarted).toBe(true)
     })
     it('Should throw an error if trying to start an already started game', () => {
       gameManager.createGame(hostInfo)
@@ -195,7 +192,7 @@ describe('Game Manager', () => {
       gameManager.createGame(hostInfo)
       gameManager.startGame(hostInfo.id)
       gameManager.unStartGame(hostInfo.id)
-      expect(gameManager.getGameDataByHostId(hostInfo.id)?.isStarted).toBe(false)
+      expect(gameManager.getGameByHostId(hostInfo.id)?.isStarted).toBe(false)
     })
     it('Should throw an error if trying to un start a not started game', () => {
       gameManager.createGame(hostInfo)

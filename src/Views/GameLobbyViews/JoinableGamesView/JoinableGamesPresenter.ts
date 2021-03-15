@@ -1,8 +1,8 @@
 import AddPlayerToGameCommandDTO from '../../../InterfaceAdapters/CommandExecutor/LobbyCommands/LobbyCommandDTOs/AddPlayerToGameCommandDTO'
 import GameData from '../../../Entities/GameManager/GameData'
 import ICommandInterface from '../../../InterfaceAdapters/ICommandInterface'
-import IGameList from './IGameList'
-import IGameListSubscriber from './IGameListSubscriber'
+import IGameManager from '../../../Entities/GameManager/IGameManager'
+import IGameManagerSubscriber from '../../AppPresenter/IGameManagerSubscriber'
 import IJoinableGamesPresenter from './IJoinableGamesPresenter'
 import ILocalPlayerInfoManager from '../LobbyEntranceView/ILocalPlayerInfoManager'
 import INotifier from '../LobbyEntranceView/INotifier'
@@ -13,19 +13,19 @@ import UniqueIdentifier from '../../../Utilities/UniqueIdentifier'
 
 const NUM_PLAYERS = 4
 
-class JoinableGamesPresenter implements IJoinableGamesPresenter, IGameListSubscriber {
+class JoinableGamesPresenter implements IJoinableGamesPresenter, IGameManagerSubscriber {
   private view: ISubscriber | undefined
 
   constructor(
     private readonly lobbyCommand: ICommandInterface,
-    private readonly gameList: IGameList,
+    private readonly gameList: IGameManager,
     private readonly localPlayerInfoManager: ILocalPlayerInfoManager,
     private readonly userNotifier: INotifier
   ) {
     this.gameList.subscribe(this)
   }
 
-  public gameListUpdated(): void {
+  public gameUpdated(): void {
     this.view?.update()
   }
 

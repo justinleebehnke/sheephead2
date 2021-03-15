@@ -1,9 +1,24 @@
+import CommandExecutor from '../../InterfaceAdapters/CommandExecutor/CommandExecutor'
+import Fetcher from '../../Drivers/Fetcher'
+import Game from '../../Entities/Game'
+import GameCommandFactory from '../../InterfaceAdapters/CommandExecutor/GameCommands/GameCommandFactory'
+import GameBoardModel from '../../InterfaceAdapters/GamePresenter/GameBoardModel'
+import GameBoardPresenter from '../../InterfaceAdapters/GameBoardPresenter/GameBoardPresenter'
 import IAppPresenter from './IAppPresenter'
-import IGameManager from './IGameManager'
+import IGameBoardPresenter from '../GamePlayViews/IGameBoardPresenter'
+import IGameManager from '../../Entities/GameManager/IGameManager'
 import IGameManagerSubscriber from './IGameManagerSubscriber'
 import ILocalPlayerInfoManager from '../GameLobbyViews/LobbyEntranceView/ILocalPlayerInfoManager'
 import ISubscriber from '../../Entities/ISubscriber'
+import OnlineMultiplayerGameCommandInterface from '../../InterfaceAdapters/OnlineMultiplayerGameCommandInterface/OnlineMultiplayerGameCommandInterface'
+import Player from '../../Entities/Player'
+import PlayerDTO from '../../UseCase/PlayerDTO'
 import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
+
+const PAUSE_DURATION_FOR_GAME_EVENTS = 1000
+const POLLING_INTERVAL = 1000
+
+const GAME_PATH = 'http://68.183.105.73:2020/game'
 
 class AppPresenter implements IAppPresenter, IGameManagerSubscriber {
   private view: ISubscriber | undefined
@@ -13,6 +28,32 @@ class AppPresenter implements IAppPresenter, IGameManagerSubscriber {
     private readonly localPlayerInfoManager: ILocalPlayerInfoManager
   ) {
     this.gameManager.subscribe(this)
+  }
+
+  public getGamePresenter(): IGameBoardPresenter {
+    const gameData = this.gameManager.getGameByPlayerId(
+      new UniqueIdentifier(this.localPlayerInfoManager.getPlayerId())
+    )
+    if (!gameData) {
+      throw Error('hello')
+    }
+    const game: Game = new Game(
+      gameData.players.map((player: PlayerDTO) => new Player(player.name, player.id)),
+      gameData.config.firstDealerIndex,
+      gameData.config.shuffleSeed
+    )
+    const commandInterface = new OnlineMultiplayerGameCommandInterface(
+      POLLING_INTERVAL,
+      new Fetcher(),
+      GAME_PATH,
+      gameData.hostId.getId(),
+      new CommandExecutor(new GameCommandFactory(game))
+    )
+    return new GameBoardPresenter(
+      commandInterface,
+      new GameBoardModel(new UniqueIdentifier(this.localPlayerInfoManager.getPlayerId()), game),
+      PAUSE_DURATION_FOR_GAME_EVENTS
+    )
   }
 
   public gameUpdated(): void {

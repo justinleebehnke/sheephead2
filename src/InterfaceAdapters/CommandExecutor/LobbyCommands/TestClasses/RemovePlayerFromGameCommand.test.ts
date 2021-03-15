@@ -15,6 +15,8 @@ describe('Remove Player From Game Command', () => {
       setGameConfig: jest.fn(),
       startGame: jest.fn(),
       unStartGame: jest.fn(),
+      subscribe: jest.fn(),
+      getGameByPlayerId: jest.fn(),
     }
     playerToRemoveId = new UniqueIdentifier().getId()
     hostId = new UniqueIdentifier().getId()

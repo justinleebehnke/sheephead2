@@ -9,7 +9,6 @@ interface IReadOnlyGameModel extends IObservable {
   getPlayerById(id: UniqueIdentifier): Player
   getPlayerByIndex(index: number): Player
   getCurrentRound(): IReadOnlyRound | null
-  pick(): void
   updateSubscribers(): void
 }
 
