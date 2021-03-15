@@ -1,4 +1,5 @@
-import { Component, ReactElement } from 'react'
+import { Component, Fragment, ReactElement } from 'react'
+import Button from 'react-bootstrap/esm/Button'
 import AppPresenter from './AppPresenter/AppPresenter'
 import CommandExecutor from '../InterfaceAdapters/CommandExecutor/CommandExecutor'
 import Fetcher from '../Drivers/Fetcher'
@@ -52,49 +53,64 @@ class App extends Component {
 
   render(): ReactElement {
     return (
-      <section>
-        {this.presenter.isShowingLobby && (
-          <LobbyEntranceView
-            presenter={this.lobbyPresenter}
-            joinableGames={
-              new JoinableGamesPresenter(
-                this.lobbyCommandInterface,
-                this.gameManager,
-                this.playerInfoManager,
-                new UserNotifier()
-              )
-            }
-          />
-        )}
-        {this.presenter.isShowingPreGameAsHost && (
-          <HostPreGameView
-            presenter={
-              new PreGamePresenter(
-                this.gameManager,
-                new UniqueIdentifier(this.playerInfoManager.getPlayerId()),
-                this.playerInfoManager,
-                this.lobbyCommandInterface
-              )
-            }
-          />
-        )}
-        {this.presenter.isShowingPreGameAsNonHost && (
-          <PlayerPreGameView
-            presenter={
-              new PreGamePresenter(
-                this.gameManager,
-                this.gameManager.getGameByPlayerId(
-                  new UniqueIdentifier(this.playerInfoManager.getPlayerId())
-                )?.hostId || new UniqueIdentifier(),
-                this.playerInfoManager,
-                this.lobbyCommandInterface
-              )
-            }
-          />
-        )}
-        {this.presenter.isShowingGame && <GameView presenter={this.presenter.getGamePresenter()} />}
-      </section>
+      <Fragment>
+        <section>
+          {this.presenter.isShowingLobby && (
+            <LobbyEntranceView
+              presenter={this.lobbyPresenter}
+              joinableGames={
+                new JoinableGamesPresenter(
+                  this.lobbyCommandInterface,
+                  this.gameManager,
+                  this.playerInfoManager,
+                  new UserNotifier()
+                )
+              }
+            />
+          )}
+          {this.presenter.isShowingPreGameAsHost && (
+            <HostPreGameView
+              presenter={
+                new PreGamePresenter(
+                  this.gameManager,
+                  new UniqueIdentifier(this.playerInfoManager.getPlayerId()),
+                  this.playerInfoManager,
+                  this.lobbyCommandInterface
+                )
+              }
+            />
+          )}
+          {this.presenter.isShowingPreGameAsNonHost && (
+            <PlayerPreGameView
+              presenter={
+                new PreGamePresenter(
+                  this.gameManager,
+                  this.gameManager.getGameByPlayerId(
+                    new UniqueIdentifier(this.playerInfoManager.getPlayerId())
+                  )?.hostId || new UniqueIdentifier(),
+                  this.playerInfoManager,
+                  this.lobbyCommandInterface
+                )
+              }
+            />
+          )}
+          {this.presenter.isShowingGame && (
+            <GameView presenter={this.presenter.getGamePresenter()} />
+          )}
+        </section>
+        <Button id='reset-button' variant='danger' onClick={() => this.hardReset()}>
+          Hard Reset Server (Destroy All Games)
+        </Button>
+      </Fragment>
     )
+  }
+
+  private hardReset = (): void => {
+    fetch('http://68.183.105.73:2020', {
+      method: 'DELETE',
+    }).then(() => {
+      window.location.reload()
+    })
   }
 }
 
