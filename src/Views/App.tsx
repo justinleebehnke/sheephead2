@@ -1,5 +1,6 @@
 import { Component, Fragment, ReactElement } from 'react'
 import Button from 'react-bootstrap/esm/Button'
+import { serverName } from '../constants'
 import AppPresenter from './AppPresenter/AppPresenter'
 import CommandExecutor from '../InterfaceAdapters/CommandExecutor/CommandExecutor'
 import Fetcher from '../Drivers/Fetcher'
@@ -36,7 +37,7 @@ class App extends Component {
     this.lobbyCommandInterface = new LobbyCommandInterface(
       1000,
       new Fetcher(),
-      'http://68.183.105.73:2020/lobby',
+      `${serverName}/lobby`,
       new CommandExecutor(new LobbyCommandFactory(this.gameManager))
     )
     this.lobbyPresenter = new LobbyEntrancePresenter(
@@ -106,7 +107,7 @@ class App extends Component {
   }
 
   private hardReset = (): void => {
-    fetch('http://68.183.105.73:2020', {
+    fetch(serverName, {
       method: 'DELETE',
     }).then(() => {
       window.location.reload()
