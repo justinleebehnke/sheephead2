@@ -195,7 +195,7 @@ describe('Game Board Model', () => {
     }
     expect(model.getDataForPlayerToRight()).toEqual(expectedToRight)
     const expectedLocal: PlayerLayoutData = {
-      name: localPlayer.getName(),
+      name: localPlayer.getName() + ' (You)',
       isTurn: false,
       isDealer: false,
       isPicker: false,

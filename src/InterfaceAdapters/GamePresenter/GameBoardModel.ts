@@ -96,7 +96,9 @@ class GameBoardModel implements ISubscriber, IGameBoardModel {
   }
 
   public getDataForLocalPlayer(): PlayerLayoutData {
-    return this.getDataForPlayer(this.game.getIndexOfPlayerById(this.localPlayerId))
+    const localPlayer = this.getDataForPlayer(this.game.getIndexOfPlayerById(this.localPlayerId))
+    localPlayer.name += ' (You)'
+    return localPlayer
   }
 
   public isShowingPassOrPickForm(): boolean {
