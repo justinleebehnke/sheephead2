@@ -16,6 +16,17 @@ section {
   margin-top: 50vh;
 }
 
+#rules-link {
+  background-color: #007bff;
+  border-radius: 0.25rem;
+  color: white;
+  margin: 0.25rem 0 0 0.25rem;
+  padding: 0.375rem 0.75rem;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+
 .lobby {
   background-color: #efefef;
   margin: auto;

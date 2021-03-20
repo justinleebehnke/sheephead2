@@ -55,6 +55,9 @@ class App extends Component {
   render(): ReactElement {
     return (
       <Fragment>
+        <a id='rules-link' href='/SheepheadBellePlaineRules.pdf' download>
+          Download Rules PDF
+        </a>
         <section>
           {this.presenter.isShowingLobby && (
             <LobbyEntranceView
