@@ -1,1 +1,1 @@
-export const serverName = 'https://shs.justinbehnke.com'
+export const serverName = 'https://sheep-server.justinbehnke.com/'
