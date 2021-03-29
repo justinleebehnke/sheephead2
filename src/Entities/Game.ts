@@ -14,6 +14,7 @@ class Game implements ISubscriber, IReadOnlyGameModel {
   private readonly idsOfPlayersThatAreReadyToPlayAgain: Set<string>
 
   public constructor(players: Player[], dealerIndex: number, shuffleSeed: number) {
+    console.log('constructor shuffleSeed', shuffleSeed)
     this.players = players
     this.currentDealer = dealerIndex
     this.currentRound = null
@@ -78,6 +79,7 @@ class Game implements ISubscriber, IReadOnlyGameModel {
   }
 
   private playRound(): void {
+    console.log('ShuffleSeed Before Increment', this.shuffleSeed)
     this.players.forEach((player) => player.clearCards())
     this.currentRound = new Round(
       this.players,
@@ -87,6 +89,7 @@ class Game implements ISubscriber, IReadOnlyGameModel {
     )
     this.currentRound.addSubscriber(this)
     this.notifySubscribers()
+    console.log('ShuffleSeed After Increment', this.shuffleSeed)
   }
 
   public playAgain(playerId: UniqueIdentifier): void {
