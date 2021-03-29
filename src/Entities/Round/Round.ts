@@ -6,6 +6,7 @@ import ICardRanker from '../ICardRanker'
 import IObservable from '../IObservable'
 import IReadOnlyRound from '../ReadOnlyEntities/IReadOnlyRound'
 import IRoundState from './IRoundState'
+import IShuffleSeedManager from './IShuffleSeedManager'
 import ISubscriber from '../ISubscriber'
 import PickerHasNotBuriedState from './PickerHasNotBuriedState'
 import Player from '../Player'
@@ -16,7 +17,6 @@ class Round implements IRoundState, IObservable, IReadOnlyRound {
   private indexOfDealer: number
   private indexOfCurrentTurn: number
   private blind: Card[]
-  private shuffleSeed: number
   private context: IRoundState
   private _bury: Card[]
   private cardRanker: ICardRanker
@@ -28,7 +28,7 @@ class Round implements IRoundState, IObservable, IReadOnlyRound {
   constructor(
     players: Player[],
     indexOfDealer: number,
-    shuffleSeed: number,
+    private readonly shuffleSeedManager: IShuffleSeedManager,
     cardRanker: ICardRanker
   ) {
     this.players = players
@@ -37,7 +37,6 @@ class Round implements IRoundState, IObservable, IReadOnlyRound {
     this.blind = []
     this.pickerIndex = -1
     this._bury = []
-    this.shuffleSeed = shuffleSeed
     this.cardRanker = cardRanker
     this.context = new FindingPickerState(this)
     this.currentTrick = new Trick(-1)
@@ -168,7 +167,7 @@ class Round implements IRoundState, IObservable, IReadOnlyRound {
   }
 
   public reDeal(): void {
-    this.shuffleSeed++
+    this.shuffleSeedManager.changeShuffleSeed()
     this.removeAllCards()
     this.deal()
   }
@@ -181,7 +180,7 @@ class Round implements IRoundState, IObservable, IReadOnlyRound {
 
   private deal(): void {
     const deck = new Deck(this.cardRanker)
-    deck.shuffle(this.shuffleSeed)
+    deck.shuffle(this.shuffleSeedManager.getShuffleSeed())
 
     this.giveEachPlayerThreeCards(deck)
     this.blind.push(deck.getNextCard())

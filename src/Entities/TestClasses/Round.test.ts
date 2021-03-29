@@ -1,6 +1,7 @@
 import Card from '../Card'
 import BellePlaineRulesCardRanker from '../BellePlaineRulesCardRanker'
 import ICardRanker from '../../Entities/ICardRanker'
+import IShuffleSeedManager from '../Round/IShuffleSeedManager'
 import Player from '../Player'
 import Round from '../Round/Round'
 import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
@@ -16,7 +17,14 @@ describe('Round', () => {
   let player4Id: string
   let player4: Player
   let round: Round
+  let shuffleSeedManager: IShuffleSeedManager
+
   beforeEach(() => {
+    shuffleSeedManager = {
+      getShuffleSeed: jest.fn().mockReturnValueOnce(123456789).mockReturnValueOnce(123456790),
+      changeShuffleSeed: jest.fn(),
+    }
+
     cardRanker = new BellePlaineRulesCardRanker()
     player1Id = '4d2f43c3-224d-46ba-bb76-0e383d9ceb5c'
     player1 = new Player('Jesse', new UniqueIdentifier(player1Id))
@@ -33,7 +41,7 @@ describe('Round', () => {
     round = new Round(
       [player1, player2, player3, player4],
       0,
-      123456789,
+      shuffleSeedManager,
       new BellePlaineRulesCardRanker()
     )
   })
@@ -383,7 +391,7 @@ describe('Round', () => {
     expect(actualEndOfRoundReport.tricks[5].cards[3]).toEqual(player2CardData[5])
   })
 
-  it('Should shuffle and re deal if no one picks', () => {
+  it('Should tell the shuffle seed manager to changeShuffleSeed and re deal if no one picks', () => {
     expect(player1.getPlayableCardIds()).toEqual(['7d', 'qh', '9d', '8d', 'kc', '9s'])
     expect(player2.getPlayableCardIds()).toEqual(['qd', 'td', 'kd', 'ah', 'tc', '9c'])
     expect(player3.getPlayableCardIds()).toEqual(['qs', 'jc', 'js', 'jd', 'ad', '9h'])
@@ -396,5 +404,6 @@ describe('Round', () => {
     expect(player2.getPlayableCardIds()).toEqual(['7d', 'qh', 'jd', 'td', 'ts', '9h'])
     expect(player3.getPlayableCardIds()).toEqual(['qs', 'kd', '8d', 'ac', 'ks', 'kh'])
     expect(player4.getPlayableCardIds()).toEqual(['jc', 'jh', 'ad', 'tc', 'th', '9c'])
+    expect(shuffleSeedManager.changeShuffleSeed).toHaveBeenCalledTimes(1)
   })
 })

@@ -1,11 +1,12 @@
 import BellePlaineRulesCardRanker from './BellePlaineRulesCardRanker'
 import IReadOnlyGameModel from './ReadOnlyEntities/IReadOnlyGameModel'
+import IShuffleSeedManager from './Round/IShuffleSeedManager'
 import ISubscriber from './ISubscriber'
 import Player from './Player'
 import Round from './Round/Round'
 import UniqueIdentifier from '../Utilities/UniqueIdentifier'
 
-class Game implements ISubscriber, IReadOnlyGameModel {
+class Game implements ISubscriber, IReadOnlyGameModel, IShuffleSeedManager {
   private players: Player[]
   private currentDealer: number
   private currentRound: Round | null
@@ -14,7 +15,6 @@ class Game implements ISubscriber, IReadOnlyGameModel {
   private readonly idsOfPlayersThatAreReadyToPlayAgain: Set<string>
 
   public constructor(players: Player[], dealerIndex: number, shuffleSeed: number) {
-    console.log('constructor shuffleSeed', shuffleSeed)
     this.players = players
     this.currentDealer = dealerIndex
     this.currentRound = null
@@ -24,6 +24,14 @@ class Game implements ISubscriber, IReadOnlyGameModel {
     if (players.length === 4) {
       this.playRound()
     }
+  }
+
+  public changeShuffleSeed(): void {
+    this.shuffleSeed++
+  }
+
+  public getShuffleSeed(): number {
+    return this.shuffleSeed
   }
 
   public addSubscriber(newSubscriber: ISubscriber): void {
@@ -79,17 +87,15 @@ class Game implements ISubscriber, IReadOnlyGameModel {
   }
 
   private playRound(): void {
-    console.log('ShuffleSeed Before Increment', this.shuffleSeed)
     this.players.forEach((player) => player.clearCards())
     this.currentRound = new Round(
       this.players,
       this.currentDealer,
-      this.shuffleSeed++,
+      this,
       new BellePlaineRulesCardRanker()
     )
     this.currentRound.addSubscriber(this)
     this.notifySubscribers()
-    console.log('ShuffleSeed After Increment', this.shuffleSeed)
   }
 
   public playAgain(playerId: UniqueIdentifier): void {
