@@ -6,10 +6,8 @@ import IGameBoardPresenter from '../../Views/GamePlayViews/IGameBoardPresenter'
 import ISubscriber from '../../Entities/ISubscriber'
 import PlayerData from '../../Views/GamePlayViews/EndOfRoundReport/PlayerData'
 import PlayerLayoutData from '../GamePresenter/PlayerLayoutData'
-import { pause } from '../../Utilities/TestingUtilities'
 
 describe('Game Board Presenter', () => {
-  let delayedUpdateDurationInMS: number
   let view: ISubscriber
   let presenter: IGameBoardPresenter
   let model: IGameBoardModel
@@ -21,7 +19,6 @@ describe('Game Board Presenter', () => {
   let playersData: PlayerData[]
 
   beforeEach(() => {
-    delayedUpdateDurationInMS = 50
     view = {
       update: jest.fn(),
     }
@@ -85,7 +82,7 @@ describe('Game Board Presenter', () => {
     commandInterface = {
       giveCommand: jest.fn(),
     }
-    presenter = new GameBoardPresenter(commandInterface, model, delayedUpdateDurationInMS)
+    presenter = new GameBoardPresenter(commandInterface, model)
   })
 
   it('Should be able to have a view subscribe to it', () => {
@@ -107,11 +104,13 @@ describe('Game Board Presenter', () => {
           dataForPlayerToRight: rightPlayerData,
         },
         handViewData: {
+          isLoading: false,
           isTurn: localPlayerData.isTurn,
           hand: ['ac', 'ad'],
           playableCardIds: ['ad'],
         },
         passOrPickViewData: {
+          isLoading: false,
           isPicking: true,
           isShowingPassOrPickForm: true,
           hand: ['ac', 'ad'],
@@ -129,63 +128,62 @@ describe('Game Board Presenter', () => {
       expect(res).toEqual(expected1stResponse)
     })
 
-    it('Should do a delayed update after there is a state change if the changes happened close together', async () => {
-      // @ts-ignore pretending that the model called update on him
-      presenter.update()
-      // @ts-ignore pretending that the model called update on him
-      presenter.update()
-      expect(presenter.getGameBoardViewData()).toEqual(expected1stResponse)
-      await pause(delayedUpdateDurationInMS / 2)
-      expect(presenter.getGameBoardViewData()).toEqual(expected1stResponse)
-      await pause(delayedUpdateDurationInMS / 2)
-      expected1stResponse.endOfRoundViewData.pickerIndex = 1
-      expect(presenter.getGameBoardViewData()).toEqual(expected1stResponse)
-      await pause(delayedUpdateDurationInMS)
-      expected1stResponse.endOfRoundViewData.pickerIndex = 0
-      expect(presenter.getGameBoardViewData()).toEqual(expected1stResponse)
-      await pause(delayedUpdateDurationInMS)
-      expect(presenter.getGameBoardViewData()).toEqual(expected1stResponse)
-    })
-  })
+    describe('Commands', () => {
+      it('Should stop loading after every update', () => {
+        presenter.pass()
+        expect(presenter.getGameBoardViewData().passOrPickViewData.isLoading).toBe(true)
+        // @ts-ignore pretending that the model called update on him
+        presenter.update()
+        expect(presenter.getGameBoardViewData().passOrPickViewData.isLoading).toBe(false)
+      })
 
-  describe('Commands', () => {
-    it('Should delegate the call to bury to the command interface object it is given', () => {
-      presenter.bury(['cardA', 'cardB'])
-      expect(commandInterface.giveCommand).toHaveBeenCalledWith({
-        name: 'bury',
-        params: {
-          cards: ['cardA', 'cardB'],
-        },
+      it('Should delegate the call to bury to the command interface object it is given', () => {
+        presenter.bury(['cardA', 'cardB'])
+        expect(presenter.getGameBoardViewData().passOrPickViewData.isLoading).toBe(true)
+        expect(commandInterface.giveCommand).toHaveBeenCalledWith({
+          name: 'bury',
+          params: {
+            cards: ['cardA', 'cardB'],
+          },
+        })
       })
-    })
-    it('Should delegate the call to pass to the command interface object it is given', () => {
-      presenter.pass()
-      expect(commandInterface.giveCommand).toHaveBeenCalledWith({
-        name: 'pass',
-        params: null,
+
+      it('Should delegate the call to pass to the command interface object it is given', () => {
+        presenter.pass()
+        expect(presenter.getGameBoardViewData().passOrPickViewData.isLoading).toBe(true)
+        expect(commandInterface.giveCommand).toHaveBeenCalledWith({
+          name: 'pass',
+          params: null,
+        })
       })
-    })
-    it('Should delegate the call to pick to the model', () => {
-      presenter.pick()
-      expect(commandInterface.giveCommand).toHaveBeenCalledWith({
-        name: 'pick',
-        params: null,
+
+      it('Should delegate the call to pick to the model', () => {
+        presenter.pick()
+        expect(presenter.getGameBoardViewData().passOrPickViewData.isLoading).toBe(true)
+        expect(commandInterface.giveCommand).toHaveBeenCalledWith({
+          name: 'pick',
+          params: null,
+        })
       })
-    })
-    it('Should delegate the call to play to the command interface object', () => {
-      presenter.play('cardA')
-      expect(commandInterface.giveCommand).toHaveBeenCalledWith({
-        name: 'play',
-        params: { card: 'cardA' },
+
+      it('Should delegate the call to play to the command interface object', () => {
+        presenter.play('cardA')
+        expect(presenter.getGameBoardViewData().passOrPickViewData.isLoading).toBe(true)
+        expect(commandInterface.giveCommand).toHaveBeenCalledWith({
+          name: 'play',
+          params: { card: 'cardA' },
+        })
       })
-    })
-    it('Should delegate the call to play again to the command interface object', () => {
-      presenter.playAgain()
-      expect(commandInterface.giveCommand).toHaveBeenCalledWith({
-        name: 'playAgain',
-        params: {
-          playerId: 'georges-id',
-        },
+
+      it('Should delegate the call to play again to the command interface object', () => {
+        presenter.playAgain()
+        expect(presenter.getGameBoardViewData().passOrPickViewData.isLoading).toBe(true)
+        expect(commandInterface.giveCommand).toHaveBeenCalledWith({
+          name: 'playAgain',
+          params: {
+            playerId: 'georges-id',
+          },
+        })
       })
     })
   })

@@ -7,3 +7,13 @@
   box-sizing: content-box;
   border: green solid 5px;
 }
+
+.playing-card .playable:hover {
+  position: relative;
+  top: -10px;
+  cursor: pointer;
+}
+
+.playing-card .loading:hover {
+  cursor: wait;
+}

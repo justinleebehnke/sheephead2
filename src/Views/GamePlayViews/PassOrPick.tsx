@@ -5,6 +5,7 @@ import Container from 'react-bootstrap/Container'
 import PassOrPickPresenter from './PassOrPickPresenter'
 import PassOrPickViewData from './PassOrPickViewData'
 import SelectableCardHand from './SelectableCardHand'
+import Spinner from 'react-bootstrap/Spinner'
 
 type Props = {
   presenter: PassOrPickPresenter
@@ -32,6 +33,15 @@ class PassOrPick extends Component<Props> {
 
   renderActions = (): ReactElement => {
     const { presenter } = this.props
+    if (this.props.data.isLoading && !this.props.data.isPicking) {
+      return (
+        <div className='controls'>
+          <div></div>
+          <Spinner animation='border' className='center' />
+          <div></div>
+        </div>
+      )
+    }
     if (!this.props.data.isPicking) {
       return (
         <div className='controls'>

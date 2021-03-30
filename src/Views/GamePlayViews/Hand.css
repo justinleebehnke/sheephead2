@@ -13,9 +13,3 @@
 #hand .playing-card:first-child {
   margin-left: 0px;
 }
-
-#hand .playing-card:hover {
-  position: relative;
-  top: -10px;
-  cursor: pointer;
-}
