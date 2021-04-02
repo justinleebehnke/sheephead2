@@ -48,6 +48,7 @@ class JoinableGamesView extends Component<Props> implements ISubscriber {
                       <td>
                         <Button
                           variant='primary'
+                          disabled={this.props.presenter.isLoading}
                           onClick={() => this.props.presenter.joinGame(game.hostId.getId())}
                         >
                           Join

@@ -1,5 +1,6 @@
 import { Component, ReactElement } from 'react'
 import Button from 'react-bootstrap/Button'
+import Spinner from 'react-bootstrap/esm/Spinner'
 import Table from 'react-bootstrap/Table'
 import IPreGamePresenter from './IPreGamePresenter'
 
@@ -34,13 +35,18 @@ class PlayerPreGameView extends Component<Props> {
             </tr>
           </tbody>
         </Table>
+
         <div className='split'>
           <div></div>
-          <div>
-            <Button variant='outline-primary' onClick={() => this.props.presenter.leaveGame()}>
-              Leave
-            </Button>{' '}
-          </div>
+          {this.props.presenter.isLoading ? (
+            <Spinner animation='border' />
+          ) : (
+            <div>
+              <Button variant='outline-primary' onClick={() => this.props.presenter.leaveGame()}>
+                Leave
+              </Button>{' '}
+            </div>
+          )}
         </div>
       </div>
     )
