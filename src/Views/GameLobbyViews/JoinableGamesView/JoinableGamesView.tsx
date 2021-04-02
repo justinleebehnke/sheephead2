@@ -1,5 +1,6 @@
 import { Component, ReactElement } from 'react'
 import Button from 'react-bootstrap/Button'
+import Spinner from 'react-bootstrap/Spinner'
 import Table from 'react-bootstrap/Table'
 import IJoinableGamesPresenter from './IJoinableGamesPresenter'
 import ISubscriber from '../../../Entities/ISubscriber'
@@ -46,13 +47,17 @@ class JoinableGamesView extends Component<Props> implements ISubscriber {
                         <td></td>
                       ))}
                       <td>
-                        <Button
-                          variant='primary'
-                          disabled={this.props.presenter.isLoading}
-                          onClick={() => this.props.presenter.joinGame(game.hostId.getId())}
-                        >
-                          Join
-                        </Button>
+                        {this.props.presenter.isLoading ? (
+                          <Spinner animation='border' />
+                        ) : (
+                          <Button
+                            variant='primary'
+                            disabled={this.props.presenter.isLoading}
+                            onClick={() => this.props.presenter.joinGame(game.hostId.getId())}
+                          >
+                            Join
+                          </Button>
+                        )}
                       </td>
                     </tr>
                   )
