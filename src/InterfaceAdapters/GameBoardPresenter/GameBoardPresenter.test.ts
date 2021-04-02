@@ -326,7 +326,7 @@ describe('Game Board Presenter', () => {
           getHand: jest.fn().mockReturnValue(['jc', 'jd', '9s', '9h']),
           getPlayableCardIds: jest
             .fn()
-            .mockReturnValueOnce(['jc', 'jd'])
+            .mockReturnValue(['jc', 'jd', '9s', '9h'])
             .mockReturnValue(['jc', 'jd', '9s', '9h']),
           getPlayersData: jest.fn().mockReturnValue(triggeringState.endOfRoundViewData.players),
           getPickerIndex: jest.fn().mockReturnValue(1),
@@ -335,18 +335,22 @@ describe('Game Board Presenter', () => {
         presenter = new GameBoardPresenter(commandInterface, model, 400)
         presenter.setView(view)
         presenter.update()
-        expect(presenter.getGameBoardViewData()).toEqual(triggeringState)
+        expect(presenter.getGameBoardViewData().allPlayerData).toEqual(
+          triggeringState.allPlayerData
+        )
         expect(view.update).toHaveBeenCalledTimes(1)
         presenter.update()
         presenter.update()
         presenter.update()
         expect(view.update).toHaveBeenCalledTimes(4)
         await pause(150)
-        expect(presenter.getGameBoardViewData()).toEqual(triggeringState)
+        expect(presenter.getGameBoardViewData().allPlayerData).toEqual(
+          triggeringState.allPlayerData
+        )
         expect(view.update).toHaveBeenCalledTimes(4)
         await pause(400)
         expect(view.update).toHaveBeenCalledTimes(5)
-        expect(presenter.getGameBoardViewData()).toEqual(followingState)
+        expect(presenter.getGameBoardViewData().allPlayerData).toEqual(followingState.allPlayerData)
       })
     })
   })
