@@ -2,10 +2,10 @@ import React, { Component, ReactElement } from 'react'
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
+import Spinner from 'react-bootstrap/Spinner'
 import PassOrPickPresenter from './PassOrPickPresenter'
 import PassOrPickViewData from './PassOrPickViewData'
 import SelectableCardHand from './SelectableCardHand'
-import Spinner from 'react-bootstrap/Spinner'
 
 type Props = {
   presenter: PassOrPickPresenter

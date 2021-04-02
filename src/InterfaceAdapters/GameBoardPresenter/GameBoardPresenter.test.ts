@@ -1,4 +1,3 @@
-import { pause } from '../../Utilities/TestingUtilities'
 import GameBoardPresenter from './GameBoardPresenter'
 import GameBoardViewData from '../../Views/GamePlayViews/GameBoardViewData'
 import ICommandInterface from '../ICommandInterface'
@@ -6,8 +5,10 @@ import IGameBoardModel from '../IGameBoardModel'
 import ISubscriber from '../../Entities/ISubscriber'
 import PlayerData from '../../Views/GamePlayViews/EndOfRoundReport/PlayerData'
 import PlayerLayoutData from '../GamePresenter/PlayerLayoutData'
+import { pause } from '../../Utilities/TestingUtilities'
 
 describe('Game Board Presenter', () => {
+  let pauseDurationAfterTrick: number
   let view: ISubscriber
   let presenter: GameBoardPresenter
   let model: IGameBoardModel
@@ -19,6 +20,7 @@ describe('Game Board Presenter', () => {
   let playersData: PlayerData[]
 
   beforeEach(() => {
+    pauseDurationAfterTrick = 400
     view = {
       update: jest.fn(),
     }
@@ -82,7 +84,7 @@ describe('Game Board Presenter', () => {
     commandInterface = {
       giveCommand: jest.fn(),
     }
-    presenter = new GameBoardPresenter(commandInterface, model, 400)
+    presenter = new GameBoardPresenter(commandInterface, model, pauseDurationAfterTrick)
   })
 
   it('Should be able to have a view subscribe to it', () => {
@@ -332,7 +334,7 @@ describe('Game Board Presenter', () => {
           getPickerIndex: jest.fn().mockReturnValue(1),
           getEndOfRoundReport: jest.fn().mockReturnValue(undefined),
         }
-        presenter = new GameBoardPresenter(commandInterface, model, 400)
+        presenter = new GameBoardPresenter(commandInterface, model, pauseDurationAfterTrick)
         presenter.setView(view)
         presenter.update()
         expect(presenter.getGameBoardViewData().allPlayerData).toEqual(
@@ -343,12 +345,12 @@ describe('Game Board Presenter', () => {
         presenter.update()
         presenter.update()
         expect(view.update).toHaveBeenCalledTimes(4)
-        await pause(150)
+        await pause(pauseDurationAfterTrick * 0.33)
         expect(presenter.getGameBoardViewData().allPlayerData).toEqual(
           triggeringState.allPlayerData
         )
         expect(view.update).toHaveBeenCalledTimes(4)
-        await pause(400)
+        await pause(pauseDurationAfterTrick)
         expect(view.update).toHaveBeenCalledTimes(5)
         expect(presenter.getGameBoardViewData().allPlayerData).toEqual(followingState.allPlayerData)
       })

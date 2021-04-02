@@ -1,9 +1,9 @@
 import React, { Component, Fragment } from 'react'
-import Button from 'react-bootstrap/esm/Button'
+import Button from 'react-bootstrap/Button'
 import SelectAbleCard from './SelectAbleCard'
 import SelectableCardHandData from './SelectableCardHandData'
 import SelectableCardHandPresenter from './SelectableCardHandPresenter'
-import Spinner from 'react-bootstrap/esm/Spinner'
+import Spinner from 'react-bootstrap/Spinner'
 import './SelectableCardHand.css'
 
 type Props = {

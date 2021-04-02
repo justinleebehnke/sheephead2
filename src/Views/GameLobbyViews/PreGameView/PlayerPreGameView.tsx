@@ -1,6 +1,6 @@
 import { Component, ReactElement } from 'react'
 import Button from 'react-bootstrap/Button'
-import Spinner from 'react-bootstrap/esm/Spinner'
+import Spinner from 'react-bootstrap/Spinner'
 import Table from 'react-bootstrap/Table'
 import IPreGamePresenter from './IPreGamePresenter'
 
