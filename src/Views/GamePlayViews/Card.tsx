@@ -4,13 +4,14 @@ import './Card.css'
 
 type Props = {
   card: string
+  isLoading: boolean
   isPlayable: boolean
   play(event: MouseEvent): void
 }
 
 class Card extends Component<Props, {}> {
   render() {
-    const { card, isPlayable, play } = this.props
+    const { card, isLoading, isPlayable, play } = this.props
     return (
       <div className='playing-card'>
         {
@@ -20,7 +21,7 @@ class Card extends Component<Props, {}> {
             // @ts-ignore
             src={cards[card]}
             alt={`playing-card-${card}`}
-            className={`${isPlayable ? 'playable' : ''}`}
+            className={`${isPlayable ? 'playable' : ' '}${isLoading ? ' loading' : ''}`}
           />
         }
       </div>

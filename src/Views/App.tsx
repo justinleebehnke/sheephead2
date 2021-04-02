@@ -1,5 +1,5 @@
 import { Component, Fragment, ReactElement } from 'react'
-import Button from 'react-bootstrap/esm/Button'
+import Button from 'react-bootstrap/Button'
 import { serverName } from '../constants'
 import AppPresenter from './AppPresenter/AppPresenter'
 import CommandExecutor from '../InterfaceAdapters/CommandExecutor/CommandExecutor'

@@ -2,16 +2,15 @@ import GameBoardPresenter from './GameBoardPresenter'
 import GameBoardViewData from '../../Views/GamePlayViews/GameBoardViewData'
 import ICommandInterface from '../ICommandInterface'
 import IGameBoardModel from '../IGameBoardModel'
-import IGameBoardPresenter from '../../Views/GamePlayViews/IGameBoardPresenter'
 import ISubscriber from '../../Entities/ISubscriber'
 import PlayerData from '../../Views/GamePlayViews/EndOfRoundReport/PlayerData'
 import PlayerLayoutData from '../GamePresenter/PlayerLayoutData'
 import { pause } from '../../Utilities/TestingUtilities'
 
 describe('Game Board Presenter', () => {
-  let delayedUpdateDurationInMS: number
+  let pauseDurationAfterTrick: number
   let view: ISubscriber
-  let presenter: IGameBoardPresenter
+  let presenter: GameBoardPresenter
   let model: IGameBoardModel
   let commandInterface: ICommandInterface
   let localPlayerData: PlayerLayoutData
@@ -21,7 +20,7 @@ describe('Game Board Presenter', () => {
   let playersData: PlayerData[]
 
   beforeEach(() => {
-    delayedUpdateDurationInMS = 50
+    pauseDurationAfterTrick = 400
     view = {
       update: jest.fn(),
     }
@@ -85,7 +84,7 @@ describe('Game Board Presenter', () => {
     commandInterface = {
       giveCommand: jest.fn(),
     }
-    presenter = new GameBoardPresenter(commandInterface, model, delayedUpdateDurationInMS)
+    presenter = new GameBoardPresenter(commandInterface, model, pauseDurationAfterTrick)
   })
 
   it('Should be able to have a view subscribe to it', () => {
@@ -107,11 +106,13 @@ describe('Game Board Presenter', () => {
           dataForPlayerToRight: rightPlayerData,
         },
         handViewData: {
+          isLoading: false,
           isTurn: localPlayerData.isTurn,
           hand: ['ac', 'ad'],
           playableCardIds: ['ad'],
         },
         passOrPickViewData: {
+          isLoading: false,
           isPicking: true,
           isShowingPassOrPickForm: true,
           hand: ['ac', 'ad'],
@@ -129,63 +130,229 @@ describe('Game Board Presenter', () => {
       expect(res).toEqual(expected1stResponse)
     })
 
-    it('Should do a delayed update after there is a state change if the changes happened close together', async () => {
-      // @ts-ignore pretending that the model called update on him
-      presenter.update()
-      // @ts-ignore pretending that the model called update on him
-      presenter.update()
-      expect(presenter.getGameBoardViewData()).toEqual(expected1stResponse)
-      await pause(delayedUpdateDurationInMS / 2)
-      expect(presenter.getGameBoardViewData()).toEqual(expected1stResponse)
-      await pause(delayedUpdateDurationInMS / 2)
-      expected1stResponse.endOfRoundViewData.pickerIndex = 1
-      expect(presenter.getGameBoardViewData()).toEqual(expected1stResponse)
-      await pause(delayedUpdateDurationInMS)
-      expected1stResponse.endOfRoundViewData.pickerIndex = 0
-      expect(presenter.getGameBoardViewData()).toEqual(expected1stResponse)
-      await pause(delayedUpdateDurationInMS)
-      expect(presenter.getGameBoardViewData()).toEqual(expected1stResponse)
-    })
-  })
+    describe('Commands', () => {
+      it('Should stop loading after every update', () => {
+        presenter.pass()
+        expect(presenter.getGameBoardViewData().passOrPickViewData.isLoading).toBe(true)
+        // @ts-ignore pretending that the model called update on him
+        presenter.update()
+        expect(presenter.getGameBoardViewData().passOrPickViewData.isLoading).toBe(false)
+      })
 
-  describe('Commands', () => {
-    it('Should delegate the call to bury to the command interface object it is given', () => {
-      presenter.bury(['cardA', 'cardB'])
-      expect(commandInterface.giveCommand).toHaveBeenCalledWith({
-        name: 'bury',
-        params: {
-          cards: ['cardA', 'cardB'],
-        },
+      it('Should delegate the call to bury to the command interface object it is given', () => {
+        presenter.bury(['cardA', 'cardB'])
+        expect(presenter.getGameBoardViewData().passOrPickViewData.isLoading).toBe(true)
+        expect(commandInterface.giveCommand).toHaveBeenCalledWith({
+          name: 'bury',
+          params: {
+            cards: ['cardA', 'cardB'],
+          },
+        })
+      })
+
+      it('Should delegate the call to pass to the command interface object it is given', () => {
+        presenter.pass()
+        expect(presenter.getGameBoardViewData().passOrPickViewData.isLoading).toBe(true)
+        expect(commandInterface.giveCommand).toHaveBeenCalledWith({
+          name: 'pass',
+          params: null,
+        })
+      })
+
+      it('Should delegate the call to pick to the model', () => {
+        presenter.pick()
+        expect(presenter.getGameBoardViewData().passOrPickViewData.isLoading).toBe(true)
+        expect(commandInterface.giveCommand).toHaveBeenCalledWith({
+          name: 'pick',
+          params: null,
+        })
+      })
+
+      it('Should delegate the call to play to the command interface object', () => {
+        presenter.play('cardA')
+        expect(presenter.getGameBoardViewData().passOrPickViewData.isLoading).toBe(true)
+        expect(commandInterface.giveCommand).toHaveBeenCalledWith({
+          name: 'play',
+          params: { card: 'cardA' },
+        })
+      })
+
+      it('Should delegate the call to play again to the command interface object', () => {
+        presenter.playAgain()
+        expect(presenter.getGameBoardViewData().passOrPickViewData.isLoading).toBe(true)
+        expect(commandInterface.giveCommand).toHaveBeenCalledWith({
+          name: 'playAgain',
+          params: {
+            playerId: 'georges-id',
+          },
+        })
       })
     })
-    it('Should delegate the call to pass to the command interface object it is given', () => {
-      presenter.pass()
-      expect(commandInterface.giveCommand).toHaveBeenCalledWith({
-        name: 'pass',
-        params: null,
+
+    describe('Pause when the trick is full before clearing', () => {
+      beforeEach(() => {
+        view = {
+          update: jest.fn(),
+        }
       })
-    })
-    it('Should delegate the call to pick to the model', () => {
-      presenter.pick()
-      expect(commandInterface.giveCommand).toHaveBeenCalledWith({
-        name: 'pick',
-        params: null,
-      })
-    })
-    it('Should delegate the call to play to the command interface object', () => {
-      presenter.play('cardA')
-      expect(commandInterface.giveCommand).toHaveBeenCalledWith({
-        name: 'play',
-        params: { card: 'cardA' },
-      })
-    })
-    it('Should delegate the call to play again to the command interface object', () => {
-      presenter.playAgain()
-      expect(commandInterface.giveCommand).toHaveBeenCalledWith({
-        name: 'playAgain',
-        params: {
-          playerId: 'georges-id',
-        },
+      it('Should pause for 4 seconds before clearing the trick', async () => {
+        let triggeringState: GameBoardViewData = {
+          allPlayerData: {
+            dataForLocalPlayer: {
+              name: 'Luis (You)',
+              isTurn: false,
+              isDealer: false,
+              isPicker: true,
+              cardPlayed: 'qh',
+            },
+            dataForPlayerAcross: {
+              name: 'Andres',
+              isTurn: true,
+              isDealer: false,
+              isPicker: false,
+              cardPlayed: 'js',
+            },
+            dataForPlayerToLeft: {
+              name: 'Fernando',
+              isTurn: false,
+              isDealer: false,
+              isPicker: false,
+              cardPlayed: 'ac',
+            },
+            dataForPlayerToRight: {
+              name: 'George',
+              isTurn: false,
+              isDealer: true,
+              isPicker: false,
+              cardPlayed: 'qs',
+            },
+          },
+          passOrPickViewData: {
+            isLoading: false,
+            isPicking: false,
+            isShowingPassOrPickForm: false,
+            hand: ['jc', 'jd', '9s', '9h'],
+          },
+          handViewData: {
+            isLoading: false,
+            isTurn: false,
+            playableCardIds: ['jc', 'jd'],
+            hand: ['jc', 'jd', '9s', '9h'],
+          },
+          endOfRoundViewData: {
+            endOfRoundReport: undefined,
+            players: [
+              { name: 'George', id: '45c78893-ac7b-4999-bd08-dbb557e851c7' },
+              { name: 'Luis', id: '07d23498-c980-4a7d-810f-ff780af7fa94' },
+              { name: 'Fernando', id: 'e4858617-0a61-4568-b19e-374a1668a5f2' },
+              { name: 'Andres', id: '9a959c1f-9124-4b7a-b84a-ed8c9ea46354' },
+            ],
+            pickerIndex: 1,
+          },
+        }
+        let followingState: GameBoardViewData = {
+          allPlayerData: {
+            dataForLocalPlayer: {
+              name: 'Luis (You)',
+              isTurn: false,
+              isDealer: false,
+              isPicker: true,
+              cardPlayed: 'none',
+            },
+            dataForPlayerAcross: {
+              name: 'Andres',
+              isTurn: false,
+              isDealer: false,
+              isPicker: false,
+              cardPlayed: 'none',
+            },
+            dataForPlayerToLeft: {
+              name: 'Fernando',
+              isTurn: false,
+              isDealer: false,
+              isPicker: false,
+              cardPlayed: 'none',
+            },
+            dataForPlayerToRight: {
+              name: 'George',
+              isTurn: true,
+              isDealer: true,
+              isPicker: false,
+              cardPlayed: 'turn',
+            },
+          },
+          passOrPickViewData: {
+            isLoading: false,
+            isPicking: false,
+            isShowingPassOrPickForm: false,
+            hand: ['jc', 'jd', '9s', '9h'],
+          },
+          handViewData: {
+            isLoading: false,
+            isTurn: false,
+            playableCardIds: ['jc', 'jd', '9s', '9h'],
+            hand: ['jc', 'jd', '9s', '9h'],
+          },
+          endOfRoundViewData: {
+            endOfRoundReport: undefined,
+            players: [
+              { name: 'George', id: '45c78893-ac7b-4999-bd08-dbb557e851c7' },
+              { name: 'Luis', id: '07d23498-c980-4a7d-810f-ff780af7fa94' },
+              { name: 'Fernando', id: 'e4858617-0a61-4568-b19e-374a1668a5f2' },
+              { name: 'Andres', id: '9a959c1f-9124-4b7a-b84a-ed8c9ea46354' },
+            ],
+            pickerIndex: 1,
+          },
+        }
+        model = {
+          addSubscriber: jest.fn(),
+          removeSubscriber: jest.fn(),
+          getDataForLocalPlayer: jest
+            .fn()
+            .mockReturnValueOnce(triggeringState.allPlayerData.dataForLocalPlayer)
+            .mockReturnValue(followingState.allPlayerData.dataForLocalPlayer),
+          getDataForPlayerAcross: jest
+            .fn()
+            .mockReturnValueOnce(triggeringState.allPlayerData.dataForPlayerAcross)
+            .mockReturnValue(followingState.allPlayerData.dataForPlayerAcross),
+          getDataForPlayerToLeft: jest
+            .fn()
+            .mockReturnValueOnce(triggeringState.allPlayerData.dataForPlayerToLeft)
+            .mockReturnValue(followingState.allPlayerData.dataForPlayerToLeft),
+          getDataForPlayerToRight: jest
+            .fn()
+            .mockReturnValueOnce(triggeringState.allPlayerData.dataForPlayerToRight)
+            .mockReturnValue(followingState.allPlayerData.dataForPlayerToRight),
+          isPicking: jest.fn().mockReturnValue(false),
+          isShowingPassOrPickForm: jest.fn().mockReturnValue(false),
+          getHand: jest.fn().mockReturnValue(['jc', 'jd', '9s', '9h']),
+          getPlayableCardIds: jest
+            .fn()
+            .mockReturnValue(['jc', 'jd', '9s', '9h'])
+            .mockReturnValue(['jc', 'jd', '9s', '9h']),
+          getPlayersData: jest.fn().mockReturnValue(triggeringState.endOfRoundViewData.players),
+          getPickerIndex: jest.fn().mockReturnValue(1),
+          getEndOfRoundReport: jest.fn().mockReturnValue(undefined),
+        }
+        presenter = new GameBoardPresenter(commandInterface, model, pauseDurationAfterTrick)
+        presenter.setView(view)
+        presenter.update()
+        expect(presenter.getGameBoardViewData().allPlayerData).toEqual(
+          triggeringState.allPlayerData
+        )
+        expect(view.update).toHaveBeenCalledTimes(1)
+        presenter.update()
+        presenter.update()
+        presenter.update()
+        expect(view.update).toHaveBeenCalledTimes(4)
+        await pause(pauseDurationAfterTrick * 0.33)
+        expect(presenter.getGameBoardViewData().allPlayerData).toEqual(
+          triggeringState.allPlayerData
+        )
+        expect(view.update).toHaveBeenCalledTimes(4)
+        await pause(pauseDurationAfterTrick)
+        expect(view.update).toHaveBeenCalledTimes(5)
+        expect(presenter.getGameBoardViewData().allPlayerData).toEqual(followingState.allPlayerData)
       })
     })
   })

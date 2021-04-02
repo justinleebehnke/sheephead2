@@ -13,6 +13,7 @@ import StartGameCommandDTO from '../../../InterfaceAdapters/CommandExecutor/Lobb
 class PreGamePresenter implements IGameManagerSubscriber, IPreGamePresenter {
   private view: ISubscriber | undefined
   private firstDealerIndex: number
+  private _isLoading: boolean
 
   constructor(
     private readonly gameList: IGameManager,
@@ -20,11 +21,17 @@ class PreGamePresenter implements IGameManagerSubscriber, IPreGamePresenter {
     private readonly localPlayerInfoManager: ILocalPlayerInfoManager,
     private readonly commandInterface: ICommandInterface
   ) {
+    this._isLoading = false
     this.gameList.subscribe(this)
     this.firstDealerIndex = 0
   }
 
+  public get isLoading(): boolean {
+    return this._isLoading
+  }
+
   public gameUpdated(): void {
+    this._isLoading = false
     this.view?.update()
   }
 
@@ -75,7 +82,8 @@ class PreGamePresenter implements IGameManagerSubscriber, IPreGamePresenter {
     if (!this.isHosting) {
       throw new Error('Only the host may remove a player')
     }
-
+    this._isLoading = true
+    this.view?.update()
     const removePlayerCommand: RemovePlayerFromGameCommandDTO = {
       name: 'removePlayer',
       params: {
@@ -87,6 +95,8 @@ class PreGamePresenter implements IGameManagerSubscriber, IPreGamePresenter {
   }
 
   public leaveGame(): void {
+    this._isLoading = true
+    this.view?.update()
     const removePlayerCommand: RemovePlayerFromGameCommandDTO = {
       name: 'removePlayer',
       params: {
@@ -101,6 +111,8 @@ class PreGamePresenter implements IGameManagerSubscriber, IPreGamePresenter {
     if (!this.isHosting) {
       throw new Error('Only the host may start the game')
     }
+    this._isLoading = true
+    this.view?.update()
     const startGameCommand: StartGameCommandDTO = {
       name: 'startGame',
       params: {

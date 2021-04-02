@@ -11,7 +11,7 @@ type Props = {
 
 class Hand extends Component<Props> {
   render() {
-    if (this.props.data.isTurn) {
+    if (this.props.data.isTurn && !this.props.data.isLoading) {
       const playAbleCards: Set<string> = new Set(this.props.data.playableCardIds)
       return (
         <div id='hand'>
@@ -19,6 +19,7 @@ class Hand extends Component<Props> {
             <Card
               key={cardName}
               isPlayable={playAbleCards.has(cardName)}
+              isLoading={false}
               card={cardName}
               play={
                 playAbleCards.has(cardName)
@@ -42,7 +43,13 @@ class Hand extends Component<Props> {
     return (
       <div id='hand'>
         {this.props.data.hand.map((cardName) => (
-          <Card key={cardName} isPlayable={false} card={cardName} play={() => {}} />
+          <Card
+            key={cardName}
+            isPlayable={false}
+            isLoading={this.props.data.isLoading}
+            card={cardName}
+            play={() => {}}
+          />
         ))}
       </div>
     )

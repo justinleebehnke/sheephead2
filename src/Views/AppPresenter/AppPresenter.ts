@@ -16,7 +16,7 @@ import Player from '../../Entities/Player'
 import PlayerDTO from '../../UseCase/PlayerDTO'
 import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
 
-const PAUSE_DURATION_FOR_GAME_EVENTS = 1000
+const PAUSE_DURATION_FOR_END_OF_TRICK = 4000
 const POLLING_INTERVAL = 1000
 
 const GAME_PATH = `${serverName}/game`
@@ -53,7 +53,7 @@ class AppPresenter implements IAppPresenter, IGameManagerSubscriber {
     return new GameBoardPresenter(
       commandInterface,
       new GameBoardModel(new UniqueIdentifier(this.localPlayerInfoManager.getPlayerId()), game),
-      PAUSE_DURATION_FOR_GAME_EVENTS
+      PAUSE_DURATION_FOR_END_OF_TRICK
     )
   }
 

@@ -1,5 +1,6 @@
 interface SelectableCardHandData {
   hand: string[]
+  isLoading: boolean
   isPicking: boolean
 }
 

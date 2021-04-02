@@ -15,6 +15,7 @@ const NUM_PLAYERS = 4
 
 class JoinableGamesPresenter implements IJoinableGamesPresenter, IGameManagerSubscriber {
   private view: ISubscriber | undefined
+  private _isLoading: boolean
 
   constructor(
     private readonly lobbyCommand: ICommandInterface,
@@ -22,10 +23,16 @@ class JoinableGamesPresenter implements IJoinableGamesPresenter, IGameManagerSub
     private readonly localPlayerInfoManager: ILocalPlayerInfoManager,
     private readonly userNotifier: INotifier
   ) {
+    this._isLoading = false
     this.gameList.subscribe(this)
   }
 
+  public get isLoading(): boolean {
+    return this._isLoading
+  }
+
   public gameUpdated(): void {
+    this._isLoading = false
     this.view?.update()
   }
 
@@ -78,6 +85,8 @@ class JoinableGamesPresenter implements IJoinableGamesPresenter, IGameManagerSub
       },
     }
 
+    this._isLoading = true
+    this.view?.update()
     this.lobbyCommand.giveCommand(addPlayerCommand)
   }
 }

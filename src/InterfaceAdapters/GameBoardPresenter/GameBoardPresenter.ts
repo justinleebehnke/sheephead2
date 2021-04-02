@@ -1,56 +1,59 @@
-import DelayedUpdateQueue from '../../Utilities/DelayedUpdateQueue/DelayedUpdateQueue'
 import GameBoardViewData from '../../Views/GamePlayViews/GameBoardViewData'
 import ICommandInterface from '../ICommandInterface'
 import IGameBoardModel from '../IGameBoardModel'
 import IGameBoardPresenter from '../../Views/GamePlayViews/IGameBoardPresenter'
 import ISubscriber from '../../Entities/ISubscriber'
 import PlayerData from '../../Views/GamePlayViews/EndOfRoundReport/PlayerData'
+import PlayerLayoutDisplayData from '../../Views/GamePlayViews/PlayerLayout/PlayerLayoutDisplayData'
 
 class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
-  private readonly commandInterface: ICommandInterface
-  private readonly model: IGameBoardModel
-  private readonly gameStateDelayedUpdater: DelayedUpdateQueue<GameBoardViewData>
+  private isLoading: boolean
+  private view: ISubscriber | undefined
+  private playerDataToServe: PlayerLayoutDisplayData | undefined
 
-  constructor(commandInterface: ICommandInterface, model: IGameBoardModel, delayToUse: number) {
-    this.commandInterface = commandInterface
-    this.model = model
+  constructor(
+    private readonly commandInterface: ICommandInterface,
+    private readonly model: IGameBoardModel,
+    private readonly endOfTrickPauseDuration: number
+  ) {
     this.model.addSubscriber(this)
-    this.gameStateDelayedUpdater = new DelayedUpdateQueue(delayToUse, 5)
-    this.gameStateDelayedUpdater.push(this.getLiveGameBoardViewData())
+    this.isLoading = false
   }
 
   public update(): void {
-    const liveState: GameBoardViewData = this.getLiveGameBoardViewData()
-    const mostRecentState: GameBoardViewData = this.gameStateDelayedUpdater.peekLastEnqueued()
-    if (JSON.stringify(liveState) !== JSON.stringify(mostRecentState)) {
-      this.gameStateDelayedUpdater.push(liveState)
-    }
+    this.isLoading = false
+    this.view?.update()
   }
 
   public setView(view: ISubscriber): void {
-    this.gameStateDelayedUpdater.addSubscriber(view)
+    this.view = view
   }
 
   public unsetView(): void {
-    throw new Error('Method not implemented.')
+    this.view = undefined
   }
 
   private getLiveGameBoardViewData(): GameBoardViewData {
     const dataForLocalPlayer = this.model.getDataForLocalPlayer()
     const hand = this.model.getHand()
-    return {
-      allPlayerData: {
-        dataForLocalPlayer,
-        dataForPlayerAcross: this.model.getDataForPlayerAcross(),
-        dataForPlayerToLeft: this.model.getDataForPlayerToLeft(),
-        dataForPlayerToRight: this.model.getDataForPlayerToRight(),
-      },
+    const res = {
+      allPlayerData:
+        this.playerDataToServe === undefined
+          ? {
+              dataForLocalPlayer,
+              dataForPlayerAcross: this.model.getDataForPlayerAcross(),
+              dataForPlayerToLeft: this.model.getDataForPlayerToLeft(),
+              dataForPlayerToRight: this.model.getDataForPlayerToRight(),
+            }
+          : this.playerDataToServe,
       passOrPickViewData: {
+        isLoading: this.isLoading,
         isPicking: this.model.isPicking(),
         isShowingPassOrPickForm: this.model.isShowingPassOrPickForm(),
         hand,
       },
       handViewData: {
+        isLoading: this.isLoading,
         isTurn: dataForLocalPlayer.isTurn,
         playableCardIds: Array.from(this.model.getPlayableCardIds()),
         hand,
@@ -61,13 +64,31 @@ class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
         endOfRoundReport: this.model.getEndOfRoundReport(),
       },
     }
+
+    if (
+      this.playerDataToServe === undefined &&
+      res.allPlayerData.dataForLocalPlayer.cardPlayed.length === 2 &&
+      res.allPlayerData.dataForPlayerAcross.cardPlayed.length === 2 &&
+      res.allPlayerData.dataForPlayerToLeft.cardPlayed.length === 2 &&
+      res.allPlayerData.dataForPlayerToRight.cardPlayed.length === 2
+    ) {
+      this.playerDataToServe = res.allPlayerData
+      setTimeout(() => {
+        this.playerDataToServe = undefined
+        this.view?.update()
+      }, this.endOfTrickPauseDuration)
+    }
+
+    return res
   }
 
   public getGameBoardViewData(): GameBoardViewData {
-    return this.gameStateDelayedUpdater.peek()
+    return this.getLiveGameBoardViewData()
   }
 
   public bury(cards: string[]): void {
+    this.isLoading = true
+    this.view?.update()
     this.commandInterface.giveCommand({
       name: 'bury',
       params: {
@@ -77,6 +98,8 @@ class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
   }
 
   public pass(): void {
+    this.isLoading = true
+    this.view?.update()
     this.commandInterface.giveCommand({
       name: 'pass',
       params: null,
@@ -84,6 +107,8 @@ class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
   }
 
   public pick(): void {
+    this.isLoading = true
+    this.view?.update()
     this.commandInterface.giveCommand({
       name: 'pick',
       params: null,
@@ -91,6 +116,8 @@ class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
   }
 
   public play(card: string): void {
+    this.isLoading = true
+    this.view?.update()
     this.commandInterface.giveCommand({
       name: 'play',
       params: {
@@ -100,6 +127,8 @@ class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
   }
 
   public playAgain(): void {
+    this.isLoading = true
+    this.view?.update()
     const localPlayerData = this.model.getDataForLocalPlayer()
     const localPlayerInfo = this.model
       .getPlayersData()

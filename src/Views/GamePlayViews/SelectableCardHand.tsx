@@ -1,8 +1,9 @@
 import React, { Component, Fragment } from 'react'
-import Button from 'react-bootstrap/esm/Button'
+import Button from 'react-bootstrap/Button'
 import SelectAbleCard from './SelectAbleCard'
 import SelectableCardHandData from './SelectableCardHandData'
 import SelectableCardHandPresenter from './SelectableCardHandPresenter'
+import Spinner from 'react-bootstrap/Spinner'
 import './SelectableCardHand.css'
 
 type Props = {
@@ -20,7 +21,7 @@ class SelectableCardHand extends Component<Props, State> {
 
   render() {
     const setOfSelectedCardIds: Set<string> = new Set(this.state.selectedCardIds)
-    const { hand, isPicking } = this.props.selectableCardHandData
+    const { hand, isPicking, isLoading } = this.props.selectableCardHandData
     const isShowBury = isPicking
 
     return (
@@ -32,7 +33,7 @@ class SelectableCardHand extends Component<Props, State> {
                 key={cardId}
                 isSelected={setOfSelectedCardIds.has(cardId)}
                 cardId={cardId}
-                toggleSelected={!isShowBury ? () => {} : this.toggleSelected}
+                toggleSelected={!isShowBury || isLoading ? () => {} : this.toggleSelected}
               />
             ))}
           </div>
@@ -40,13 +41,17 @@ class SelectableCardHand extends Component<Props, State> {
         {isShowBury && (
           <div className='footer-controls'>
             <div></div>
-            <Button
-              className='bury-button'
-              disabled={this.state.selectedCardIds.length !== 2}
-              onClick={this.burySelectedCards}
-            >
-              Bury Selected Cards
-            </Button>
+            {!isLoading ? (
+              <Button
+                className='bury-button'
+                disabled={this.state.selectedCardIds.length !== 2}
+                onClick={this.burySelectedCards}
+              >
+                Bury Selected Cards
+              </Button>
+            ) : (
+              <Spinner animation='border' />
+            )}
           </div>
         )}
       </Fragment>

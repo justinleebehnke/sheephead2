@@ -15,6 +15,7 @@ describe('Lobby Entrance View', () => {
     container = document.createElement('div')
     document.body.appendChild(container)
     joinableGamesPresenter = {
+      isLoading: false,
       joinGame: jest.fn(),
       getJoinableGameData: jest.fn().mockReturnValue([]),
       setView: jest.fn(),

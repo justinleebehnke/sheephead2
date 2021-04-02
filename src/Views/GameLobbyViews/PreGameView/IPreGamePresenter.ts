@@ -2,6 +2,7 @@ import ISubscriber from '../../../Entities/ISubscriber'
 import PlayerData from '../../GamePlayViews/EndOfRoundReport/PlayerData'
 
 interface IPreGamePresenter {
+  isLoading: boolean
   getFirstDealerIndex(): number
   getPlayers(): PlayerData[]
   isHosting: boolean
