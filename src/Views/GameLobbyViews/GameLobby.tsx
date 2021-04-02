@@ -117,7 +117,8 @@ class GameLobby extends Component<{}, State> {
       new GameBoardModel(
         new UniqueIdentifier(localStorage.getItem('localPlayerId') || undefined),
         game
-      )
+      ),
+      4000
     )
     return <GameBoard presenter={presenter} />
   }

@@ -51,7 +51,8 @@ class AppPresenter implements IAppPresenter, IGameManagerSubscriber {
     )
     return new GameBoardPresenter(
       commandInterface,
-      new GameBoardModel(new UniqueIdentifier(this.localPlayerInfoManager.getPlayerId()), game)
+      new GameBoardModel(new UniqueIdentifier(this.localPlayerInfoManager.getPlayerId()), game),
+      4000
     )
   }
 

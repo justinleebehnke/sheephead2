@@ -4,16 +4,18 @@ import IGameBoardModel from '../IGameBoardModel'
 import IGameBoardPresenter from '../../Views/GamePlayViews/IGameBoardPresenter'
 import ISubscriber from '../../Entities/ISubscriber'
 import PlayerData from '../../Views/GamePlayViews/EndOfRoundReport/PlayerData'
+import PlayerLayoutDisplayData from '../../Views/GamePlayViews/PlayerLayout/PlayerLayoutDisplayData'
 
 class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
-  private readonly commandInterface: ICommandInterface
-  private readonly model: IGameBoardModel
   private isLoading: boolean
   private view: ISubscriber | undefined
+  private playerDataToServe: PlayerLayoutDisplayData | undefined
 
-  constructor(commandInterface: ICommandInterface, model: IGameBoardModel) {
-    this.commandInterface = commandInterface
-    this.model = model
+  constructor(
+    private readonly commandInterface: ICommandInterface,
+    private readonly model: IGameBoardModel,
+    private readonly endOfTrickPauseDuration: number
+  ) {
     this.model.addSubscriber(this)
     this.isLoading = false
   }
@@ -34,13 +36,16 @@ class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
   private getLiveGameBoardViewData(): GameBoardViewData {
     const dataForLocalPlayer = this.model.getDataForLocalPlayer()
     const hand = this.model.getHand()
-    return {
-      allPlayerData: {
-        dataForLocalPlayer,
-        dataForPlayerAcross: this.model.getDataForPlayerAcross(),
-        dataForPlayerToLeft: this.model.getDataForPlayerToLeft(),
-        dataForPlayerToRight: this.model.getDataForPlayerToRight(),
-      },
+    const res = {
+      allPlayerData:
+        this.playerDataToServe === undefined
+          ? {
+              dataForLocalPlayer,
+              dataForPlayerAcross: this.model.getDataForPlayerAcross(),
+              dataForPlayerToLeft: this.model.getDataForPlayerToLeft(),
+              dataForPlayerToRight: this.model.getDataForPlayerToRight(),
+            }
+          : this.playerDataToServe,
       passOrPickViewData: {
         isLoading: this.isLoading,
         isPicking: this.model.isPicking(),
@@ -59,6 +64,22 @@ class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
         endOfRoundReport: this.model.getEndOfRoundReport(),
       },
     }
+
+    if (
+      this.playerDataToServe === undefined &&
+      res.allPlayerData.dataForLocalPlayer.cardPlayed.length === 2 &&
+      res.allPlayerData.dataForPlayerAcross.cardPlayed.length === 2 &&
+      res.allPlayerData.dataForPlayerToLeft.cardPlayed.length === 2 &&
+      res.allPlayerData.dataForPlayerToRight.cardPlayed.length === 2
+    ) {
+      this.playerDataToServe = res.allPlayerData
+      setTimeout(() => {
+        this.playerDataToServe = undefined
+        this.view?.update()
+      }, this.endOfTrickPauseDuration)
+    }
+
+    return res
   }
 
   public getGameBoardViewData(): GameBoardViewData {
