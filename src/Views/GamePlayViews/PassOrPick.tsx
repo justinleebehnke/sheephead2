@@ -6,6 +6,7 @@ import Spinner from 'react-bootstrap/Spinner'
 import PassOrPickPresenter from './PassOrPickPresenter'
 import PassOrPickViewData from './PassOrPickViewData'
 import SelectableCardHand from './SelectableCardHand'
+import './PassOrPick.css'
 
 type Props = {
   presenter: PassOrPickPresenter
