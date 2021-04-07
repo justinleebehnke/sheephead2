@@ -21,9 +21,10 @@ class BuryCommand extends AbstractCommand {
     if (!currentTurnPlayer) {
       throw Error(this.getNoCurrentTurnErrorMessage())
     }
-    round.oldBury(
+    round.bury(
       currentTurnPlayer.removeCardFromHand(this.cardIds[0]),
-      currentTurnPlayer.removeCardFromHand(this.cardIds[1])
+      currentTurnPlayer.removeCardFromHand(this.cardIds[1]),
+      false // TODO
     )
   }
 }

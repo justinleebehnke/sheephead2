@@ -11,7 +11,7 @@ describe('End Of Round State', () => {
     const endOfRoundState = new EndOfRoundState(null)
     expect(() => endOfRoundState.pass()).toThrow('Cannot pass in EndOfRoundState.')
     expect(() => endOfRoundState.pick()).toThrow('Cannot pick in EndOfRoundState.')
-    expect(() => endOfRoundState.oldBury(cardA, cardB)).toThrow(
+    expect(() => endOfRoundState.bury(cardA, cardB)).toThrow(
       `Cannot bury "${cardA.getCardId()}" & "${cardB.getCardId()}" in EndOfRoundState.`
     )
     expect(() => endOfRoundState.play(cardA)).toThrow(

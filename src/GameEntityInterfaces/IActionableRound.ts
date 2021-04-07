@@ -1,7 +1,7 @@
 import ICard from './ICard'
 
 interface IActionableRound {
-  oldBury(cardA: ICard, cardB: ICard): void
+  bury(cardA: ICard, cardB: ICard, isGoingAlone: boolean): void
   pass(): void
   pick(): void
   play(card: ICard): void

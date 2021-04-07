@@ -72,7 +72,7 @@ describe('Round', () => {
     )
     expect(round.getCurrentTurnPlayer()).toBe(player3)
 
-    round.oldBury(player3.removeCardFromHand('ad'), player3.removeCardFromHand('ks'))
+    round.bury(player3.removeCardFromHand('ad'), player3.removeCardFromHand('ks'), false)
     expect(player3.getPlayableCardIds()).toEqual(['qs', 'jc', 'js', 'jh', 'jd', '9h'])
 
     expect(round.getBlind().length).toBe(0)

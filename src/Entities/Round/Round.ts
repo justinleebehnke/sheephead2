@@ -78,8 +78,8 @@ class Round implements IRoundState, IRound, IObservable, IReadOnlyRound {
     this.context.pick()
   }
 
-  oldBury(cardA: Card, cardB: Card): void {
-    this.context.oldBury(cardA, cardB)
+  bury(cardA: Card, cardB: Card, isGoingAlone: boolean): void {
+    this.context.bury(cardA, cardB, isGoingAlone)
   }
 
   play(card: Card): void {

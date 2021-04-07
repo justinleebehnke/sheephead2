@@ -11,7 +11,7 @@ describe('End Of Round State', () => {
     const trickState = new TrickState(null)
     expect(() => trickState.pass()).toThrow('Cannot pass in TrickState')
     expect(() => trickState.pick()).toThrow('Cannot pick in TrickState')
-    expect(() => trickState.oldBury(cardA, cardB)).toThrow(
+    expect(() => trickState.bury(cardA, cardB)).toThrow(
       `Cannot bury "${cardA.getCardId()}" & "${cardB.getCardId()}" in TrickState`
     )
     expect(() => trickState.getEndOfRoundReport()).toThrow('Round not over in TrickState')

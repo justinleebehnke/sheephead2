@@ -16,7 +16,7 @@ describe('Play Command', () => {
     }
     round = {
       pick: jest.fn(),
-      oldBury: jest.fn(),
+      bury: jest.fn(),
       pass: jest.fn(),
       play: jest.fn(),
       getCurrentTurnPlayer: jest.fn().mockReturnValue(player),

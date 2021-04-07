@@ -21,7 +21,7 @@ class EndOfRoundState implements IRoundState {
     throw new Error('Cannot pick in EndOfRoundState.')
   }
 
-  public oldBury(cardA: Card, cardB: Card): void {
+  public bury(cardA: Card, cardB: Card): void {
     throw new Error(
       `Cannot bury "${cardA.getCardId()}" & "${cardB.getCardId()}" in EndOfRoundState.`
     )
