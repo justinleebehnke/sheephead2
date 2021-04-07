@@ -172,6 +172,7 @@ class CPUPlayer extends Player implements ISubscriber {
       name: 'bury',
       params: {
         cards: [highestValueCardId, secondHighestValueCardId],
+        isGoingAlone: false,
       },
     }
     this.commandInterface.giveCommand(buryCommand)

@@ -32,7 +32,7 @@ class GameCommandFactory implements ICommandFactory {
       return new PlayCommand(this.game, commandDTO.params.card)
     }
     if (this.isBuryCommandDTO(commandDTO)) {
-      return new BuryCommand(this.game, commandDTO.params.cards)
+      return new BuryCommand(this.game, commandDTO.params.cards, commandDTO.params.isGoingAlone)
     }
     throw Error(`Game command is not recognized: ${JSON.stringify(commandDTO)}`)
   }

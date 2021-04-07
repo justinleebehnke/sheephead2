@@ -33,23 +33,23 @@ describe('Bury Command', () => {
   })
 
   it("Should remove the cards from the current turn player's hand", () => {
-    const buryCommand = new BuryCommand(game, cardIds)
+    const buryCommand = new BuryCommand(game, cardIds, false)
     buryCommand.execute()
     expect(currentTurnPlayer.removeCardFromHand).toHaveBeenCalledWith('ac')
     expect(currentTurnPlayer.removeCardFromHand).toHaveBeenCalledWith('as')
     expect(currentTurnPlayer.removeCardFromHand).toHaveBeenCalledTimes(2)
-    expect(round.bury).toHaveBeenCalledWith({ name: 'cardA' }, { name: 'cardB' }, false) // TODO
+    expect(round.bury).toHaveBeenCalledWith({ name: 'cardA' }, { name: 'cardB' }, false)
   })
 
   it('Should throw an error if the card ids is not the right length', () => {
-    expect(() => new BuryCommand(game, ['ac'])).toThrow(
+    expect(() => new BuryCommand(game, ['ac'], false)).toThrow(
       'The bury must contain two card ids to bury'
     )
   })
 
   it('Should throw an error if there is no current round', () => {
     game.getCurrentRound = jest.fn()
-    const buryCommand = new BuryCommand(game, cardIds)
+    const buryCommand = new BuryCommand(game, cardIds, false)
     expect(() => buryCommand.execute()).toThrow('Cannot bury because there is no current round')
   })
 
@@ -59,7 +59,7 @@ describe('Bury Command', () => {
       getCurrentRound: jest.fn().mockReturnValue(round),
       playAgain: jest.fn(),
     }
-    const buryCommand = new BuryCommand(game, cardIds)
+    const buryCommand = new BuryCommand(game, cardIds, false)
     expect(() => buryCommand.execute()).toThrow(
       'Cannot bury because there is no current turn player'
     )

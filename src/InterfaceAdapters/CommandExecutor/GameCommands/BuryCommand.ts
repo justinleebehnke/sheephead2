@@ -4,7 +4,7 @@ import IGame from '../../../GameEntityInterfaces/IGame'
 class BuryCommand extends AbstractCommand {
   private readonly cardIds: string[]
 
-  constructor(game: IGame, cardIds: string[]) {
+  constructor(game: IGame, cardIds: string[], private readonly isGoingAlone: boolean) {
     super('bury', game)
     if (cardIds.length !== 2) {
       throw Error('The bury must contain two card ids to bury')
@@ -24,7 +24,7 @@ class BuryCommand extends AbstractCommand {
     round.bury(
       currentTurnPlayer.removeCardFromHand(this.cardIds[0]),
       currentTurnPlayer.removeCardFromHand(this.cardIds[1]),
-      false // TODO
+      this.isGoingAlone
     )
   }
 }
