@@ -19,6 +19,7 @@ describe('Bury Command', () => {
     }
 
     round = {
+      pick: jest.fn(),
       bury: jest.fn(),
       getCurrentTurnPlayer: jest.fn().mockReturnValue(currentTurnPlayer),
       pass: jest.fn(),
