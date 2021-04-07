@@ -5,12 +5,11 @@ import IGameBoardPresenter from '../../Views/GamePlayViews/IGameBoardPresenter'
 import ISubscriber from '../../Entities/ISubscriber'
 import PlayerData from '../../Views/GamePlayViews/EndOfRoundReport/PlayerData'
 import PlayerLayoutData from '../GamePresenter/PlayerLayoutData'
-import PlayerLayoutDisplayData from '../../Views/GamePlayViews/PlayerLayout/PlayerLayoutDisplayData'
 
 class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
   private isLoading: boolean
   private view: ISubscriber | undefined
-  private playerDataToServe: PlayerLayoutDisplayData | undefined
+  private playerDataToServe: GameBoardViewData | undefined
 
   constructor(
     private readonly commandInterface: ICommandInterface,
@@ -37,50 +36,56 @@ class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
   private getLiveGameBoardViewData(): GameBoardViewData {
     const dataForLocalPlayer = this.model.getDataForLocalPlayer()
     const hand = this.model.getHand()
-    const res = {
-      allPlayerData:
-        this.playerDataToServe === undefined
-          ? {
-              dataForLocalPlayer,
-              dataForPlayerAcross: this.model.getDataForPlayerAcross(),
-              dataForPlayerToLeft: this.model.getDataForPlayerToLeft(),
-              dataForPlayerToRight: this.model.getDataForPlayerToRight(),
-            }
-          : this.playerDataToServe,
-      passOrPickViewData: {
-        isLoading: this.isLoading,
-        isPicking: this.model.isPicking(),
-        isShowingPassOrPickForm: this.model.isShowingPassOrPickForm(),
-        hand,
-      },
-      handViewData: {
-        isLoading: this.isLoading,
-        isTurn: dataForLocalPlayer.isTurn,
-        playableCardIds: Array.from(this.model.getPlayableCardIds()),
-        hand,
-      },
-      endOfRoundViewData: {
-        pickerWentAlone: this.pickerIsGoingAlone(),
-        players: this.model.getPlayersData(),
-        pickerIndex: this.model.getPickerIndex(),
-        endOfRoundReport: this.model.getEndOfRoundReport(),
-      },
+    let res: GameBoardViewData
+    if (this.playerDataToServe === undefined) {
+      res = {
+        allPlayerData: {
+          dataForLocalPlayer,
+          dataForPlayerAcross: this.model.getDataForPlayerAcross(),
+          dataForPlayerToLeft: this.model.getDataForPlayerToLeft(),
+          dataForPlayerToRight: this.model.getDataForPlayerToRight(),
+        },
+        passOrPickViewData: {
+          isLoading: this.isLoading,
+          isPicking: this.model.isPicking(),
+          isShowingPassOrPickForm: this.model.isShowingPassOrPickForm(),
+          hand,
+        },
+        handViewData: {
+          isLoading: this.isLoading,
+          isTurn: dataForLocalPlayer.isTurn,
+          playableCardIds: Array.from(this.model.getPlayableCardIds()),
+          hand,
+        },
+        endOfRoundViewData: {
+          pickerWentAlone: this.pickerIsGoingAlone(),
+          players: this.model.getPlayersData(),
+          pickerIndex: this.model.getPickerIndex(),
+          endOfRoundReport: this.model.getEndOfRoundReport(),
+        },
+      }
+      if (
+        this.playerDataToServe === undefined &&
+        res.allPlayerData.dataForLocalPlayer.cardPlayed.length === 2 &&
+        res.allPlayerData.dataForPlayerAcross.cardPlayed.length === 2 &&
+        res.allPlayerData.dataForPlayerToLeft.cardPlayed.length === 2 &&
+        res.allPlayerData.dataForPlayerToRight.cardPlayed.length === 2
+      ) {
+        res.handViewData = {
+          isLoading: this.isLoading,
+          isTurn: false,
+          playableCardIds: [],
+          hand,
+        }
+        this.playerDataToServe = res
+        setTimeout(() => {
+          this.playerDataToServe = undefined
+          this.view?.update()
+        }, this.endOfTrickPauseDuration)
+      }
+    } else {
+      res = this.playerDataToServe
     }
-
-    if (
-      this.playerDataToServe === undefined &&
-      res.allPlayerData.dataForLocalPlayer.cardPlayed.length === 2 &&
-      res.allPlayerData.dataForPlayerAcross.cardPlayed.length === 2 &&
-      res.allPlayerData.dataForPlayerToLeft.cardPlayed.length === 2 &&
-      res.allPlayerData.dataForPlayerToRight.cardPlayed.length === 2
-    ) {
-      this.playerDataToServe = res.allPlayerData
-      setTimeout(() => {
-        this.playerDataToServe = undefined
-        this.view?.update()
-      }, this.endOfTrickPauseDuration)
-    }
-
     return res
   }
 
