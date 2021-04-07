@@ -120,6 +120,7 @@ describe('Game Board Presenter', () => {
           hand: ['ac', 'ad'],
         },
         endOfRoundViewData: {
+          pickerWentAlone: false,
           endOfRoundReport: undefined,
           pickerIndex: 0,
           players: playersData,
@@ -247,6 +248,7 @@ describe('Game Board Presenter', () => {
             hand: ['jc', 'jd', '9s', '9h'],
           },
           endOfRoundViewData: {
+            pickerWentAlone: false,
             endOfRoundReport: undefined,
             players: [
               { name: 'George', id: '45c78893-ac7b-4999-bd08-dbb557e851c7' },
@@ -305,6 +307,7 @@ describe('Game Board Presenter', () => {
             hand: ['jc', 'jd', '9s', '9h'],
           },
           endOfRoundViewData: {
+            pickerWentAlone: false,
             endOfRoundReport: undefined,
             players: [
               { name: 'George', id: '45c78893-ac7b-4999-bd08-dbb557e851c7' },
