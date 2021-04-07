@@ -1,6 +1,6 @@
 import BuryCommandDTO from '../InterfaceAdapters/CommandExecutor/GameCommands/GameCommandDTOs/BuryCommandDTO'
-import IReadOnlyGameModel from '../Entities/ReadOnlyEntities/IReadOnlyGameModel'
-import IReadOnlyRound from '../Entities/ReadOnlyEntities/IReadOnlyRound'
+import IReadOnlyGameModel from '../GameEntityInterfaces/ReadOnlyEntities/IReadOnlyGameModel'
+import IReadOnlyRound from '../GameEntityInterfaces/ReadOnlyEntities/IReadOnlyRound'
 import ICardRanker from '../Entities/ICardRanker'
 import ICommandInterface from '../InterfaceAdapters/ICommandInterface'
 import PlayCommandDTO from '../InterfaceAdapters/CommandExecutor/GameCommands/GameCommandDTOs/PlayCommandDTO'
@@ -172,6 +172,7 @@ class CPUPlayer extends Player implements ISubscriber {
       name: 'bury',
       params: {
         cards: [highestValueCardId, secondHighestValueCardId],
+        isGoingAlone: false,
       },
     }
     this.commandInterface.giveCommand(buryCommand)

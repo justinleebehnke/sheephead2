@@ -53,7 +53,12 @@ class EndOfRoundReport extends Component<Props, State> {
                     <tr>
                       <td className='short'>
                         {player.name}
-                        {indexOfPicker === index && <p>(Picker)</p>}
+                        {indexOfPicker === index && (
+                          <p>
+                            (Picker)
+                            {this.props.endOfRoundData.pickerWentAlone && <span>(Chopped)</span>}
+                          </p>
+                        )}
                       </td>
                       {report.tricks.map((trick) => {
                         const winningCardId = trick.cards[trick.winningCardIndex].cardId

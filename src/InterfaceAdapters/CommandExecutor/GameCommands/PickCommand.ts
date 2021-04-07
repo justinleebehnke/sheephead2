@@ -1,5 +1,5 @@
 import AbstractCommand from './AbstractCommand'
-import IGame from './Interfaces/IGame'
+import IGame from '../../../GameEntityInterfaces/IGame'
 
 class PickCommand extends AbstractCommand {
   constructor(game: IGame) {

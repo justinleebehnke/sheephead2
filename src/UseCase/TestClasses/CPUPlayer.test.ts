@@ -1,8 +1,8 @@
 import CPUPlayer from '../CPUPlayer'
 import ICardRanker from '../../Entities/ICardRanker'
 import ICommandInterface from '../../InterfaceAdapters/ICommandInterface'
-import IReadOnlyGameModel from '../../Entities/ReadOnlyEntities/IReadOnlyGameModel'
-import IReadOnlyRound from '../../Entities/ReadOnlyEntities/IReadOnlyRound'
+import IReadOnlyGameModel from '../../GameEntityInterfaces/ReadOnlyEntities/IReadOnlyGameModel'
+import IReadOnlyRound from '../../GameEntityInterfaces/ReadOnlyEntities/IReadOnlyRound'
 import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
 
 describe('CPU Player', () => {
@@ -18,6 +18,7 @@ describe('CPU Player', () => {
     name = 'Random Name'
     id = new UniqueIdentifier()
     round = {
+      pickerIsGoingAlone: false,
       getCurrentTrick: jest.fn(),
       getCurrentTurnPlayer: jest.fn(),
       getEndOfRoundReport: jest.fn(),
@@ -36,7 +37,6 @@ describe('CPU Player', () => {
       getPlayerById: jest.fn(),
       getPlayerByIndex: jest.fn(),
       getCurrentRound: jest.fn().mockReturnValue(round),
-      pick: jest.fn(),
       updateSubscribers: jest.fn(),
     }
     commandInterface = {

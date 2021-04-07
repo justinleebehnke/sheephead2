@@ -2,9 +2,9 @@ import BellePlaineRulesCardRanker from '../../../Entities/BellePlaineRulesCardRa
 import Card from '../../../Entities/Card'
 import CardPlayedByData from '../../../Entities/DataStructures/CardPlayedByData'
 import GameBoardModel from '../GameBoardModel'
-import IReadOnlyGameModel from '../../../Entities/ReadOnlyEntities/IReadOnlyGameModel'
-import IReadOnlyRound from '../../../Entities/ReadOnlyEntities/IReadOnlyRound'
-import IReadOnlyTrick from '../../../Entities/ReadOnlyEntities/IReadOnlyTrick'
+import IReadOnlyGameModel from '../../../GameEntityInterfaces/ReadOnlyEntities/IReadOnlyGameModel'
+import IReadOnlyRound from '../../../GameEntityInterfaces/ReadOnlyEntities/IReadOnlyRound'
+import IReadOnlyTrick from '../../../GameEntityInterfaces/ReadOnlyEntities/IReadOnlyTrick'
 import ISubscriber from '../../../Entities/ISubscriber'
 import Player from '../../../Entities/Player'
 import PlayerLayoutData from '../PlayerLayoutData'
@@ -83,6 +83,7 @@ describe('Game Board Model', () => {
     }
 
     round = {
+      pickerIsGoingAlone: false,
       getIndexOfCurrentTurn: jest.fn().mockReturnValue(1),
       getIndexOfDealer: jest.fn().mockReturnValue(2),
       getIndexOfPicker: jest.fn().mockReturnValue(2),
@@ -169,6 +170,7 @@ describe('Game Board Model', () => {
 
   it('Should figure out what to display for the player across from the local player', () => {
     const expectedAcross: PlayerLayoutData = {
+      isGoingAlone: false,
       name: mockPlayer3.getName(),
       isTurn: false,
       isDealer: true,
@@ -178,6 +180,7 @@ describe('Game Board Model', () => {
     expect(model.getDataForPlayerAcross()).toEqual(expectedAcross)
 
     const expectedToLeft: PlayerLayoutData = {
+      isGoingAlone: false,
       name: mockPlayer2.getName(),
       isTurn: true,
       isDealer: false,
@@ -187,6 +190,7 @@ describe('Game Board Model', () => {
     expect(model.getDataForPlayerToLeft()).toEqual(expectedToLeft)
 
     const expectedToRight: PlayerLayoutData = {
+      isGoingAlone: false,
       name: mockPlayer4.getName(),
       isTurn: false,
       isDealer: false,
@@ -195,6 +199,7 @@ describe('Game Board Model', () => {
     }
     expect(model.getDataForPlayerToRight()).toEqual(expectedToRight)
     const expectedLocal: PlayerLayoutData = {
+      isGoingAlone: false,
       name: localPlayer.getName() + ' (You)',
       isTurn: false,
       isDealer: false,

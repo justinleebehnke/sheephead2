@@ -4,6 +4,7 @@ import IGameBoardModel from '../IGameBoardModel'
 import IGameBoardPresenter from '../../Views/GamePlayViews/IGameBoardPresenter'
 import ISubscriber from '../../Entities/ISubscriber'
 import PlayerData from '../../Views/GamePlayViews/EndOfRoundReport/PlayerData'
+import PlayerLayoutData from '../GamePresenter/PlayerLayoutData'
 import PlayerLayoutDisplayData from '../../Views/GamePlayViews/PlayerLayout/PlayerLayoutDisplayData'
 
 class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
@@ -59,6 +60,7 @@ class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
         hand,
       },
       endOfRoundViewData: {
+        pickerWentAlone: this.pickerIsGoingAlone(),
         players: this.model.getPlayersData(),
         pickerIndex: this.model.getPickerIndex(),
         endOfRoundReport: this.model.getEndOfRoundReport(),
@@ -82,17 +84,31 @@ class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
     return res
   }
 
+  private getAllPlayerLayoutData(): PlayerLayoutData[] {
+    return [
+      this.model.getDataForLocalPlayer(),
+      this.model.getDataForPlayerAcross(),
+      this.model.getDataForPlayerToLeft(),
+      this.model.getDataForPlayerToRight(),
+    ]
+  }
+
+  private pickerIsGoingAlone(): boolean {
+    return this.getAllPlayerLayoutData().some((player) => player.isGoingAlone)
+  }
+
   public getGameBoardViewData(): GameBoardViewData {
     return this.getLiveGameBoardViewData()
   }
 
-  public bury(cards: string[]): void {
+  public bury(cards: string[], isGoingAlone: boolean): void {
     this.isLoading = true
     this.view?.update()
     this.commandInterface.giveCommand({
       name: 'bury',
       params: {
         cards,
+        isGoingAlone,
       },
     })
   }

@@ -14,12 +14,13 @@ type Props = {
 type State = {
   selectedCardIds: string[]
 }
+
 class SelectableCardHand extends Component<Props, State> {
   state = {
     selectedCardIds: [],
   }
 
-  render() {
+  public render() {
     const setOfSelectedCardIds: Set<string> = new Set(this.state.selectedCardIds)
     const { hand, isPicking, isLoading } = this.props.selectableCardHandData
     const isShowBury = isPicking
@@ -40,17 +41,29 @@ class SelectableCardHand extends Component<Props, State> {
         </div>
         {isShowBury && (
           <div className='footer-controls'>
-            <div></div>
             {!isLoading ? (
-              <Button
-                className='bury-button'
-                disabled={this.state.selectedCardIds.length !== 2}
-                onClick={this.burySelectedCards}
-              >
-                Bury Selected Cards
-              </Button>
+              <Fragment>
+                <Button
+                  className='bury-button'
+                  variant='outline-primary'
+                  disabled={this.state.selectedCardIds.length !== 2}
+                  onClick={this.burySelectedCardsAndGoAlone}
+                >
+                  Bury &amp; Chop (Go Alone)
+                </Button>
+                <Button
+                  id='bury-button'
+                  disabled={this.state.selectedCardIds.length !== 2}
+                  onClick={this.burySelectedCards}
+                >
+                  Bury Cards
+                </Button>
+              </Fragment>
             ) : (
-              <Spinner animation='border' />
+              <Fragment>
+                <div></div>
+                <Spinner animation='border' />
+              </Fragment>
             )}
           </div>
         )}
@@ -58,7 +71,7 @@ class SelectableCardHand extends Component<Props, State> {
     )
   }
 
-  toggleSelected = (cardId: string): void => {
+  private toggleSelected = (cardId: string): void => {
     if (this.state.selectedCardIds.some((selectedCardId) => selectedCardId === cardId)) {
       this.setState({
         selectedCardIds: this.state.selectedCardIds.filter(
@@ -72,9 +85,14 @@ class SelectableCardHand extends Component<Props, State> {
     }
   }
 
-  burySelectedCards = (): void => {
+  private burySelectedCards = (): void => {
     const { selectedCardIds } = this.state
-    this.props.presenter.bury(selectedCardIds)
+    this.props.presenter.bury(selectedCardIds, false)
+  }
+
+  private burySelectedCardsAndGoAlone = (): void => {
+    const { selectedCardIds } = this.state
+    this.props.presenter.bury(selectedCardIds, true)
   }
 }
 

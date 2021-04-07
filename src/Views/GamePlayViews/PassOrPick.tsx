@@ -16,7 +16,7 @@ type Props = {
 class PassOrPick extends Component<Props> {
   render() {
     return (
-      <Modal show={this.props.data.isShowingPassOrPickForm}>
+      <Modal show={this.props.data.isShowingPassOrPickForm} id='pick-or-pass-modal'>
         <Modal.Header>
           <Modal.Title className='center'>
             {this.props.data.isPicking ? 'Choose 2 Cards to Bury' : 'Pass or Pick'}
@@ -48,7 +48,7 @@ class PassOrPick extends Component<Props> {
         <div className='controls'>
           <span>
             <Button
-              variant='primary'
+              variant='outline-primary'
               onClick={() => {
                 presenter.pick()
               }}
@@ -58,7 +58,7 @@ class PassOrPick extends Component<Props> {
           </span>{' '}
           <span className='right'>
             <Button
-              variant='outline-primary'
+              variant='primary'
               onClick={() => {
                 presenter.pass()
               }}

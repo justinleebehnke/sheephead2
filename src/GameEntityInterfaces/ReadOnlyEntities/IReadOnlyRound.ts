@@ -1,6 +1,6 @@
-import EndOfRoundData from '../Round/EndOfRoundReportData'
+import EndOfRoundData from '../../Entities/Round/EndOfRoundReportData'
 import IReadOnlyTrick from './IReadOnlyTrick'
-import Player from '../Player'
+import Player from '../../Entities/Player'
 
 interface IReadOnlyRound {
   getCurrentTrick(): IReadOnlyTrick
@@ -12,6 +12,7 @@ interface IReadOnlyRound {
   isOver(): boolean
   isFindingPickerState(): boolean
   isPickerHasNotBuriedState(): boolean
+  pickerIsGoingAlone: boolean
 }
 
 export default IReadOnlyRound

@@ -1,3 +1,7 @@
 .player-turn-box {
   height: 175px;
 }
+
+.player-turn-box .badge {
+  margin-right: 0.25em;
+}

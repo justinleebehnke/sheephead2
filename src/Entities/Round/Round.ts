@@ -4,7 +4,8 @@ import EndOfRoundData from './EndOfRoundReportData'
 import FindingPickerState from './FindingPickerState'
 import ICardRanker from '../ICardRanker'
 import IObservable from '../IObservable'
-import IReadOnlyRound from '../ReadOnlyEntities/IReadOnlyRound'
+import IReadOnlyRound from '../../GameEntityInterfaces/ReadOnlyEntities/IReadOnlyRound'
+import IRound from '../../GameEntityInterfaces/IRound'
 import IRoundState from './IRoundState'
 import IShuffleSeedManager from './IShuffleSeedManager'
 import ISubscriber from '../ISubscriber'
@@ -12,7 +13,7 @@ import PickerHasNotBuriedState from './PickerHasNotBuriedState'
 import Player from '../Player'
 import Trick from '../Trick'
 
-class Round implements IRoundState, IObservable, IReadOnlyRound {
+class Round implements IRoundState, IRound, IObservable, IReadOnlyRound {
   private players: Player[]
   private indexOfDealer: number
   private indexOfCurrentTurn: number
@@ -24,6 +25,7 @@ class Round implements IRoundState, IObservable, IReadOnlyRound {
   private pickerIndex: number
   private _isOver: boolean
   private subscribers: ISubscriber[]
+  private _pickerIsGoingAlone: boolean
 
   constructor(
     players: Player[],
@@ -42,7 +44,16 @@ class Round implements IRoundState, IObservable, IReadOnlyRound {
     this.currentTrick = new Trick(-1)
     this._isOver = false
     this.subscribers = []
+    this._pickerIsGoingAlone = false
     this.deal()
+  }
+
+  public set pickerIsGoingAlone(isGoingAlone: boolean) {
+    this._pickerIsGoingAlone = isGoingAlone
+  }
+
+  public get pickerIsGoingAlone(): boolean {
+    return this._pickerIsGoingAlone
   }
 
   public getIndexOfPicker(): number {
@@ -77,8 +88,8 @@ class Round implements IRoundState, IObservable, IReadOnlyRound {
     this.context.pick()
   }
 
-  bury(cardA: Card, cardB: Card): void {
-    this.context.bury(cardA, cardB)
+  bury(cardA: Card, cardB: Card, isGoingAlone: boolean): void {
+    this.context.bury(cardA, cardB, isGoingAlone)
   }
 
   play(card: Card): void {

@@ -1,7 +1,7 @@
 import Card from '../../Entities/Card'
 import EndOfRoundData from '../../Entities/Round/EndOfRoundReportData'
-import IReadOnlyGameModel from '../../Entities/ReadOnlyEntities/IReadOnlyGameModel'
-import IReadOnlyRound from '../../Entities/ReadOnlyEntities/IReadOnlyRound'
+import IReadOnlyGameModel from '../../GameEntityInterfaces/ReadOnlyEntities/IReadOnlyGameModel'
+import IReadOnlyRound from '../../GameEntityInterfaces/ReadOnlyEntities/IReadOnlyRound'
 import ISubscriber from '../../Entities/ISubscriber'
 import Player from '../../Entities/Player'
 import PlayerData from '../../Views/GamePlayViews/EndOfRoundReport/PlayerData'
@@ -149,6 +149,7 @@ class GameBoardModel implements ISubscriber, IGameBoardModel {
         isTurn: round.getIndexOfCurrentTurn() === index,
         isDealer: round.getIndexOfDealer() === index,
         isPicker: round.getIndexOfPicker() === index,
+        isGoingAlone: round.getIndexOfPicker() === index && round.pickerIsGoingAlone,
         cardPlayed: chosenCard
           ? chosenCard
           : round.getIndexOfCurrentTurn() === index
@@ -162,6 +163,7 @@ class GameBoardModel implements ISubscriber, IGameBoardModel {
       isDealer: false,
       isPicker: false,
       cardPlayed: 'none',
+      isGoingAlone: false,
     }
   }
 }

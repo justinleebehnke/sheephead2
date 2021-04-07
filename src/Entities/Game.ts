@@ -1,5 +1,5 @@
 import BellePlaineRulesCardRanker from './BellePlaineRulesCardRanker'
-import IReadOnlyGameModel from './ReadOnlyEntities/IReadOnlyGameModel'
+import IReadOnlyGameModel from '../GameEntityInterfaces/ReadOnlyEntities/IReadOnlyGameModel'
 import IShuffleSeedManager from './Round/IShuffleSeedManager'
 import ISubscriber from './ISubscriber'
 import Player from './Player'
