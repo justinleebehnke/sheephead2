@@ -1,5 +1,6 @@
-interface PassOrPickPresenter {
-  bury(cardIds: string[]): void
+import SelectableCardHandPresenter from './SelectableCardHandPresenter'
+
+interface PassOrPickPresenter extends SelectableCardHandPresenter {
   pass(): void
   pick(): void
 }

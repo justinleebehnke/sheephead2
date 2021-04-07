@@ -86,13 +86,14 @@ class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
     return this.getLiveGameBoardViewData()
   }
 
-  public bury(cards: string[]): void {
+  public bury(cards: string[], isGoingAlone: boolean): void {
     this.isLoading = true
     this.view?.update()
     this.commandInterface.giveCommand({
       name: 'bury',
       params: {
         cards,
+        isGoingAlone,
       },
     })
   }

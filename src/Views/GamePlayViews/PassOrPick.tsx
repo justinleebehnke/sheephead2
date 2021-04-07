@@ -48,7 +48,7 @@ class PassOrPick extends Component<Props> {
         <div className='controls'>
           <span>
             <Button
-              variant='primary'
+              variant='outline-primary'
               onClick={() => {
                 presenter.pick()
               }}
@@ -58,7 +58,7 @@ class PassOrPick extends Component<Props> {
           </span>{' '}
           <span className='right'>
             <Button
-              variant='outline-primary'
+              variant='primary'
               onClick={() => {
                 presenter.pass()
               }}

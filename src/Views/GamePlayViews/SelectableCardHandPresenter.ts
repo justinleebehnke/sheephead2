@@ -1,5 +1,5 @@
 interface SelectableCardHandPresenter {
-  bury(cardIds: string[]): void
+  bury(cardIds: string[], isGoingAlone: boolean): void
 }
 
 export default SelectableCardHandPresenter
