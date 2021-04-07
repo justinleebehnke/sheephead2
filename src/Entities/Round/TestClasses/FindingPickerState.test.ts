@@ -9,7 +9,7 @@ describe('End Of Round State', () => {
 
     // @ts-ignore
     const findingPickerState = new FindingPickerState(null)
-    expect(() => findingPickerState.bury(cardA, cardB)).toThrow(
+    expect(() => findingPickerState.oldBury(cardA, cardB)).toThrow(
       `Cannot bury "${cardA.getCardId()}" & "${cardB.getCardId()}" in FindingPickerState`
     )
     expect(() => findingPickerState.play(cardA)).toThrow(

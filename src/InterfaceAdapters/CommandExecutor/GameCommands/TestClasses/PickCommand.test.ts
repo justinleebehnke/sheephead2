@@ -10,7 +10,7 @@ describe('Pick Command', () => {
 
   beforeEach(() => {
     round = {
-      bury: jest.fn(),
+      oldBury: jest.fn(),
       pass: jest.fn(),
       play: jest.fn(),
       pick: jest.fn(),

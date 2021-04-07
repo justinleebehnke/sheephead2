@@ -22,7 +22,7 @@ class TrickState implements IRoundState {
     throw new Error('Cannot pick in TrickState')
   }
 
-  public bury(cardA: Card, cardB: Card): void {
+  public oldBury(cardA: Card, cardB: Card): void {
     throw new Error(`Cannot bury "${cardA.getCardId()}" & "${cardB.getCardId()}" in TrickState`)
   }
 

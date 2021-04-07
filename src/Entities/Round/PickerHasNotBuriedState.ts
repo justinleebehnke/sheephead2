@@ -19,7 +19,7 @@ class PickerHasNotBuriedState implements IRoundState {
     throw new Error('Cannot pick in PickerHasNotBuriedState')
   }
 
-  public bury(cardA: Card, cardB: Card): void {
+  public oldBury(cardA: Card, cardB: Card): void {
     this.round.setBury([cardA, cardB])
     this.round.setCurrentTrick(new Trick(1))
     this.round.setIndexOfCurrentTurn(this.round.getIndexOfNextPlayer(this.round.getIndexOfDealer()))

@@ -20,7 +20,7 @@ describe('Bury Command', () => {
 
     round = {
       pick: jest.fn(),
-      bury: jest.fn(),
+      oldBury: jest.fn(),
       getCurrentTurnPlayer: jest.fn().mockReturnValue(currentTurnPlayer),
       pass: jest.fn(),
       play: jest.fn(),
@@ -38,7 +38,7 @@ describe('Bury Command', () => {
     expect(currentTurnPlayer.removeCardFromHand).toHaveBeenCalledWith('ac')
     expect(currentTurnPlayer.removeCardFromHand).toHaveBeenCalledWith('as')
     expect(currentTurnPlayer.removeCardFromHand).toHaveBeenCalledTimes(2)
-    expect(round.bury).toHaveBeenCalledWith({ name: 'cardA' }, { name: 'cardB' })
+    expect(round.oldBury).toHaveBeenCalledWith({ name: 'cardA' }, { name: 'cardB' })
   })
 
   it('Should throw an error if the card ids is not the right length', () => {
