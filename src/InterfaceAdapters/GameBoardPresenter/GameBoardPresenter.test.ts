@@ -25,6 +25,7 @@ describe('Game Board Presenter', () => {
       update: jest.fn(),
     }
     localPlayerData = {
+      isGoingAlone: false,
       cardPlayed: 'qc',
       isDealer: true,
       isPicker: true,
@@ -32,6 +33,7 @@ describe('Game Board Presenter', () => {
       name: 'George',
     }
     acrossPlayerData = {
+      isGoingAlone: false,
       cardPlayed: 'none',
       isDealer: false,
       isPicker: false,
@@ -140,12 +142,13 @@ describe('Game Board Presenter', () => {
       })
 
       it('Should delegate the call to bury to the command interface object it is given', () => {
-        presenter.bury(['cardA', 'cardB'])
+        presenter.bury(['cardA', 'cardB'], false)
         expect(presenter.getGameBoardViewData().passOrPickViewData.isLoading).toBe(true)
         expect(commandInterface.giveCommand).toHaveBeenCalledWith({
           name: 'bury',
           params: {
             cards: ['cardA', 'cardB'],
+            isGoingAlone: false,
           },
         })
       })
@@ -199,6 +202,7 @@ describe('Game Board Presenter', () => {
         let triggeringState: GameBoardViewData = {
           allPlayerData: {
             dataForLocalPlayer: {
+              isGoingAlone: false,
               name: 'Luis (You)',
               isTurn: false,
               isDealer: false,
@@ -206,6 +210,7 @@ describe('Game Board Presenter', () => {
               cardPlayed: 'qh',
             },
             dataForPlayerAcross: {
+              isGoingAlone: false,
               name: 'Andres',
               isTurn: true,
               isDealer: false,
@@ -213,6 +218,7 @@ describe('Game Board Presenter', () => {
               cardPlayed: 'js',
             },
             dataForPlayerToLeft: {
+              isGoingAlone: false,
               name: 'Fernando',
               isTurn: false,
               isDealer: false,
@@ -220,6 +226,7 @@ describe('Game Board Presenter', () => {
               cardPlayed: 'ac',
             },
             dataForPlayerToRight: {
+              isGoingAlone: false,
               name: 'George',
               isTurn: false,
               isDealer: true,
@@ -253,6 +260,7 @@ describe('Game Board Presenter', () => {
         let followingState: GameBoardViewData = {
           allPlayerData: {
             dataForLocalPlayer: {
+              isGoingAlone: false,
               name: 'Luis (You)',
               isTurn: false,
               isDealer: false,
@@ -260,6 +268,7 @@ describe('Game Board Presenter', () => {
               cardPlayed: 'none',
             },
             dataForPlayerAcross: {
+              isGoingAlone: false,
               name: 'Andres',
               isTurn: false,
               isDealer: false,
@@ -267,6 +276,7 @@ describe('Game Board Presenter', () => {
               cardPlayed: 'none',
             },
             dataForPlayerToLeft: {
+              isGoingAlone: false,
               name: 'Fernando',
               isTurn: false,
               isDealer: false,
@@ -274,6 +284,7 @@ describe('Game Board Presenter', () => {
               cardPlayed: 'none',
             },
             dataForPlayerToRight: {
+              isGoingAlone: false,
               name: 'George',
               isTurn: true,
               isDealer: true,

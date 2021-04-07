@@ -149,6 +149,7 @@ class GameBoardModel implements ISubscriber, IGameBoardModel {
         isTurn: round.getIndexOfCurrentTurn() === index,
         isDealer: round.getIndexOfDealer() === index,
         isPicker: round.getIndexOfPicker() === index,
+        isGoingAlone: round.getIndexOfPicker() === index && round.pickerIsGoingAlone,
         cardPlayed: chosenCard
           ? chosenCard
           : round.getIndexOfCurrentTurn() === index
@@ -162,6 +163,7 @@ class GameBoardModel implements ISubscriber, IGameBoardModel {
       isDealer: false,
       isPicker: false,
       cardPlayed: 'none',
+      isGoingAlone: false,
     }
   }
 }

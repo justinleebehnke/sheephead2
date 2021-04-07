@@ -16,7 +16,7 @@ type Props = {
 class PassOrPick extends Component<Props> {
   render() {
     return (
-      <Modal show={this.props.data.isShowingPassOrPickForm}>
+      <Modal show={this.props.data.isShowingPassOrPickForm} id='pick-or-pass-modal'>
         <Modal.Header>
           <Modal.Title className='center'>
             {this.props.data.isPicking ? 'Choose 2 Cards to Bury' : 'Pass or Pick'}

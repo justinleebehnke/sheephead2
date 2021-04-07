@@ -35,9 +35,10 @@ class PlayerLayout extends Component<Props> {
   private renderPlayerTurnBox = (playerData: PlayerLayoutData): ReactElement => {
     return (
       <PlayerTurnBox
-        isDealer={playerData.isDealer}
-        isPicker={playerData.isPicker}
         chosenCard={playerData.cardPlayed}
+        isDealer={playerData.isDealer}
+        isGoingAlone={playerData.isGoingAlone}
+        isPicker={playerData.isPicker}
         playerName={playerData.name}
       />
     )

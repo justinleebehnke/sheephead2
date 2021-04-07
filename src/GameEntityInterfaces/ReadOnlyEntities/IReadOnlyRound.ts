@@ -12,6 +12,7 @@ interface IReadOnlyRound {
   isOver(): boolean
   isFindingPickerState(): boolean
   isPickerHasNotBuriedState(): boolean
+  pickerIsGoingAlone: boolean
 }
 
 export default IReadOnlyRound

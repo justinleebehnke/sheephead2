@@ -14,6 +14,7 @@ type Props = {
 type State = {
   selectedCardIds: string[]
 }
+
 class SelectableCardHand extends Component<Props, State> {
   state = {
     selectedCardIds: [],

@@ -52,6 +52,10 @@ class Round implements IRoundState, IRound, IObservable, IReadOnlyRound {
     this._pickerIsGoingAlone = isGoingAlone
   }
 
+  public get pickerIsGoingAlone(): boolean {
+    return this._pickerIsGoingAlone
+  }
+
   public getIndexOfPicker(): number {
     return this.getPickerIndex()
   }
