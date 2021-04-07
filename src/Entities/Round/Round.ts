@@ -25,6 +25,7 @@ class Round implements IRoundState, IRound, IObservable, IReadOnlyRound {
   private pickerIndex: number
   private _isOver: boolean
   private subscribers: ISubscriber[]
+  private _pickerIsGoingAlone: boolean
 
   constructor(
     players: Player[],
@@ -43,7 +44,12 @@ class Round implements IRoundState, IRound, IObservable, IReadOnlyRound {
     this.currentTrick = new Trick(-1)
     this._isOver = false
     this.subscribers = []
+    this._pickerIsGoingAlone = false
     this.deal()
+  }
+
+  public set pickerIsGoingAlone(isGoingAlone: boolean) {
+    this._pickerIsGoingAlone = isGoingAlone
   }
 
   public getIndexOfPicker(): number {
