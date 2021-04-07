@@ -18,6 +18,7 @@ describe('CPU Player', () => {
     name = 'Random Name'
     id = new UniqueIdentifier()
     round = {
+      pickerIsGoingAlone: false,
       getCurrentTrick: jest.fn(),
       getCurrentTurnPlayer: jest.fn(),
       getEndOfRoundReport: jest.fn(),
@@ -36,7 +37,6 @@ describe('CPU Player', () => {
       getPlayerById: jest.fn(),
       getPlayerByIndex: jest.fn(),
       getCurrentRound: jest.fn().mockReturnValue(round),
-      pick: jest.fn(),
       updateSubscribers: jest.fn(),
     }
     commandInterface = {
