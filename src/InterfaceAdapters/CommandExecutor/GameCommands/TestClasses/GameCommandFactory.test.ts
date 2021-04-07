@@ -1,6 +1,6 @@
 import BuryCommand from '../BuryCommand'
 import GameCommandFactory from '../GameCommandFactory'
-import IGame from '../Interfaces/IGame'
+import IGame from '../../../../GameEntityInterfaces/IGame'
 import PassCommand from '../PassCommand'
 import PlayAgainCommand from '../PlayAgainCommand'
 import PlayCommand from '../PlayCommand'

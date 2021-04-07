@@ -1,6 +1,6 @@
 import Card from './Card'
 import CardPlayedByData from './DataStructures/CardPlayedByData'
-import IReadOnlyTrick from './ReadOnlyEntities/IReadOnlyTrick'
+import IReadOnlyTrick from '../GameEntityInterfaces/ReadOnlyEntities/IReadOnlyTrick'
 import Player from './Player'
 import TrickData from './DataStructures/TrickData'
 

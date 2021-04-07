@@ -1,8 +1,8 @@
 import CPUPlayer from '../CPUPlayer'
 import ICardRanker from '../../Entities/ICardRanker'
 import ICommandInterface from '../../InterfaceAdapters/ICommandInterface'
-import IReadOnlyGameModel from '../../Entities/ReadOnlyEntities/IReadOnlyGameModel'
-import IReadOnlyRound from '../../Entities/ReadOnlyEntities/IReadOnlyRound'
+import IReadOnlyGameModel from '../../GameEntityInterfaces/ReadOnlyEntities/IReadOnlyGameModel'
+import IReadOnlyRound from '../../GameEntityInterfaces/ReadOnlyEntities/IReadOnlyRound'
 import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
 
 describe('CPU Player', () => {

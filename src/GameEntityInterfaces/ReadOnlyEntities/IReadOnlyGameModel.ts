@@ -1,6 +1,6 @@
 import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
-import IObservable from '../IObservable'
-import Player from '../Player'
+import IObservable from '../../Entities/IObservable'
+import Player from '../../Entities/Player'
 import IReadOnlyRound from './IReadOnlyRound'
 
 interface IReadOnlyGameModel extends IObservable {

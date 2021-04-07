@@ -1,5 +1,5 @@
 import AbstractCommand from './AbstractCommand'
-import IGame from './Interfaces/IGame'
+import IGame from '../../../GameEntityInterfaces/IGame'
 
 class PassCommand extends AbstractCommand {
   constructor(game: IGame) {

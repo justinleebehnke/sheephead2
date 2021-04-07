@@ -1,5 +1,5 @@
-import IGame from './Interfaces/IGame'
 import ICommand from '../ICommand'
+import IGame from '../../../GameEntityInterfaces/IGame'
 import UniqueIdentifier from '../../../Utilities/UniqueIdentifier'
 
 class PlayAgainCommand implements ICommand {

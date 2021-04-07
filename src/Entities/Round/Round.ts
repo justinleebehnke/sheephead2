@@ -4,7 +4,8 @@ import EndOfRoundData from './EndOfRoundReportData'
 import FindingPickerState from './FindingPickerState'
 import ICardRanker from '../ICardRanker'
 import IObservable from '../IObservable'
-import IReadOnlyRound from '../ReadOnlyEntities/IReadOnlyRound'
+import IReadOnlyRound from '../../GameEntityInterfaces/ReadOnlyEntities/IReadOnlyRound'
+import IRound from '../../GameEntityInterfaces/IRound'
 import IRoundState from './IRoundState'
 import IShuffleSeedManager from './IShuffleSeedManager'
 import ISubscriber from '../ISubscriber'
@@ -12,7 +13,7 @@ import PickerHasNotBuriedState from './PickerHasNotBuriedState'
 import Player from '../Player'
 import Trick from '../Trick'
 
-class Round implements IRoundState, IObservable, IReadOnlyRound {
+class Round implements IRoundState, IRound, IObservable, IReadOnlyRound {
   private players: Player[]
   private indexOfDealer: number
   private indexOfCurrentTurn: number

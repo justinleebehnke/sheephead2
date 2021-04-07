@@ -1,4 +1,4 @@
-import IGame from '../Interfaces/IGame'
+import IGame from '../../../../GameEntityInterfaces/IGame'
 import PlayAgainCommand from '../PlayAgainCommand'
 import UniqueIdentifier from '../../../../Utilities/UniqueIdentifier'
 

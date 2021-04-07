@@ -1,6 +1,6 @@
-import IGame from '../Interfaces/IGame'
-import IPlayer from '../Interfaces/IPlayer'
-import IRound from '../Interfaces/IRound'
+import IGame from '../../../../GameEntityInterfaces/IGame'
+import IPlayer from '../../../../GameEntityInterfaces/IPlayer'
+import IRound from '../../../../GameEntityInterfaces/IRound'
 import ICommand from '../../ICommand'
 import PlayCommand from '../PlayCommand'
 
@@ -15,6 +15,7 @@ describe('Play Command', () => {
       removeCardFromHand: jest.fn().mockReturnValue({ name: 'crazyCard' }),
     }
     round = {
+      pick: jest.fn(),
       bury: jest.fn(),
       pass: jest.fn(),
       play: jest.fn(),

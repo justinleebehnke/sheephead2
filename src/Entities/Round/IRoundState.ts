@@ -1,11 +1,7 @@
-import Card from '../Card'
 import EndOfRoundData from './EndOfRoundReportData'
+import IActionableRound from '../../GameEntityInterfaces/IActionableRound'
 
-interface IRoundState {
-  pass(): void
-  pick(): void
-  bury(cardA: Card, cardB: Card): void
-  play(card: Card): void
+interface IRoundState extends IActionableRound {
   getEndOfRoundReport(): EndOfRoundData
 }
 

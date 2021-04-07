@@ -1,12 +1,10 @@
 import ICard from './ICard'
-import IPlayer from './IPlayer'
 
-interface IRound {
+interface IActionableRound {
   bury(cardA: ICard, cardB: ICard): void
-  getCurrentTurnPlayer(): IPlayer | undefined
   pass(): void
   pick(): void
   play(card: ICard): void
 }
 
-export default IRound
+export default IActionableRound

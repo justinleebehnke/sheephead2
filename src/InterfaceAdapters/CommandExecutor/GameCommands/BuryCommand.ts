@@ -1,5 +1,5 @@
 import AbstractCommand from './AbstractCommand'
-import IGame from './Interfaces/IGame'
+import IGame from '../../../GameEntityInterfaces/IGame'
 
 class BuryCommand extends AbstractCommand {
   private readonly cardIds: string[]
