@@ -157,13 +157,13 @@ class EndOfRoundReport extends Component<Props, State> {
                   this.setState({ hasClickedReadyToPlayAgain: true })
                 }}
               >
-                Play Another Round
+                Play Another Hand
               </Button>
             )}
             {this.state.hasClickedReadyToPlayAgain && (
               <div className='ready'>
                 Got it. <br />
-                We'll start the next round as soon as everyone else is ready.
+                We'll deal the next hand as soon as everyone else is ready.
               </div>
             )}
           </Modal.Footer>
