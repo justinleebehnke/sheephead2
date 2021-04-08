@@ -135,7 +135,7 @@ class EndOfRoundReport extends Component<Props, State> {
                   <thead>
                     <tr>
                       <th className='short'>Picking Team</th>
-                      <th className='short'>Opposition</th>
+                      <th className='short'>Defense</th>
                     </tr>
                   </thead>
                   <tbody>
