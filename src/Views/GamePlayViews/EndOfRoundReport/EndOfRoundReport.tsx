@@ -38,7 +38,7 @@ class EndOfRoundReport extends Component<Props, State> {
       return (
         <Modal show={true} onHide={() => {}} backdrop='static'>
           <Modal.Header>
-            <Modal.Title>End Of Round Report</Modal.Title>
+            <Modal.Title>End Of Hand Report</Modal.Title>
           </Modal.Header>
           <Modal.Body className='report'>
             <Table bordered hover variant='dark'>
