@@ -1,5 +1,5 @@
 #hand {
-  width: 50%;
+  width: 75%;
   margin: auto;
 }
 
@@ -7,9 +7,6 @@
   margin: auto;
   display: inline;
   width: 110px;
-  margin-left: -75px;
+  margin-left: 10px;
   z-index: 1;
-}
-#hand .playing-card:first-child {
-  margin-left: 0px;
 }

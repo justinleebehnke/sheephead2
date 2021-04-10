@@ -1,11 +1,11 @@
 .playing-card img {
   margin-top: 5px;
-  width: 110px;
+  width: 80px;
 }
 
 .playing-card .playable {
   box-sizing: content-box;
-  border: green solid 5px;
+  box-shadow: 5px 5px 5px 0 white;
 }
 
 .playing-card .playable:hover {
