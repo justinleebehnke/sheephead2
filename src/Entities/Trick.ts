@@ -2,6 +2,7 @@ import Card from './Card'
 import CardPlayedByData from './DataStructures/CardPlayedByData'
 import IReadOnlyTrick from '../GameEntityInterfaces/ReadOnlyEntities/IReadOnlyTrick'
 import Player from './Player'
+import Suit from './Suit'
 import TrickData from './DataStructures/TrickData'
 
 class Trick implements IReadOnlyTrick {
@@ -60,19 +61,30 @@ class Trick implements IReadOnlyTrick {
   }
 
   public getWinnerOfTrick(): Player {
+    if (!this.cardsInTrick.some((card) => card.isTrump())) {
+      return this.playerOfCard[
+        this.getIndexOfHighestRankingCardOfSuit(this.getLeadCard()?.getSuit())
+      ]
+    }
     return this.playerOfCard[this.getIndexOfHighestRankingCardInTrick()]
   }
 
   private getIndexOfHighestRankingCardInTrick(): number {
-    return this.cardsInTrick.findIndex((card) => card.getRank() === this.getHighestRankInTrick())
+    return this.cardsInTrick.findIndex(
+      (card) => card.getRank() === this.getHighestRankFromArray(this.cardsInTrick)
+    )
   }
 
-  private getHighestRankInTrick(): number {
-    return Math.min(...this.getRankOfCardsInTrick())
+  private getIndexOfHighestRankingCardOfSuit(suit: Suit | undefined) {
+    return this.cardsInTrick.findIndex(
+      (card) =>
+        card.getRank() ===
+        this.getHighestRankFromArray(this.cardsInTrick.filter((card) => card.getSuit() === suit))
+    )
   }
 
-  private getRankOfCardsInTrick(): number[] {
-    return this.cardsInTrick.map((card) => card.getRank())
+  private getHighestRankFromArray(cards: Card[]): number {
+    return Math.min(...cards.map((card) => card.getRank()))
   }
 }
 
