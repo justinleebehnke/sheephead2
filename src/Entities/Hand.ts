@@ -1,4 +1,5 @@
 import Card from './Card'
+import Suit from './Suit'
 
 class Hand {
   private hand: Card[]
@@ -9,11 +10,47 @@ class Hand {
 
   public addCard(card: Card): void {
     this.hand.push(card)
-    this.hand.sort(this.sortByRankAscending)
+    this.hand.sort(this.sortBySuitThenRankAscending)
   }
 
-  private sortByRankAscending(cardA: Card, cardB: Card): number {
-    return cardA.getRank() - cardB.getRank()
+  private sortBySuitThenRankAscending(cardA: Card, cardB: Card): number {
+    if (Hand.cardsAreOfSameSuit(cardA, cardB)) {
+      return cardA.getRank() - cardB.getRank()
+    }
+    return Hand.sortBySuit(cardA, cardB)
+  }
+
+  private static sortBySuit(cardA: Card, cardB: Card): number {
+    if (cardA.isTrump()) {
+      return -1
+    }
+    if (cardB.isTrump()) {
+      return 1
+    }
+    return Hand.getNumberForSuit(cardB.getSuit()) - Hand.getNumberForSuit(cardA.getSuit())
+  }
+
+  private static getNumberForSuit(suit: Suit): number {
+    switch (suit) {
+      case Suit.CLUB:
+        return 3
+      case Suit.SPADE:
+        return 2
+      case Suit.HEART:
+        return 1
+      default:
+        throw Error('this should not have happened, all diamond are trump')
+    }
+  }
+
+  private static cardsAreOfSameSuit(cardA: Card, cardB: Card): boolean {
+    if (cardA.isTrump() && cardB.isTrump()) {
+      return true
+    }
+    if (cardA.isTrump() || cardB.isTrump()) {
+      return false
+    }
+    return cardA.getSuit() === cardB.getSuit()
   }
 
   public removeCardFromHand(cardId: string): Card {

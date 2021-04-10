@@ -47,7 +47,7 @@ describe('Round', () => {
   })
   it('Should be able to play a round all the way through', async () => {
     expect(player1.getPlayableCardIds()).toEqual(['7d', 'qh', '9d', '8d', 'kc', '9s'])
-    expect(player2.getPlayableCardIds()).toEqual(['qd', 'td', 'kd', 'ah', 'tc', '9c'])
+    expect(player2.getPlayableCardIds()).toEqual(['qd', 'td', 'kd', 'tc', '9c', 'ah'])
     expect(player3.getPlayableCardIds()).toEqual(['qs', 'jc', 'js', 'jd', 'ad', '9h'])
     expect(player4.getPlayableCardIds()).toEqual(['qc', 'ac', 'as', 'ts', 'th', 'kh'])
 
@@ -86,7 +86,7 @@ describe('Round', () => {
     expect(round.getCurrentTurnPlayer().getPlayableCardIds().length).toBe(6)
 
     const round1LeadCard = player2.removeCardFromHand('qd')
-    expect(player2.getPlayableCardIds()).toEqual(['td', 'kd', 'ah', 'tc', '9c'])
+    expect(player2.getPlayableCardIds()).toEqual(['td', 'kd', 'tc', '9c', 'ah'])
     round.play(round1LeadCard)
     // @ts-ignore
     expect(round.getCurrentTrick().getNumCardsPlayed()).toBe(1)
@@ -134,7 +134,7 @@ describe('Round', () => {
     expect(player4.getTricksWon().length).toBe(1)
 
     expect(player1.getPlayableCardIds()).toEqual(['qh', '9d', 'kc', '9s'])
-    expect(player2.getPlayableCardIds()).toEqual(['kd', 'ah', 'tc', '9c'])
+    expect(player2.getPlayableCardIds()).toEqual(['kd', 'tc', '9c', 'ah'])
     expect(player3.getPlayableCardIds()).toEqual(['jc', 'js', 'jh', '9h'])
     expect(player4.getPlayableCardIds()).toEqual(['ac', 'as', 'ts', 'th'])
 
@@ -158,7 +158,7 @@ describe('Round', () => {
     expect(player4.getTricksWon().length).toBe(2)
 
     expect(player1.getPlayableCardIds()).toEqual(['qh', '9d', '9s'])
-    expect(player2.getPlayableCardIds()).toEqual(['kd', 'ah', 'tc'])
+    expect(player2.getPlayableCardIds()).toEqual(['kd', 'tc', 'ah'])
     expect(player3.getPlayableCardIds()).toEqual(['jc', 'js', 'jh'])
     expect(player4.getPlayableCardIds()).toEqual(['as', 'ts', 'th'])
 
@@ -168,7 +168,7 @@ describe('Round', () => {
     expect(round.getCurrentTurnPlayer()).toBe(player1)
     round.play(player1.removeCardFromHand('9s'))
     expect(round.getCurrentTurnPlayer()).toBe(player2)
-    expect(player2.getPlayableCardIds(round4LeadCard)).toEqual(['kd', 'ah', 'tc'])
+    expect(player2.getPlayableCardIds(round4LeadCard)).toEqual(['kd', 'tc', 'ah'])
     round.play(player2.removeCardFromHand('kd'))
     expect(round.getCurrentTurnPlayer()).toBe(player3)
     expect(player3.getPlayableCardIds(round4LeadCard)).toEqual(['jc', 'js', 'jh'])
@@ -180,7 +180,7 @@ describe('Round', () => {
     expect(player4.getTricksWon().length).toBe(2)
 
     expect(player1.getPlayableCardIds()).toEqual(['qh', '9d'])
-    expect(player2.getPlayableCardIds()).toEqual(['ah', 'tc'])
+    expect(player2.getPlayableCardIds()).toEqual(['tc', 'ah'])
     expect(player3.getPlayableCardIds()).toEqual(['js', 'jh'])
     expect(player4.getPlayableCardIds()).toEqual(['ts', 'th'])
 
@@ -393,17 +393,17 @@ describe('Round', () => {
 
   it('Should tell the shuffle seed manager to changeShuffleSeed and re deal if no one picks', () => {
     expect(player1.getPlayableCardIds()).toEqual(['7d', 'qh', '9d', '8d', 'kc', '9s'])
-    expect(player2.getPlayableCardIds()).toEqual(['qd', 'td', 'kd', 'ah', 'tc', '9c'])
+    expect(player2.getPlayableCardIds()).toEqual(['qd', 'td', 'kd', 'tc', '9c', 'ah'])
     expect(player3.getPlayableCardIds()).toEqual(['qs', 'jc', 'js', 'jd', 'ad', '9h'])
     expect(player4.getPlayableCardIds()).toEqual(['qc', 'ac', 'as', 'ts', 'th', 'kh'])
     round.pass()
     round.pass()
     round.pass()
     round.pass()
-    expect(player1.getPlayableCardIds()).toEqual(['qc', 'qd', 'js', 'ah', 'kc', '9s'])
+    expect(player1.getPlayableCardIds()).toEqual(['qc', 'qd', 'js', 'kc', '9s', 'ah'])
     expect(player2.getPlayableCardIds()).toEqual(['7d', 'qh', 'jd', 'td', 'ts', '9h'])
     expect(player3.getPlayableCardIds()).toEqual(['qs', 'kd', '8d', 'ac', 'ks', 'kh'])
-    expect(player4.getPlayableCardIds()).toEqual(['jc', 'jh', 'ad', 'tc', 'th', '9c'])
+    expect(player4.getPlayableCardIds()).toEqual(['jc', 'jh', 'ad', 'tc', '9c', 'th'])
     expect(shuffleSeedManager.changeShuffleSeed).toHaveBeenCalledTimes(1)
   })
 })

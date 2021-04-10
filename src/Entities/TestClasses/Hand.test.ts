@@ -1,4 +1,4 @@
-import ICardRanker from 'Entities/ICardRanker'
+import ICardRanker from '../../Entities/ICardRanker'
 import BellePlaineRulesCardRanker from '../BellePlaineRulesCardRanker'
 import Card from '../Card'
 import Hand from '../Hand'
@@ -65,6 +65,63 @@ describe('Hand', () => {
       cardIdsInHand.forEach((cardId) => hand.addCard(new Card(cardId, cardRanker)))
       const trumpLead = new Card('qc', cardRanker)
       expect(hand.getPlayableCardIds(trumpLead)).toEqual(cardIdsInHand)
+    })
+  })
+
+  describe('Sorting Properly', () => {
+    beforeEach(() => {
+      hand = new Hand()
+      cardRanker = new BellePlaineRulesCardRanker()
+    })
+    it('Should first sort by suit then by rank', () => {
+      hand.addCard(new Card('qc', cardRanker))
+      expect(hand.getPlayableCardIds()).toEqual(['qc'])
+      hand.addCard(new Card('ah', cardRanker))
+      hand.addCard(new Card('jd', cardRanker))
+      hand.addCard(new Card('th', cardRanker))
+      hand.addCard(new Card('ac', cardRanker))
+      hand.addCard(new Card('tc', cardRanker))
+      expect(hand.getPlayableCardIds()).toEqual(['qc', 'jd', 'ac', 'tc', 'ah', 'th'])
+
+      hand.addCard(new Card('td', cardRanker))
+      hand.addCard(new Card('ts', cardRanker))
+      expect(hand.getPlayableCardIds()).toEqual(['qc', 'jd', 'td', 'ac', 'tc', 'ts', 'ah', 'th'])
+
+      hand.addCard(new Card('ad', cardRanker))
+      hand.addCard(new Card('as', cardRanker))
+      expect(hand.getPlayableCardIds()).toEqual([
+        'qc',
+        'jd',
+        'ad',
+        'td',
+        'ac',
+        'tc',
+        'as',
+        'ts',
+        'ah',
+        'th',
+      ])
+
+      hand.addCard(new Card('9h', cardRanker))
+      hand.addCard(new Card('9s', cardRanker))
+      hand.addCard(new Card('9c', cardRanker))
+      hand.addCard(new Card('9d', cardRanker))
+      expect(hand.getPlayableCardIds()).toEqual([
+        'qc',
+        'jd',
+        'ad',
+        'td',
+        '9d',
+        'ac',
+        'tc',
+        '9c',
+        'as',
+        'ts',
+        '9s',
+        'ah',
+        'th',
+        '9h',
+      ])
     })
   })
 })
