@@ -27,6 +27,7 @@ describe('Giving Trick to Winner', () => {
     trick.addCardToTrick(new Card('qh', cardRanker), player4)
     trick.giveToHighestRankingCardPlayer()
     expect(player1.getTricksWon()).toEqual([trick])
+    expect(trick.getTrickData().winningCardIndex).toEqual(0)
   })
 
   it('Should give the trick to the highest ranking card when all cards are the same suit', () => {
@@ -37,6 +38,7 @@ describe('Giving Trick to Winner', () => {
     trick.addCardToTrick(new Card('kc', cardRanker), player4)
     trick.giveToHighestRankingCardPlayer()
     expect(player3.getTricksWon()).toEqual([trick])
+    expect(trick.getTrickData().winningCardIndex).toEqual(2)
   })
 
   it('Should give the trick to the trump card even if some players are following suit', () => {
@@ -47,6 +49,7 @@ describe('Giving Trick to Winner', () => {
     trick.addCardToTrick(new Card('kd', cardRanker), player4)
     trick.giveToHighestRankingCardPlayer()
     expect(player2.getTricksWon()).toEqual([trick])
+    expect(trick.getTrickData().winningCardIndex).toEqual(1)
   })
 
   it('Should give the trick to the lead card if non of the players can following suit', () => {
@@ -57,6 +60,7 @@ describe('Giving Trick to Winner', () => {
     trick.addCardToTrick(new Card('as', cardRanker), player4)
     trick.giveToHighestRankingCardPlayer()
     expect(player1.getTricksWon()).toEqual([trick])
+    expect(trick.getTrickData().winningCardIndex).toEqual(0)
   })
 })
 

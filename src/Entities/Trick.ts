@@ -40,7 +40,9 @@ class Trick implements IReadOnlyTrick {
   public getTrickData(): TrickData {
     return {
       cards: this.getCardPlayedByData(),
-      winningCardIndex: this.getIndexOfHighestRankingCardInTrick(),
+      winningCardIndex: this.playerOfCard.findIndex(
+        (player) => player.getId() === this.getWinnerOfTrick().getId()
+      ),
     }
   }
 
