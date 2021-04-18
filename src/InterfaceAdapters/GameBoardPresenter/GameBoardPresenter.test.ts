@@ -3,7 +3,7 @@ import GameBoardViewData from '../../Views/GamePlayViews/GameBoardViewData'
 import ICommandInterface from '../ICommandInterface'
 import IGameBoardModel from '../IGameBoardModel'
 import ISubscriber from '../../Entities/ISubscriber'
-import PlayerData from '../../Views/GamePlayViews/EndOfRoundReport/PlayerData'
+import PlayerDataWithWinnings from '../../Views/GamePlayViews/EndOfRoundReport/PlayerDataWithWinnings'
 import PlayerLayoutData from '../GamePresenter/PlayerLayoutData'
 import { pause } from '../../Utilities/TestingUtilities'
 
@@ -17,7 +17,7 @@ describe('Game Board Presenter', () => {
   let acrossPlayerData: PlayerLayoutData
   let leftPlayerData: PlayerLayoutData
   let rightPlayerData: PlayerLayoutData
-  let playersData: PlayerData[]
+  let playersData: PlayerDataWithWinnings[]
 
   beforeEach(() => {
     pauseDurationAfterTrick = 400
@@ -53,18 +53,26 @@ describe('Game Board Presenter', () => {
     playersData = [
       {
         name: 'George',
+        totalCentsWon: 0,
+        currentHandCentsWon: 0,
         id: 'georges-id',
       },
       {
         name: 'Luis',
+        totalCentsWon: 0,
+        currentHandCentsWon: 0,
         id: 'luis-id',
       },
       {
         name: 'David',
+        totalCentsWon: 0,
+        currentHandCentsWon: 0,
         id: 'davids-id',
       },
       {
         name: 'Eliza',
+        totalCentsWon: 0,
+        currentHandCentsWon: 0,
         id: 'eliza-id',
       },
     ]
@@ -251,10 +259,30 @@ describe('Game Board Presenter', () => {
             pickerWentAlone: false,
             endOfRoundReport: undefined,
             players: [
-              { name: 'George', id: '45c78893-ac7b-4999-bd08-dbb557e851c7' },
-              { name: 'Luis', id: '07d23498-c980-4a7d-810f-ff780af7fa94' },
-              { name: 'Fernando', id: 'e4858617-0a61-4568-b19e-374a1668a5f2' },
-              { name: 'Andres', id: '9a959c1f-9124-4b7a-b84a-ed8c9ea46354' },
+              {
+                totalCentsWon: 0,
+                currentHandCentsWon: 0,
+                name: 'George',
+                id: '45c78893-ac7b-4999-bd08-dbb557e851c7',
+              },
+              {
+                totalCentsWon: 0,
+                currentHandCentsWon: 0,
+                name: 'Luis',
+                id: '07d23498-c980-4a7d-810f-ff780af7fa94',
+              },
+              {
+                totalCentsWon: 0,
+                currentHandCentsWon: 0,
+                name: 'Fernando',
+                id: 'e4858617-0a61-4568-b19e-374a1668a5f2',
+              },
+              {
+                totalCentsWon: 0,
+                currentHandCentsWon: 0,
+                name: 'Andres',
+                id: '9a959c1f-9124-4b7a-b84a-ed8c9ea46354',
+              },
             ],
             pickerIndex: 1,
           },
@@ -310,10 +338,30 @@ describe('Game Board Presenter', () => {
             pickerWentAlone: false,
             endOfRoundReport: undefined,
             players: [
-              { name: 'George', id: '45c78893-ac7b-4999-bd08-dbb557e851c7' },
-              { name: 'Luis', id: '07d23498-c980-4a7d-810f-ff780af7fa94' },
-              { name: 'Fernando', id: 'e4858617-0a61-4568-b19e-374a1668a5f2' },
-              { name: 'Andres', id: '9a959c1f-9124-4b7a-b84a-ed8c9ea46354' },
+              {
+                totalCentsWon: 0,
+                currentHandCentsWon: 0,
+                name: 'George',
+                id: '45c78893-ac7b-4999-bd08-dbb557e851c7',
+              },
+              {
+                totalCentsWon: 0,
+                currentHandCentsWon: 0,
+                name: 'Luis',
+                id: '07d23498-c980-4a7d-810f-ff780af7fa94',
+              },
+              {
+                totalCentsWon: 0,
+                currentHandCentsWon: 0,
+                name: 'Fernando',
+                id: 'e4858617-0a61-4568-b19e-374a1668a5f2',
+              },
+              {
+                totalCentsWon: 0,
+                currentHandCentsWon: 0,
+                name: 'Andres',
+                id: '9a959c1f-9124-4b7a-b84a-ed8c9ea46354',
+              },
             ],
             pickerIndex: 1,
           },

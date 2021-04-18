@@ -58,6 +58,8 @@ class Round implements IRoundState, IRound, IObservable, IReadOnlyRound {
         return {
           id: player.getId(),
           name: player.getName(),
+          totalCentsWon: player.totalCentsWon,
+          currentHandCentsWon: player.currentHandCentsWon,
         }
       }),
       endOfRoundReport: this.getEndOfRoundReport(),
