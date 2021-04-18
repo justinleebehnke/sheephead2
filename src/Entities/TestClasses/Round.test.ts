@@ -42,7 +42,8 @@ describe('Round', () => {
       [player1, player2, player3, player4],
       0,
       shuffleSeedManager,
-      new BellePlaineRulesCardRanker()
+      new BellePlaineRulesCardRanker(),
+      { givePlayersTheirPay: jest.fn() }
     )
   })
   it('Should be able to play a round all the way through', async () => {

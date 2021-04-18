@@ -11,6 +11,7 @@ class EndOfRoundState implements IRoundState {
   private round: Round
   constructor(round: Round) {
     this.round = round
+    this.round.givePlayersTheirPay()
   }
 
   public pass(): void {

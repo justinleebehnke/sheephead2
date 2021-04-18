@@ -3,6 +3,7 @@ import IReadOnlyGameModel from '../GameEntityInterfaces/ReadOnlyEntities/IReadOn
 import IShuffleSeedManager from './Round/IShuffleSeedManager'
 import ISubscriber from './ISubscriber'
 import Player from './Player'
+import QuartersPlayerPayer from '../Payment/QuartersPlayerPayer'
 import Round from './Round/Round'
 import UniqueIdentifier from '../Utilities/UniqueIdentifier'
 
@@ -93,7 +94,8 @@ class Game implements ISubscriber, IReadOnlyGameModel, IShuffleSeedManager {
       this.players,
       this.currentDealer,
       this,
-      new BellePlaineRulesCardRanker()
+      new BellePlaineRulesCardRanker(),
+      new QuartersPlayerPayer()
     )
     this.currentRound.addSubscriber(this)
     this.notifySubscribers()

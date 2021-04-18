@@ -1,9 +1,10 @@
 import Card from './Card'
 import Hand from './Hand'
+import IPayablePlayer from '../Payment/IPayablePlayer'
 import Trick from './Trick'
 import UniqueIdentifier from '../Utilities/UniqueIdentifier'
 
-class Player {
+class Player implements IPayablePlayer {
   private name: string
   private hand: Hand
   private tricksWon: Trick[]
