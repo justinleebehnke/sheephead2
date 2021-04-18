@@ -145,6 +145,28 @@ class EndOfRoundReport extends Component<Props, State> {
                   </tbody>
                 </Table>
               </div>
+              <div>
+                <Table bordered hover variant='dark'>
+                  <thead>
+                    <tr>
+                      <th className='short'>Winnings</th>
+                      <th className='short'>Hand</th>
+                      <th className='short'>Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {players.map((playerWinnings) => (
+                      <tr>
+                        <td className='short'>{playerWinnings.name}</td>
+                        <td className='short'>
+                          {(playerWinnings.currentHandCentsWon / 100).toFixed(2)}
+                        </td>
+                        <td className='short'>{(playerWinnings.totalCentsWon / 100).toFixed(2)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </div>
             </div>
           </Modal.Body>
           <Modal.Footer>

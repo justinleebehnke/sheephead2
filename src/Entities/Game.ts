@@ -89,7 +89,10 @@ class Game implements ISubscriber, IReadOnlyGameModel, IShuffleSeedManager {
   }
 
   private playRound(): void {
-    this.players.forEach((player) => player.clearCards())
+    this.players.forEach((player) => {
+      player.clearCards()
+      player.transferRoundWinningsToTotalWinnings()
+    })
     this.changeShuffleSeed()
     this.currentRound = new Round(
       this.players,
