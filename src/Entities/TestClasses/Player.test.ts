@@ -18,4 +18,27 @@ describe('Player', () => {
       expect(player.getPlayableCardIds().length).toBe(0)
     })
   })
+
+  describe('Give winnings', () => {
+    it('Should include the players current hand winnings in the total', () => {
+      const player = new Player('Jason', new UniqueIdentifier())
+      player.giveCentsForRound(25)
+      expect(player.totalCentsWon).toEqual(25)
+      player.giveCentsForRound(25)
+      expect(player.totalCentsWon).toEqual(25)
+    })
+
+    it('Should have the option to transfer the winnings from the players current hand', () => {
+      const player = new Player('Jason', new UniqueIdentifier())
+      player.giveCentsForRound(25)
+      expect(player.totalCentsWon).toEqual(25)
+      expect(player.currentHandCentsWon).toEqual(25)
+      player.transferRoundWinningsToTotalWinnings()
+      expect(player.totalCentsWon).toEqual(25)
+      expect(player.currentHandCentsWon).toEqual(0)
+      player.giveCentsForRound(25)
+      expect(player.totalCentsWon).toEqual(50)
+      expect(player.currentHandCentsWon).toEqual(25)
+    })
+  })
 })

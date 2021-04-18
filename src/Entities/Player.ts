@@ -8,12 +8,33 @@ class Player {
   private hand: Hand
   private tricksWon: Trick[]
   private uniqueIdentifier: UniqueIdentifier
+  private centsWonExcludingCurrentHand: number
+  private centsWonInCurrentHand: number
 
   constructor(name: string, id: UniqueIdentifier) {
     this.name = name
     this.hand = new Hand()
     this.tricksWon = []
     this.uniqueIdentifier = id
+    this.centsWonExcludingCurrentHand = 0
+    this.centsWonInCurrentHand = 0
+  }
+
+  public transferRoundWinningsToTotalWinnings(): void {
+    this.centsWonExcludingCurrentHand += this.centsWonInCurrentHand
+    this.centsWonInCurrentHand = 0
+  }
+
+  get totalCentsWon(): number {
+    return this.centsWonExcludingCurrentHand + this.centsWonInCurrentHand
+  }
+
+  get currentHandCentsWon(): number {
+    return this.centsWonInCurrentHand
+  }
+
+  public giveCentsForRound(cents: number) {
+    this.centsWonInCurrentHand = cents
   }
 
   public getName(): string {
