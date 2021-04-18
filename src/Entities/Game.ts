@@ -5,6 +5,7 @@ import ISubscriber from './ISubscriber'
 import Player from './Player'
 import QuartersPlayerPayer from '../Payment/QuartersPlayerPayer'
 import Round from './Round/Round'
+import RoundTeamOutcomeGetter from '../RoundOutcomeDeterminer/RoundTeamOutcomeGetter'
 import UniqueIdentifier from '../Utilities/UniqueIdentifier'
 
 class Game implements ISubscriber, IReadOnlyGameModel, IShuffleSeedManager {
@@ -95,7 +96,7 @@ class Game implements ISubscriber, IReadOnlyGameModel, IShuffleSeedManager {
       this.currentDealer,
       this,
       new BellePlaineRulesCardRanker(),
-      new QuartersPlayerPayer()
+      new QuartersPlayerPayer(new RoundTeamOutcomeGetter())
     )
     this.currentRound.addSubscriber(this)
     this.notifySubscribers()

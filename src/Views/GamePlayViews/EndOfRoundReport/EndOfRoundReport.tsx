@@ -6,13 +6,10 @@ import AbbreviatedCard from './AbbreviatedCard'
 import CardPlayedByData from '../../../Entities/DataStructures/CardPlayedByData'
 import EndOfRoundPresenter from './EndOfRoundPresenter'
 import EndOfRoundViewData from './EndOfRoundViewData'
-import OppositionTeamMemberIdentifier from '../../../OppositionTeamMemberIdentifier/OppositionTeamMemberIdentifier'
-import PlayerData from './PlayerData'
+import RoundTeamOutcomeGetter from '../../../RoundOutcomeDeterminer/RoundTeamOutcomeGetter'
 import TrickData from '../../../Entities/DataStructures/TrickData'
 import UniqueIdentifier from '../../../Utilities/UniqueIdentifier'
 import './EndOfRoundReport.css'
-
-const TOTAL_POINTS_IN_ROUND = 120
 
 type Props = {
   endOfRoundData: EndOfRoundViewData
@@ -32,7 +29,7 @@ class EndOfRoundReport extends Component<Props, State> {
     const report = this.props.endOfRoundData.endOfRoundReport
     const players = this.props.endOfRoundData.players
     const indexOfPicker = this.props.endOfRoundData.pickerIndex
-    const oppositionScore = this.getOppositionScore()
+    const teamOutcome = new RoundTeamOutcomeGetter().getRoundTeamOutcome(this.props.endOfRoundData)
 
     if (report) {
       return (
@@ -84,7 +81,9 @@ class EndOfRoundReport extends Component<Props, State> {
                           </td>
                         )
                       })}
-                      <td className='short'>{this.getPlayerScore(player.id)}</td>
+                      <td className='short'>
+                        {teamOutcome.getPlayerScore(new UniqueIdentifier(player.id))}
+                      </td>
                     </tr>
                   )
                 })}
@@ -140,8 +139,8 @@ class EndOfRoundReport extends Component<Props, State> {
                   </thead>
                   <tbody>
                     <tr>
-                      <td className='short'>{TOTAL_POINTS_IN_ROUND - oppositionScore}</td>
-                      <td className='short'>{oppositionScore}</td>
+                      <td className='short'>{teamOutcome.pickingTeamScore}</td>
+                      <td className='short'>{teamOutcome.oppositionTeamScore}</td>
                     </tr>
                   </tbody>
                 </Table>
@@ -171,41 +170,6 @@ class EndOfRoundReport extends Component<Props, State> {
       )
     }
     return null
-  }
-
-  private getOppositionScore = (): number => {
-    const identifier = new OppositionTeamMemberIdentifier(this.props.endOfRoundData)
-    return this.props.endOfRoundData.players.reduce(
-      (oppositionScore: number, player: PlayerData): number => {
-        if (identifier.isMemberOfOpposition(new UniqueIdentifier(player.id))) {
-          return oppositionScore + this.getPlayerScore(player.id)
-        }
-        return oppositionScore
-      },
-      0
-    )
-  }
-
-  private getPlayerScore = (id: string): number => {
-    const report = this.props.endOfRoundData.endOfRoundReport
-    if (!report) {
-      return 0
-    }
-    return report.tricks.reduce((total: number, trick: TrickData) => {
-      const winningCardId = trick.cards[trick.winningCardIndex].cardId
-      const cardPlayedByPlayer: CardPlayedByData | undefined = trick.cards.find(
-        (card: CardPlayedByData) => card.playedByPlayerId === id
-      )
-      if (cardPlayedByPlayer && cardPlayedByPlayer.cardId === winningCardId) {
-        return (
-          total +
-          trick.cards.reduce((trickValue: number, card: CardPlayedByData) => {
-            return trickValue + card.pointValue
-          }, 0)
-        )
-      }
-      return total
-    }, 0)
   }
 }
 
