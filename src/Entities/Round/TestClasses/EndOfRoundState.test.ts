@@ -8,7 +8,7 @@ describe('End Of Round State', () => {
     const cardB = new Card('qc', new BellePlaineRulesCardRanker())
 
     // @ts-ignore
-    const endOfRoundState = new EndOfRoundState(null)
+    const endOfRoundState = new EndOfRoundState({ givePlayersTheirPay: jest.fn() })
     expect(() => endOfRoundState.pass()).toThrow('Cannot pass in EndOfRoundState.')
     expect(() => endOfRoundState.pick()).toThrow('Cannot pick in EndOfRoundState.')
     expect(() => endOfRoundState.bury(cardA, cardB)).toThrow(

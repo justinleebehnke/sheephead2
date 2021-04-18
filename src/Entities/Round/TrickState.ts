@@ -43,6 +43,7 @@ class TrickState implements IRoundState {
           this.round.setIndexOfCurrentTurn(-1)
           this.round.markAsOver()
           this.round.setContext(new EndOfRoundState(this.round))
+          this.round.givePlayersTheirPay()
         }
       } else {
         this.round.setIndexOfCurrentTurn(

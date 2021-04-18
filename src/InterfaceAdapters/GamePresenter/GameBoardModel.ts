@@ -4,7 +4,7 @@ import IReadOnlyGameModel from '../../GameEntityInterfaces/ReadOnlyEntities/IRea
 import IReadOnlyRound from '../../GameEntityInterfaces/ReadOnlyEntities/IReadOnlyRound'
 import ISubscriber from '../../Entities/ISubscriber'
 import Player from '../../Entities/Player'
-import PlayerData from '../../Views/GamePlayViews/EndOfRoundReport/PlayerData'
+import PlayerDataWithWinnings from '../../Views/GamePlayViews/EndOfRoundReport/PlayerDataWithWinnings'
 import PlayerLayoutData from './PlayerLayoutData'
 import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
 import IGameBoardModel from '../IGameBoardModel'
@@ -80,11 +80,13 @@ class GameBoardModel implements ISubscriber, IGameBoardModel {
     ]
   }
 
-  public getPlayersData(): PlayerData[] {
+  public getPlayersData(): PlayerDataWithWinnings[] {
     return this.getPlayers().map((player: Player) => {
       return {
         name: player.getName(),
         id: player.getId(),
+        totalCentsWon: player.totalCentsWon,
+        currentHandCentsWon: player.currentHandCentsWon,
       }
     })
   }

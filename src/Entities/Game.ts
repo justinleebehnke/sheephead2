@@ -3,7 +3,9 @@ import IReadOnlyGameModel from '../GameEntityInterfaces/ReadOnlyEntities/IReadOn
 import IShuffleSeedManager from './Round/IShuffleSeedManager'
 import ISubscriber from './ISubscriber'
 import Player from './Player'
+import QuartersPlayerPayer from '../Payment/QuartersPlayerPayer'
 import Round from './Round/Round'
+import RoundTeamOutcomeGetter from '../RoundOutcomeDeterminer/RoundTeamOutcomeGetter'
 import UniqueIdentifier from '../Utilities/UniqueIdentifier'
 
 class Game implements ISubscriber, IReadOnlyGameModel, IShuffleSeedManager {
@@ -87,13 +89,17 @@ class Game implements ISubscriber, IReadOnlyGameModel, IShuffleSeedManager {
   }
 
   private playRound(): void {
-    this.players.forEach((player) => player.clearCards())
+    this.players.forEach((player) => {
+      player.clearCards()
+      player.transferRoundWinningsToTotalWinnings()
+    })
     this.changeShuffleSeed()
     this.currentRound = new Round(
       this.players,
       this.currentDealer,
       this,
-      new BellePlaineRulesCardRanker()
+      new BellePlaineRulesCardRanker(),
+      new QuartersPlayerPayer(new RoundTeamOutcomeGetter())
     )
     this.currentRound.addSubscriber(this)
     this.notifySubscribers()

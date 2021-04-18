@@ -171,10 +171,30 @@ describe('Given an index it will decide whether the player is a member of the op
       pickerIndex: 0,
       pickerWentAlone: false,
       players: [
-        { id: '45c78893-ac7b-4999-bd08-dbb557e851c7', name: 'Player 1' }, // <-- Picker
-        { id: '2711623a-5588-4c58-b316-94c00c5da1ef', name: 'Player 2' }, // <-- Partner
-        { id: 'e4858617-0a61-4568-b19e-374a1668a5f2', name: 'Player 3' },
-        { id: 'fe044200-99b9-4c21-bd5d-94a9dd5c1d1f', name: 'Player 4' },
+        {
+          id: '45c78893-ac7b-4999-bd08-dbb557e851c7',
+          name: 'Player 1',
+          currentHandCentsWon: 0,
+          totalCentsWon: 0,
+        }, // <-- Picker
+        {
+          id: '2711623a-5588-4c58-b316-94c00c5da1ef',
+          name: 'Player 2',
+          currentHandCentsWon: 0,
+          totalCentsWon: 0,
+        }, // <-- Partner
+        {
+          id: 'e4858617-0a61-4568-b19e-374a1668a5f2',
+          name: 'Player 3',
+          currentHandCentsWon: 0,
+          totalCentsWon: 0,
+        },
+        {
+          id: 'fe044200-99b9-4c21-bd5d-94a9dd5c1d1f',
+          name: 'Player 4',
+          currentHandCentsWon: 0,
+          totalCentsWon: 0,
+        },
       ],
       endOfRoundReport,
     }

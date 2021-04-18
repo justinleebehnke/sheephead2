@@ -1,6 +1,6 @@
 import EndOfRoundData from '../Entities/Round/EndOfRoundReportData'
 import IObservable from '../Entities/IObservable'
-import PlayerData from '../Views/GamePlayViews/EndOfRoundReport/PlayerData'
+import PlayerDataWithWinnings from '../Views/GamePlayViews/EndOfRoundReport/PlayerDataWithWinnings'
 import PlayerLayoutData from './GamePresenter/PlayerLayoutData'
 
 interface IGameBoardModel extends IObservable {
@@ -12,7 +12,7 @@ interface IGameBoardModel extends IObservable {
   isShowingPassOrPickForm(): boolean
   getHand(): string[]
   getPlayableCardIds(): string[]
-  getPlayersData(): PlayerData[]
+  getPlayersData(): PlayerDataWithWinnings[]
   getPickerIndex(): number | undefined
   getEndOfRoundReport(): EndOfRoundData | undefined
 }

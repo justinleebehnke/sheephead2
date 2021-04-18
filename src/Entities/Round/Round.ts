@@ -4,6 +4,7 @@ import EndOfRoundData from './EndOfRoundReportData'
 import FindingPickerState from './FindingPickerState'
 import ICardRanker from '../ICardRanker'
 import IObservable from '../IObservable'
+import IPlayerPayer from '../../Payment/IPlayerPayer'
 import IReadOnlyRound from '../../GameEntityInterfaces/ReadOnlyEntities/IReadOnlyRound'
 import IRound from '../../GameEntityInterfaces/IRound'
 import IRoundState from './IRoundState'
@@ -31,7 +32,8 @@ class Round implements IRoundState, IRound, IObservable, IReadOnlyRound {
     players: Player[],
     indexOfDealer: number,
     private readonly shuffleSeedManager: IShuffleSeedManager,
-    cardRanker: ICardRanker
+    cardRanker: ICardRanker,
+    private readonly playerPayer: IPlayerPayer
   ) {
     this.players = players
     this.indexOfDealer = indexOfDealer
@@ -46,6 +48,22 @@ class Round implements IRoundState, IRound, IObservable, IReadOnlyRound {
     this.subscribers = []
     this._pickerIsGoingAlone = false
     this.deal()
+  }
+
+  public givePlayersTheirPay(): void {
+    this.playerPayer.givePlayersTheirPay(this.players, {
+      pickerIndex: this.pickerIndex,
+      pickerWentAlone: this.pickerIsGoingAlone,
+      players: this.players.map((player: Player) => {
+        return {
+          id: player.getId(),
+          name: player.getName(),
+          totalCentsWon: player.totalCentsWon,
+          currentHandCentsWon: player.currentHandCentsWon,
+        }
+      }),
+      endOfRoundReport: this.getEndOfRoundReport(),
+    })
   }
 
   public set pickerIsGoingAlone(isGoingAlone: boolean) {
