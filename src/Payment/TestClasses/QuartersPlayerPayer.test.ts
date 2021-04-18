@@ -58,12 +58,173 @@ describe('Quarters Player Payer', () => {
     playerPayer = new QuartersPlayerPayer(scoreOutcomeGetter)
   })
 
-  it('Should pay one quarter to the picking team if they win and it should charge one quarter to the losing team if they lose and the score is 31 to 89', () => {
-    playerPayer.givePlayersTheirPay(players, endOfRoundViewData)
-    expect(player1.giveCentsForRound).toHaveBeenCalledWith(25)
-    expect(player2.giveCentsForRound).toHaveBeenCalledWith(25)
-    expect(player3.giveCentsForRound).toHaveBeenCalledWith(-25)
-    expect(player3.giveCentsForRound).toHaveBeenCalledWith(-25)
+  describe('No Chop', () => {
+    describe('Picking Team Lost (SET)', () => {
+      it('Should pay 2 quarters to the opposition with a score of 60 to 60', () => {
+        teamOutcome.pickingTeamScore = 60
+        teamOutcome.oppositionTeamScore = 60
+        scoreOutcomeGetter = {
+          getRoundTeamOutcome: jest.fn().mockReturnValue(teamOutcome),
+        }
+        playerPayer = new QuartersPlayerPayer(scoreOutcomeGetter)
+        playerPayer.givePlayersTheirPay(players, endOfRoundViewData)
+        expect(player1.giveCentsForRound).toHaveBeenCalledWith(-50)
+        expect(player2.giveCentsForRound).toHaveBeenCalledWith(-50)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(50)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(50)
+      })
+
+      it('Should pay 4 quarters to the opposition is 90 to 30', () => {
+        teamOutcome.pickingTeamScore = 30
+        teamOutcome.oppositionTeamScore = 90
+        scoreOutcomeGetter = {
+          getRoundTeamOutcome: jest.fn().mockReturnValue(teamOutcome),
+        }
+        playerPayer = new QuartersPlayerPayer(scoreOutcomeGetter)
+        playerPayer.givePlayersTheirPay(players, endOfRoundViewData)
+        expect(player1.giveCentsForRound).toHaveBeenCalledWith(-100)
+        expect(player2.giveCentsForRound).toHaveBeenCalledWith(-100)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(100)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(100)
+      })
+
+      it('Should pay 6 quarters to the opposition is 120 to 0', () => {
+        teamOutcome.pickingTeamScore = 0
+        teamOutcome.oppositionTeamScore = 120
+        scoreOutcomeGetter = {
+          getRoundTeamOutcome: jest.fn().mockReturnValue(teamOutcome),
+        }
+        playerPayer = new QuartersPlayerPayer(scoreOutcomeGetter)
+        playerPayer.givePlayersTheirPay(players, endOfRoundViewData)
+        expect(player1.giveCentsForRound).toHaveBeenCalledWith(-150)
+        expect(player2.giveCentsForRound).toHaveBeenCalledWith(-150)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(150)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(150)
+      })
+    })
+    describe('Picking Team Won', () => {
+      it('Should pay one quarter to the picking team if the score is 31 to 89', () => {
+        playerPayer.givePlayersTheirPay(players, endOfRoundViewData)
+        expect(player1.giveCentsForRound).toHaveBeenCalledWith(25)
+        expect(player2.giveCentsForRound).toHaveBeenCalledWith(25)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(-25)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(-25)
+      })
+      it('Should pay two quarters to the picking team if the score is 30 to 90', () => {
+        teamOutcome.pickingTeamScore = 90
+        teamOutcome.oppositionTeamScore = 30
+        scoreOutcomeGetter = {
+          getRoundTeamOutcome: jest.fn().mockReturnValue(teamOutcome),
+        }
+        playerPayer = new QuartersPlayerPayer(scoreOutcomeGetter)
+        playerPayer.givePlayersTheirPay(players, endOfRoundViewData)
+        expect(player1.giveCentsForRound).toHaveBeenCalledWith(50)
+        expect(player2.giveCentsForRound).toHaveBeenCalledWith(50)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(-50)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(-50)
+      })
+      it('Should pay 3 quarters to the picking team if the score is 0 to 120', () => {
+        teamOutcome.pickingTeamScore = 120
+        teamOutcome.oppositionTeamScore = 0
+        scoreOutcomeGetter = {
+          getRoundTeamOutcome: jest.fn().mockReturnValue(teamOutcome),
+        }
+        playerPayer = new QuartersPlayerPayer(scoreOutcomeGetter)
+        playerPayer.givePlayersTheirPay(players, endOfRoundViewData)
+        expect(player1.giveCentsForRound).toHaveBeenCalledWith(75)
+        expect(player2.giveCentsForRound).toHaveBeenCalledWith(75)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(-75)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(-75)
+      })
+    })
+  })
+
+  describe('With Chop', () => {
+    beforeEach(() => {
+      teamOutcome.isMemberOfOpposition = jest
+        .fn()
+        .mockImplementation((playerId: UniqueIdentifier) => {
+          return !player1Id.equals(playerId)
+        })
+    })
+    describe('Picking Team Lost (SET)', () => {
+      it('Should pay 6 quarters to the opposition with a score of 60 to 60', () => {
+        teamOutcome.pickingTeamScore = 60
+        teamOutcome.oppositionTeamScore = 60
+        scoreOutcomeGetter = {
+          getRoundTeamOutcome: jest.fn().mockReturnValue(teamOutcome),
+        }
+        playerPayer = new QuartersPlayerPayer(scoreOutcomeGetter)
+        playerPayer.givePlayersTheirPay(players, endOfRoundViewData)
+        expect(player1.giveCentsForRound).toHaveBeenCalledWith(50 * -3)
+        expect(player2.giveCentsForRound).toHaveBeenCalledWith(50)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(50)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(50)
+      })
+
+      it('Should pay 4 quarters to the opposition is 90 to 30', () => {
+        teamOutcome.pickingTeamScore = 30
+        teamOutcome.oppositionTeamScore = 90
+        scoreOutcomeGetter = {
+          getRoundTeamOutcome: jest.fn().mockReturnValue(teamOutcome),
+        }
+        playerPayer = new QuartersPlayerPayer(scoreOutcomeGetter)
+        playerPayer.givePlayersTheirPay(players, endOfRoundViewData)
+        expect(player1.giveCentsForRound).toHaveBeenCalledWith(-100 * 3)
+        expect(player2.giveCentsForRound).toHaveBeenCalledWith(100)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(100)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(100)
+      })
+
+      it('Should pay 6 quarters to the opposition is 120 to 0', () => {
+        teamOutcome.pickingTeamScore = 0
+        teamOutcome.oppositionTeamScore = 120
+        scoreOutcomeGetter = {
+          getRoundTeamOutcome: jest.fn().mockReturnValue(teamOutcome),
+        }
+        playerPayer = new QuartersPlayerPayer(scoreOutcomeGetter)
+        playerPayer.givePlayersTheirPay(players, endOfRoundViewData)
+        expect(player1.giveCentsForRound).toHaveBeenCalledWith(-150 * 3)
+        expect(player2.giveCentsForRound).toHaveBeenCalledWith(150)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(150)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(150)
+      })
+    })
+    describe('Picking Team Won', () => {
+      it('Should pay one quarter to the picking team if the score is 31 to 89', () => {
+        playerPayer.givePlayersTheirPay(players, endOfRoundViewData)
+        expect(player1.giveCentsForRound).toHaveBeenCalledWith(25 * 3)
+        expect(player2.giveCentsForRound).toHaveBeenCalledWith(-25)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(-25)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(-25)
+      })
+      it('Should pay two quarters to the picking team if the score is 30 to 90', () => {
+        teamOutcome.pickingTeamScore = 90
+        teamOutcome.oppositionTeamScore = 30
+        scoreOutcomeGetter = {
+          getRoundTeamOutcome: jest.fn().mockReturnValue(teamOutcome),
+        }
+        playerPayer = new QuartersPlayerPayer(scoreOutcomeGetter)
+        playerPayer.givePlayersTheirPay(players, endOfRoundViewData)
+        expect(player1.giveCentsForRound).toHaveBeenCalledWith(50 * 3)
+        expect(player2.giveCentsForRound).toHaveBeenCalledWith(-50)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(-50)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(-50)
+      })
+      it('Should pay 3 quarters to the picking team if the score is 0 to 120', () => {
+        teamOutcome.pickingTeamScore = 120
+        teamOutcome.oppositionTeamScore = 0
+        scoreOutcomeGetter = {
+          getRoundTeamOutcome: jest.fn().mockReturnValue(teamOutcome),
+        }
+        playerPayer = new QuartersPlayerPayer(scoreOutcomeGetter)
+        playerPayer.givePlayersTheirPay(players, endOfRoundViewData)
+        expect(player1.giveCentsForRound).toHaveBeenCalledWith(75 * 3)
+        expect(player2.giveCentsForRound).toHaveBeenCalledWith(-75)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(-75)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(-75)
+      })
+    })
   })
 })
 
