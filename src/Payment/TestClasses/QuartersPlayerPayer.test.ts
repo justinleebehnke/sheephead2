@@ -147,7 +147,7 @@ describe('Quarters Player Payer', () => {
           return !player1Id.equals(playerId)
         })
     })
-    describe('Picking Team Lost (SET)', () => {
+    describe('Picker Lost (SET)', () => {
       it('Should pay 6 quarters to the opposition with a score of 60 to 60', () => {
         teamOutcome.pickingTeamScore = 60
         teamOutcome.oppositionTeamScore = 60
@@ -156,10 +156,10 @@ describe('Quarters Player Payer', () => {
         }
         playerPayer = new QuartersPlayerPayer(scoreOutcomeGetter)
         playerPayer.givePlayersTheirPay(players, endOfRoundViewData)
-        expect(player1.giveCentsForRound).toHaveBeenCalledWith(50 * -3)
-        expect(player2.giveCentsForRound).toHaveBeenCalledWith(50)
-        expect(player3.giveCentsForRound).toHaveBeenCalledWith(50)
-        expect(player3.giveCentsForRound).toHaveBeenCalledWith(50)
+        expect(player1.giveCentsForRound).toHaveBeenCalledWith(-1 * (150 + 150 + 150))
+        expect(player2.giveCentsForRound).toHaveBeenCalledWith(150)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(150)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(150)
       })
 
       it('Should pay 4 quarters to the opposition is 90 to 30', () => {
@@ -170,10 +170,10 @@ describe('Quarters Player Payer', () => {
         }
         playerPayer = new QuartersPlayerPayer(scoreOutcomeGetter)
         playerPayer.givePlayersTheirPay(players, endOfRoundViewData)
-        expect(player1.giveCentsForRound).toHaveBeenCalledWith(-100 * 3)
-        expect(player2.giveCentsForRound).toHaveBeenCalledWith(100)
-        expect(player3.giveCentsForRound).toHaveBeenCalledWith(100)
-        expect(player3.giveCentsForRound).toHaveBeenCalledWith(100)
+        expect(player1.giveCentsForRound).toHaveBeenCalledWith(-900)
+        expect(player2.giveCentsForRound).toHaveBeenCalledWith(300)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(300)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(300)
       })
 
       it('Should pay 6 quarters to the opposition is 120 to 0', () => {
@@ -184,19 +184,19 @@ describe('Quarters Player Payer', () => {
         }
         playerPayer = new QuartersPlayerPayer(scoreOutcomeGetter)
         playerPayer.givePlayersTheirPay(players, endOfRoundViewData)
-        expect(player1.giveCentsForRound).toHaveBeenCalledWith(-150 * 3)
-        expect(player2.giveCentsForRound).toHaveBeenCalledWith(150)
-        expect(player3.giveCentsForRound).toHaveBeenCalledWith(150)
-        expect(player3.giveCentsForRound).toHaveBeenCalledWith(150)
+        expect(player1.giveCentsForRound).toHaveBeenCalledWith(-450 * 3)
+        expect(player2.giveCentsForRound).toHaveBeenCalledWith(450)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(450)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(450)
       })
     })
     describe('Picking Team Won', () => {
       it('Should pay one quarter to the picking team if the score is 31 to 89', () => {
         playerPayer.givePlayersTheirPay(players, endOfRoundViewData)
-        expect(player1.giveCentsForRound).toHaveBeenCalledWith(25 * 3)
-        expect(player2.giveCentsForRound).toHaveBeenCalledWith(-25)
-        expect(player3.giveCentsForRound).toHaveBeenCalledWith(-25)
-        expect(player3.giveCentsForRound).toHaveBeenCalledWith(-25)
+        expect(player1.giveCentsForRound).toHaveBeenCalledWith(75 * 3)
+        expect(player2.giveCentsForRound).toHaveBeenCalledWith(-75)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(-75)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(-75)
       })
       it('Should pay two quarters to the picking team if the score is 30 to 90', () => {
         teamOutcome.pickingTeamScore = 90
@@ -206,10 +206,10 @@ describe('Quarters Player Payer', () => {
         }
         playerPayer = new QuartersPlayerPayer(scoreOutcomeGetter)
         playerPayer.givePlayersTheirPay(players, endOfRoundViewData)
-        expect(player1.giveCentsForRound).toHaveBeenCalledWith(50 * 3)
-        expect(player2.giveCentsForRound).toHaveBeenCalledWith(-50)
-        expect(player3.giveCentsForRound).toHaveBeenCalledWith(-50)
-        expect(player3.giveCentsForRound).toHaveBeenCalledWith(-50)
+        expect(player1.giveCentsForRound).toHaveBeenCalledWith(150 * 3)
+        expect(player2.giveCentsForRound).toHaveBeenCalledWith(-150)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(-150)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(-150)
       })
       it('Should pay 3 quarters to the picking team if the score is 0 to 120', () => {
         teamOutcome.pickingTeamScore = 120
@@ -219,10 +219,10 @@ describe('Quarters Player Payer', () => {
         }
         playerPayer = new QuartersPlayerPayer(scoreOutcomeGetter)
         playerPayer.givePlayersTheirPay(players, endOfRoundViewData)
-        expect(player1.giveCentsForRound).toHaveBeenCalledWith(75 * 3)
-        expect(player2.giveCentsForRound).toHaveBeenCalledWith(-75)
-        expect(player3.giveCentsForRound).toHaveBeenCalledWith(-75)
-        expect(player3.giveCentsForRound).toHaveBeenCalledWith(-75)
+        expect(player1.giveCentsForRound).toHaveBeenCalledWith(225 * 3)
+        expect(player2.giveCentsForRound).toHaveBeenCalledWith(-225)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(-225)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(-225)
       })
     })
   })

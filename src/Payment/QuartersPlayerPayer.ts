@@ -11,7 +11,8 @@ class QuartersPlayerPayer implements IPlayerPayer {
   givePlayersTheirPay(players: IPayablePlayer[], endOfRoundViewData: EndOfRoundViewData): void {
     const teamOutcome = this.scoreOutcomeGetter.getRoundTeamOutcome(endOfRoundViewData)
     const choppingMultiplier = this.pickerWentAlone(players, teamOutcome) ? 3 : 1
-    const oppositionTeamMemberCentsWon = this.getOppositionTeamMemberWinnings(teamOutcome)
+    const oppositionTeamMemberCentsWon =
+      this.getOppositionTeamMemberWinnings(teamOutcome) * choppingMultiplier
     const pickingTeamMemberCentsWon = -1 * oppositionTeamMemberCentsWon * choppingMultiplier
 
     players.forEach((player) => {
