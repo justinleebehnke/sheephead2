@@ -137,6 +137,9 @@ class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
   }
 
   public play(card: string): void {
+    if (this.isLoading) {
+      return
+    }
     this.isLoading = true
     this.view?.update()
     this.commandInterface.giveCommand({

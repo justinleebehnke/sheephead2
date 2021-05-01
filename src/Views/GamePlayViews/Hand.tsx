@@ -13,6 +13,10 @@ class Hand extends Component<Props> {
   render() {
     if (this.props.data.isTurn && !this.props.data.isLoading) {
       const playAbleCards: Set<string> = new Set(this.props.data.playableCardIds)
+      if (this.props.data.hand.length === 1) {
+        this.props.presenter.play(this.props.data.hand[0])
+        playAbleCards.clear()
+      }
       return (
         <div id='hand'>
           {this.props.data.hand.map((cardName) => (
