@@ -38,10 +38,10 @@ class QuartersPlayerPayer implements IPlayerPayer {
   }
 
   private getOppositionTeamMemberWinnings(teamOutcome: IRoundTeamOutcome): number {
-    if (teamOutcome.oppositionTeamScore === 0) {
+    if (teamOutcome.oppositionTricksWon === 0) {
       return -75
     }
-    if (teamOutcome.oppositionTeamScore === 120) {
+    if (teamOutcome.oppositionTricksWon === 6) {
       return 150
     }
     if (teamOutcome.oppositionTeamScore <= 30) {

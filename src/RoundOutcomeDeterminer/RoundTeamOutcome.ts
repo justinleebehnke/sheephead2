@@ -9,6 +9,7 @@ import UniqueIdentifier from '../Utilities/UniqueIdentifier'
 class RoundTeamOutcome implements IRoundTeamOutcome {
   private readonly identifier: OppositionTeamMemberIdentifier
   private readonly _oppositionTeamScore: number
+  private readonly _oppositionTricksWon: number
 
   constructor(private readonly endOfRoundViewData: EndOfRoundViewData) {
     this.identifier = new OppositionTeamMemberIdentifier(this.endOfRoundViewData)
@@ -18,6 +19,15 @@ class RoundTeamOutcome implements IRoundTeamOutcome {
           return oppositionScore + this.getPlayerScore(new UniqueIdentifier(player.id))
         }
         return oppositionScore
+      },
+      0
+    )
+    this._oppositionTricksWon = this.endOfRoundViewData.players.reduce(
+      (oppositionTricksWon: number, player: PlayerData) => {
+        if (this.identifier.isMemberOfOpposition(new UniqueIdentifier(player.id))) {
+          return oppositionTricksWon + this.getPlayerTricksWon(new UniqueIdentifier(player.id))
+        }
+        return oppositionTricksWon
       },
       0
     )
@@ -35,28 +45,37 @@ class RoundTeamOutcome implements IRoundTeamOutcome {
     return 120 - this._oppositionTeamScore
   }
 
+  public get oppositionTricksWon(): number {
+    return this._oppositionTricksWon
+  }
+
+  public get pickingTeamTricksWon(): number {
+    return 6 - this._oppositionTricksWon
+  }
+
   public getPlayerScore = (id: UniqueIdentifier): number => {
+    return this.getTricksWonByPlayer(id).reduce((total: number, trick: TrickData) => {
+      return (
+        total +
+        trick.cards.reduce((trickValue: number, card: CardPlayedByData) => {
+          return trickValue + card.pointValue
+        }, 0)
+      )
+    }, 0)
+  }
+
+  private getPlayerTricksWon = (id: UniqueIdentifier): number => {
+    return this.getTricksWonByPlayer(id).length
+  }
+
+  private getTricksWonByPlayer = (id: UniqueIdentifier): TrickData[] => {
     const report = this.endOfRoundViewData.endOfRoundReport
     if (!report) {
-      return 0
+      return []
     }
-    return report.tricks.reduce((total: number, trick: TrickData) => {
-      const winningCardId = trick.cards[trick.winningCardIndex].cardId
-      const cardPlayedByPlayer:
-        | CardPlayedByData
-        | undefined = trick.cards.find((card: CardPlayedByData) =>
-        new UniqueIdentifier(card.playedByPlayerId).equals(id)
-      )
-      if (cardPlayedByPlayer && cardPlayedByPlayer.cardId === winningCardId) {
-        return (
-          total +
-          trick.cards.reduce((trickValue: number, card: CardPlayedByData) => {
-            return trickValue + card.pointValue
-          }, 0)
-        )
-      }
-      return total
-    }, 0)
+    return report.tricks.filter((trick: TrickData) => {
+      return new UniqueIdentifier(trick.cards[trick.winningCardIndex].playedByPlayerId).equals(id)
+    })
   }
 }
 
