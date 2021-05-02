@@ -42,3 +42,9 @@ section {
 td.light {
   color: gray;
 }
+
+.doubles-badge {
+  margin-left: 0.25em;
+  margin-top: 0.1em;
+  position: absolute;
+}

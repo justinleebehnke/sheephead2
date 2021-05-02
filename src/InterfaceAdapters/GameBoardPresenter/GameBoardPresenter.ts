@@ -62,7 +62,9 @@ class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
           players: this.model.getPlayersData(),
           pickerIndex: this.model.getPickerIndex(),
           endOfRoundReport: this.model.getEndOfRoundReport(),
+          isDoubleRound: this.model.isHandOfDoubles(),
         },
+        shouldShowDoublesBadge: this.model.isHandOfDoubles(),
       }
       if (
         this.playerDataToServe === undefined &&

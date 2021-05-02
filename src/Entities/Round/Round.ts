@@ -3,6 +3,7 @@ import Deck from '../Deck'
 import EndOfRoundData from './EndOfRoundReportData'
 import FindingPickerState from './FindingPickerState'
 import ICardRanker from '../ICardRanker'
+import IHandOfDoublesManager from './IHandOfDoublesAdder'
 import IObservable from '../IObservable'
 import IPlayerPayer from '../../Payment/IPlayerPayer'
 import IReadOnlyRound from '../../GameEntityInterfaces/ReadOnlyEntities/IReadOnlyRound'
@@ -31,7 +32,7 @@ class Round implements IRoundState, IRound, IObservable, IReadOnlyRound {
   constructor(
     players: Player[],
     indexOfDealer: number,
-    private readonly shuffleSeedManager: IShuffleSeedManager,
+    private readonly shuffleSeedManager: IShuffleSeedManager & IHandOfDoublesManager,
     cardRanker: ICardRanker,
     private readonly playerPayer: IPlayerPayer
   ) {
@@ -62,6 +63,7 @@ class Round implements IRoundState, IRound, IObservable, IReadOnlyRound {
           currentHandCentsWon: player.currentHandCentsWon,
         }
       }),
+      isDoubleRound: this.shuffleSeedManager.isHandOfDoubles(),
       endOfRoundReport: this.getEndOfRoundReport(),
     })
   }
@@ -196,6 +198,7 @@ class Round implements IRoundState, IRound, IObservable, IReadOnlyRound {
   }
 
   public reDeal(): void {
+    this.shuffleSeedManager.addHandOfDoubles()
     this.shuffleSeedManager.changeShuffleSeed()
     this.removeAllCards()
     this.deal()

@@ -1,6 +1,7 @@
 import Card from '../Card'
 import BellePlaineRulesCardRanker from '../BellePlaineRulesCardRanker'
 import ICardRanker from '../../Entities/ICardRanker'
+import IHandOfDoublesManager from '../Round/IHandOfDoublesAdder'
 import IShuffleSeedManager from '../Round/IShuffleSeedManager'
 import Player from '../Player'
 import Round from '../Round/Round'
@@ -17,12 +18,14 @@ describe('Round', () => {
   let player4Id: string
   let player4: Player
   let round: Round
-  let shuffleSeedManager: IShuffleSeedManager
+  let shuffleSeedManager: IShuffleSeedManager & IHandOfDoublesManager
 
   beforeEach(() => {
     shuffleSeedManager = {
       getShuffleSeed: jest.fn().mockReturnValueOnce(123456789).mockReturnValueOnce(123456790),
       changeShuffleSeed: jest.fn(),
+      addHandOfDoubles: jest.fn(),
+      isHandOfDoubles: jest.fn(),
     }
 
     cardRanker = new BellePlaineRulesCardRanker()
@@ -406,5 +409,6 @@ describe('Round', () => {
     expect(player3.getPlayableCardIds()).toEqual(['qs', 'kd', '8d', 'ac', 'ks', 'kh'])
     expect(player4.getPlayableCardIds()).toEqual(['jc', 'jh', 'ad', 'tc', '9c', 'th'])
     expect(shuffleSeedManager.changeShuffleSeed).toHaveBeenCalledTimes(1)
+    expect(shuffleSeedManager.addHandOfDoubles).toHaveBeenCalledTimes(1)
   })
 })

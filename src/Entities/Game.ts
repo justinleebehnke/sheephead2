@@ -1,4 +1,5 @@
 import BellePlaineRulesCardRanker from './BellePlaineRulesCardRanker'
+import IHandOfDoublesManager from './Round/IHandOfDoublesAdder'
 import IReadOnlyGameModel from '../GameEntityInterfaces/ReadOnlyEntities/IReadOnlyGameModel'
 import IShuffleSeedManager from './Round/IShuffleSeedManager'
 import ISubscriber from './ISubscriber'
@@ -8,15 +9,17 @@ import Round from './Round/Round'
 import RoundTeamOutcomeGetter from '../RoundOutcomeDeterminer/RoundTeamOutcomeGetter'
 import UniqueIdentifier from '../Utilities/UniqueIdentifier'
 
-class Game implements ISubscriber, IReadOnlyGameModel, IShuffleSeedManager {
+class Game implements ISubscriber, IReadOnlyGameModel, IShuffleSeedManager, IHandOfDoublesManager {
   private players: Player[]
   private currentDealer: number
   private currentRound: Round | null
   private subscribers: ISubscriber[]
   private shuffleSeed: number
   private readonly idsOfPlayersThatAreReadyToPlayAgain: Set<string>
+  private numHandsOfDoublesRemaining: number
 
   public constructor(players: Player[], dealerIndex: number, shuffleSeed: number) {
+    this.numHandsOfDoublesRemaining = 0
     this.players = players
     this.currentDealer = dealerIndex
     this.currentRound = null
@@ -26,6 +29,14 @@ class Game implements ISubscriber, IReadOnlyGameModel, IShuffleSeedManager {
     if (players.length === 4) {
       this.playRound()
     }
+  }
+
+  public isHandOfDoubles(): boolean {
+    return this.numHandsOfDoublesRemaining > 0
+  }
+
+  public addHandOfDoubles(): void {
+    this.numHandsOfDoublesRemaining++
   }
 
   public changeShuffleSeed(): void {
@@ -93,6 +104,7 @@ class Game implements ISubscriber, IReadOnlyGameModel, IShuffleSeedManager {
       player.clearCards()
       player.transferRoundWinningsToTotalWinnings()
     })
+    this.removeOneHandOfDoubles()
     this.changeShuffleSeed()
     this.currentRound = new Round(
       this.players,
@@ -103,6 +115,12 @@ class Game implements ISubscriber, IReadOnlyGameModel, IShuffleSeedManager {
     )
     this.currentRound.addSubscriber(this)
     this.notifySubscribers()
+  }
+
+  private removeOneHandOfDoubles(): void {
+    if (this.numHandsOfDoublesRemaining > 0) {
+      this.numHandsOfDoublesRemaining--
+    }
   }
 
   public playAgain(playerId: UniqueIdentifier): void {
