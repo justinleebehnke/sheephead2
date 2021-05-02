@@ -1,4 +1,5 @@
 import { Component, ReactElement } from 'react'
+import Badge from 'react-bootstrap/esm/Badge'
 import EndOfRoundReport from './EndOfRoundReport/EndOfRoundReport'
 import Hand from './Hand'
 import IGameBoardPresenter from './IGameBoardPresenter'
@@ -31,6 +32,13 @@ class GameBoard extends Component<Props> implements ISubscriber {
             presenter={this.props.presenter}
             data={this.props.presenter.getGameBoardViewData().passOrPickViewData}
           />
+        )}
+        {this.props.presenter.getGameBoardViewData().shouldShowDoublesBadge && (
+          <h4 className='doubles-badge'>
+            <Badge variant='danger'>
+              <strong>DOUBLES</strong>
+            </Badge>
+          </h4>
         )}
         <PlayerLayout allPlayerData={this.props.presenter.getGameBoardViewData().allPlayerData} />
         <Hand

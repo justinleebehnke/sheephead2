@@ -197,6 +197,7 @@ describe('Given an index it will decide whether the player is a member of the op
         },
       ],
       endOfRoundReport,
+      isDoubleRound: false,
     }
   })
 

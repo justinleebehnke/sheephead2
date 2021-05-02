@@ -20,6 +20,10 @@ class GameBoardModel implements ISubscriber, IGameBoardModel {
     this.game.addSubscriber(this)
   }
 
+  public isHandOfDoubles(): boolean {
+    return this.game.isHandOfDoubles()
+  }
+
   public addSubscriber(subscriber: ISubscriber): void {
     this.subscriber = subscriber
   }

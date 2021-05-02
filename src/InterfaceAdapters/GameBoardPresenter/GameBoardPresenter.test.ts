@@ -1,3 +1,4 @@
+import { pause } from '../../Utilities/TestingUtilities'
 import GameBoardPresenter from './GameBoardPresenter'
 import GameBoardViewData from '../../Views/GamePlayViews/GameBoardViewData'
 import ICommandInterface from '../ICommandInterface'
@@ -5,7 +6,6 @@ import IGameBoardModel from '../IGameBoardModel'
 import ISubscriber from '../../Entities/ISubscriber'
 import PlayerDataWithWinnings from '../../Views/GamePlayViews/EndOfRoundReport/PlayerDataWithWinnings'
 import PlayerLayoutData from '../GamePresenter/PlayerLayoutData'
-import { pause } from '../../Utilities/TestingUtilities'
 
 describe('Game Board Presenter', () => {
   let pauseDurationAfterTrick: number
@@ -90,6 +90,7 @@ describe('Game Board Presenter', () => {
       getPlayersData: jest.fn().mockReturnValue(playersData),
       getPickerIndex: jest.fn().mockReturnValueOnce(0).mockReturnValueOnce(1).mockReturnValue(0),
       getEndOfRoundReport: jest.fn().mockReturnValue(undefined),
+      isHandOfDoubles: jest.fn().mockReturnValue(false),
     }
     commandInterface = {
       giveCommand: jest.fn(),
@@ -132,7 +133,9 @@ describe('Game Board Presenter', () => {
           endOfRoundReport: undefined,
           pickerIndex: 0,
           players: playersData,
+          isDoubleRound: false,
         },
+        shouldShowDoublesBadge: false,
       }
     })
 
@@ -285,7 +288,9 @@ describe('Game Board Presenter', () => {
               },
             ],
             pickerIndex: 1,
+            isDoubleRound: false,
           },
+          shouldShowDoublesBadge: false,
         }
         let followingState: GameBoardViewData = {
           allPlayerData: {
@@ -364,7 +369,9 @@ describe('Game Board Presenter', () => {
               },
             ],
             pickerIndex: 1,
+            isDoubleRound: false,
           },
+          shouldShowDoublesBadge: false,
         }
         model = {
           addSubscriber: jest.fn(),
@@ -395,6 +402,7 @@ describe('Game Board Presenter', () => {
           getPlayersData: jest.fn().mockReturnValue(triggeringState.endOfRoundViewData.players),
           getPickerIndex: jest.fn().mockReturnValue(1),
           getEndOfRoundReport: jest.fn().mockReturnValue(undefined),
+          isHandOfDoubles: jest.fn().mockReturnValue(false),
         }
         presenter = new GameBoardPresenter(commandInterface, model, pauseDurationAfterTrick)
         presenter.setView(view)

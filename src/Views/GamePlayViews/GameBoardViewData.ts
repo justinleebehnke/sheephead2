@@ -5,9 +5,10 @@ import PlayerLayoutDisplayData from './PlayerLayout/PlayerLayoutDisplayData'
 
 interface GameBoardViewData {
   allPlayerData: PlayerLayoutDisplayData
+  endOfRoundViewData: EndOfRoundViewData
   handViewData: LocalPlayerHandViewData
   passOrPickViewData: PassOrPickViewData
-  endOfRoundViewData: EndOfRoundViewData
+  shouldShowDoublesBadge: boolean
 }
 
 export default GameBoardViewData

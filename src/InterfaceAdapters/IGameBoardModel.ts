@@ -8,6 +8,7 @@ interface IGameBoardModel extends IObservable {
   getDataForPlayerAcross(): PlayerLayoutData
   getDataForPlayerToLeft(): PlayerLayoutData
   getDataForPlayerToRight(): PlayerLayoutData
+  isHandOfDoubles(): boolean
   isPicking(): boolean
   isShowingPassOrPickForm(): boolean
   getHand(): string[]

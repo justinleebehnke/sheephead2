@@ -22,6 +22,10 @@ describe('Quarters Player Payer', () => {
   let endOfRoundViewData: EndOfRoundViewData
 
   beforeEach(() => {
+    // @ts-ignore
+    endOfRoundViewData = {
+      isDoubleRound: false,
+    }
     player1Id = new UniqueIdentifier()
     player2Id = new UniqueIdentifier()
     player3Id = new UniqueIdentifier()
