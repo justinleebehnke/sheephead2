@@ -409,5 +409,6 @@ describe('Round', () => {
     expect(player3.getPlayableCardIds()).toEqual(['qs', 'kd', '8d', 'ac', 'ks', 'kh'])
     expect(player4.getPlayableCardIds()).toEqual(['jc', 'jh', 'ad', 'tc', '9c', 'th'])
     expect(shuffleSeedManager.changeShuffleSeed).toHaveBeenCalledTimes(1)
+    expect(shuffleSeedManager.addHandOfDoubles).toHaveBeenCalledTimes(1)
   })
 })
