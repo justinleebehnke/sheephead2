@@ -53,6 +53,19 @@ class RoundTeamOutcome implements IRoundTeamOutcome {
     return 6 - this._oppositionTricksWon
   }
 
+  public get pickerId(): UniqueIdentifier {
+    if (this.endOfRoundViewData.pickerIndex !== undefined) {
+      return new UniqueIdentifier(
+        this.endOfRoundViewData.players[this.endOfRoundViewData.pickerIndex].id
+      )
+    }
+    return new UniqueIdentifier()
+  }
+
+  public get pickerTricksWon(): number {
+    return this.getPlayerTricksWon(this.pickerId)
+  }
+
   public getPlayerScore = (id: UniqueIdentifier): number => {
     return this.getTricksWonByPlayer(id).reduce((total: number, trick: TrickData) => {
       return (
