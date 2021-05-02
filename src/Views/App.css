@@ -44,9 +44,7 @@ td.light {
 }
 
 .doubles-badge {
-  position: absolute;
   margin-left: 0.25em;
   margin-top: 0.1em;
-  padding: 0;
-  display: inline;
+  position: absolute;
 }
