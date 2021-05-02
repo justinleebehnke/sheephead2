@@ -286,6 +286,22 @@ describe('Quarters Player Payer', () => {
         expect(player3.giveCentsForRound).toHaveBeenCalledWith(-225)
         expect(player3.giveCentsForRound).toHaveBeenCalledWith(-225)
       })
+      it('Should pay 6 quarters to the picking team if the score is 0 to 120 AND it is a hand of doubles', () => {
+        teamOutcome.pickingTeamScore = 120
+        teamOutcome.oppositionTeamScore = 0
+        teamOutcome.pickingTeamTricksWon = 6
+        teamOutcome.oppositionTricksWon = 0
+        endOfRoundViewData.isDoubleRound = true
+        scoreOutcomeGetter = {
+          getRoundTeamOutcome: jest.fn().mockReturnValue(teamOutcome),
+        }
+        playerPayer = new QuartersPlayerPayer(scoreOutcomeGetter)
+        playerPayer.givePlayersTheirPay(players, endOfRoundViewData)
+        expect(player1.giveCentsForRound).toHaveBeenCalledWith(225 * 3 * 2)
+        expect(player2.giveCentsForRound).toHaveBeenCalledWith(-225 * 2)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(-225 * 2)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(-225 * 2)
+      })
     })
   })
 })
