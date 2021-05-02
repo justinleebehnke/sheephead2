@@ -16,13 +16,24 @@ class QuartersPlayerPayer implements IPlayerPayer {
       this.getOppositionTeamMemberWinnings(teamOutcome) * choppingMultiplier * doublesMultiplier
     const pickingTeamMemberCentsWon = -1 * oppositionTeamMemberCentsWon * choppingMultiplier
 
+    const noTrickPickPayment = teamOutcome.pickerTricksWon === 0 ? 100 : 0
+
     players.forEach((player) => {
       if (teamOutcome.isMemberOfOpposition(new UniqueIdentifier(player.getId()))) {
-        player.giveCentsForRound(oppositionTeamMemberCentsWon)
+        player.giveCentsForRound(oppositionTeamMemberCentsWon + noTrickPickPayment)
       } else {
-        player.giveCentsForRound(pickingTeamMemberCentsWon)
+        player.giveCentsForRound(
+          pickingTeamMemberCentsWon +
+            (this.isPicker(player.getId(), teamOutcome)
+              ? -3 * noTrickPickPayment
+              : noTrickPickPayment)
+        )
       }
     })
+  }
+
+  private isPicker(playerId: string, teamOutcome: IRoundTeamOutcome): boolean {
+    return new UniqueIdentifier(playerId).equals(teamOutcome.pickerId)
   }
 
   private pickerWentAlone(players: IPayablePlayer[], teamOutcome: IRoundTeamOutcome): boolean {

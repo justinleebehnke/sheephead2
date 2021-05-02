@@ -49,10 +49,12 @@ describe('Quarters Player Payer', () => {
     }
     players = [player1, player2, player3, player4]
     teamOutcome = {
+      pickerId: player1Id,
       isMemberOfOpposition: jest.fn().mockImplementation((playerId: UniqueIdentifier) => {
         return playerId.equals(player3Id) || playerId.equals(player4Id)
       }),
       getPlayerScore: jest.fn(),
+      pickerTricksWon: 1,
       pickingTeamScore: 89,
       oppositionTeamScore: 31,
       pickingTeamTricksWon: 4,
@@ -78,6 +80,21 @@ describe('Quarters Player Payer', () => {
         expect(player2.giveCentsForRound).toHaveBeenCalledWith(-50)
         expect(player3.giveCentsForRound).toHaveBeenCalledWith(50)
         expect(player3.giveCentsForRound).toHaveBeenCalledWith(50)
+      })
+
+      it("Should pay 2 quarters to the opposition with a score of 60 to 60 AND the picker should pay 1 dollar to everyone if they didn't even get a trick", () => {
+        teamOutcome.pickingTeamScore = 60
+        teamOutcome.oppositionTeamScore = 60
+        teamOutcome.pickerTricksWon = 0
+        scoreOutcomeGetter = {
+          getRoundTeamOutcome: jest.fn().mockReturnValue(teamOutcome),
+        }
+        playerPayer = new QuartersPlayerPayer(scoreOutcomeGetter)
+        playerPayer.givePlayersTheirPay(players, endOfRoundViewData)
+        expect(player1.giveCentsForRound).toHaveBeenCalledWith(-50 - 300)
+        expect(player2.giveCentsForRound).toHaveBeenCalledWith(-50 + 100)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(50 + 100)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(50 + 100)
       })
 
       it('Should pay 4 quarters to the opposition is 90 to 30', () => {
@@ -286,6 +303,7 @@ describe('Quarters Player Payer', () => {
         expect(player3.giveCentsForRound).toHaveBeenCalledWith(-225)
         expect(player3.giveCentsForRound).toHaveBeenCalledWith(-225)
       })
+
       it('Should pay 6 quarters to the picking team if the score is 0 to 120 AND it is a hand of doubles', () => {
         teamOutcome.pickingTeamScore = 120
         teamOutcome.oppositionTeamScore = 0
@@ -301,6 +319,24 @@ describe('Quarters Player Payer', () => {
         expect(player2.giveCentsForRound).toHaveBeenCalledWith(-225 * 2)
         expect(player3.giveCentsForRound).toHaveBeenCalledWith(-225 * 2)
         expect(player3.giveCentsForRound).toHaveBeenCalledWith(-225 * 2)
+      })
+
+      it('The picker should pay a dollar to everyone if they did not personally win a trick even if the picking team got a clean sweep', () => {
+        teamOutcome.pickingTeamScore = 120
+        teamOutcome.oppositionTeamScore = 0
+        teamOutcome.pickingTeamTricksWon = 6
+        teamOutcome.oppositionTricksWon = 0
+        teamOutcome.pickerTricksWon = 0
+        endOfRoundViewData.isDoubleRound = true
+        scoreOutcomeGetter = {
+          getRoundTeamOutcome: jest.fn().mockReturnValue(teamOutcome),
+        }
+        playerPayer = new QuartersPlayerPayer(scoreOutcomeGetter)
+        playerPayer.givePlayersTheirPay(players, endOfRoundViewData)
+        expect(player1.giveCentsForRound).toHaveBeenCalledWith(225 * 3 * 2 - 300)
+        expect(player2.giveCentsForRound).toHaveBeenCalledWith(100 + -225 * 2)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(100 + -225 * 2)
+        expect(player3.giveCentsForRound).toHaveBeenCalledWith(100 + -225 * 2)
       })
     })
   })

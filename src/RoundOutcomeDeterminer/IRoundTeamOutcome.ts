@@ -5,6 +5,8 @@ interface IRoundTeamOutcome {
   getPlayerScore(playerId: UniqueIdentifier): number
   oppositionTeamScore: number
   oppositionTricksWon: number
+  pickerId: UniqueIdentifier
+  pickerTricksWon: number
   pickingTeamScore: number
   pickingTeamTricksWon: number
 }
