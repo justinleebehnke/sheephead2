@@ -23,7 +23,7 @@ describe('Fetcher', () => {
 
   it('Should call window.fetch with what ever it is given on a GET request', async () => {
     const res = await fetcher.get('https://example.com')
-    expect(global.window.fetch).toHaveBeenCalledWith('https://example.com')
+    expect(global.window.fetch).toHaveBeenCalledWith('https://example.com', {})
     expect(res).toEqual({
       indexOfNextCommand: 0,
       newCommands: [],
