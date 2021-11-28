@@ -56,7 +56,7 @@ class App extends Component {
     return (
       <Fragment>
         <a id='rules-link' href='/SheepheadBellePlaineRules.pdf' download>
-          Download Rules PDF
+          How to Play (PDF)
         </a>
         <section>
           {this.presenter.isShowingLobby && (
