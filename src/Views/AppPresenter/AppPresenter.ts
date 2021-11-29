@@ -17,7 +17,7 @@ import PlayerDTO from '../../UseCase/PlayerDTO'
 import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
 
 const PAUSE_DURATION_FOR_END_OF_TRICK = 4000
-const POLLING_INTERVAL = 1000
+const POLLING_INTERVAL = 1
 
 const GAME_PATH = `${serverName}/game`
 
