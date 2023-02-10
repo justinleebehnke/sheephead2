@@ -152,6 +152,20 @@ class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
     })
   }
 
+  private oxford(arr: string[], conjunction: string): string {
+    let l = arr.length
+    if (!l) return ''
+    if (l < 2) return arr[0]
+    if (l < 3) return arr.join(` ${conjunction} `)
+    arr = arr.slice()
+    arr[l - 1] = `${conjunction} ${arr[l - 1]}`
+    return arr.join(', ')
+  }
+
+  public getWaitingOnString(): string {
+    return `We are waiting on ${this.oxford(this.model.getPlayersNotReady(), 'and')}.`
+  }
+
   public playAgain(): void {
     this.isLoading = true
     this.view?.update()

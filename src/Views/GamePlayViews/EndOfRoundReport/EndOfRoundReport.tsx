@@ -185,6 +185,8 @@ class EndOfRoundReport extends Component<Props, State> {
               <div className='ready'>
                 Got it. <br />
                 We'll deal the next hand as soon as everyone else is ready.
+                <br />
+                {this.props.endOfGamePresenter.getWaitingOnString()}
               </div>
             )}
           </Modal.Footer>

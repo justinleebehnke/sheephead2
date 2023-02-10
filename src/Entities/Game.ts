@@ -31,6 +31,12 @@ class Game implements ISubscriber, IReadOnlyGameModel, IShuffleSeedManager, IHan
     }
   }
 
+  public getPlayersNotReady(): string[] {
+    return this.players
+      .filter((player) => !this.idsOfPlayersThatAreReadyToPlayAgain.has(player.getId()))
+      .map((player) => player.getName())
+  }
+
   public isHandOfDoubles(): boolean {
     return this.numHandsOfDoublesRemaining > 0
   }

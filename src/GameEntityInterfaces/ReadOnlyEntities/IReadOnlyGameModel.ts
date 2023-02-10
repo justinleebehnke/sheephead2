@@ -11,6 +11,7 @@ interface IReadOnlyGameModel extends IObservable {
   getCurrentRound(): IReadOnlyRound | null
   isHandOfDoubles(): boolean
   updateSubscribers(): void
+  getPlayersNotReady(): string[]
 }
 
 export default IReadOnlyGameModel

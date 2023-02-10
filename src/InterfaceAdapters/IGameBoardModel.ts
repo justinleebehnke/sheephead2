@@ -16,6 +16,7 @@ interface IGameBoardModel extends IObservable {
   getPlayersData(): PlayerDataWithWinnings[]
   getPickerIndex(): number | undefined
   getEndOfRoundReport(): EndOfRoundData | undefined
+  getPlayersNotReady(): string[]
 }
 
 export default IGameBoardModel
