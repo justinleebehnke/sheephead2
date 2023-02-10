@@ -39,6 +39,10 @@ section {
   justify-content: space-between;
 }
 
+.light {
+  color: #efefef;
+}
+
 td.light {
   color: gray;
 }

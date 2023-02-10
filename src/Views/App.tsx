@@ -55,9 +55,12 @@ class App extends Component {
   render(): ReactElement {
     return (
       <Fragment>
+        <div className='split'>
         <a id='rules-link' href='/SheepheadBellePlaineRules.pdf' download>
           How to Play (PDF)
         </a>
+        <h5 className='light'>v0.1.1</h5>
+        </div>
         <section>
           {this.presenter.isShowingLobby && (
             <LobbyEntranceView
