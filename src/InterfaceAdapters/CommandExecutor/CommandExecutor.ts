@@ -6,7 +6,11 @@ class CommandExecutor implements ICommandExecutor {
   constructor(private readonly commandFactory: ICommandFactory) {}
 
   public execute(command: CommandDTO): void {
-    this.commandFactory.getCommand(command).execute()
+    try {
+      this.commandFactory.getCommand(command).execute()
+    } catch (error) {
+      console.log(`Error: "${error}" thrown while executing command.`)
+    }
   }
 }
 
