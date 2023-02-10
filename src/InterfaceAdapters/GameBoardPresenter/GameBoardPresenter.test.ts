@@ -30,7 +30,7 @@ describe('Game Board Presenter', () => {
       isDealer: true,
       isPicker: true,
       isTurn: false,
-      name: 'George',
+      name: 'George (You)',
     }
     acrossPlayerData = {
       isGoingAlone: false,

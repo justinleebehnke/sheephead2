@@ -158,7 +158,8 @@ class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
     const localPlayerData = this.model.getDataForLocalPlayer()
     const localPlayerInfo = this.model
       .getPlayersData()
-      .find((player: PlayerData) => player.name === localPlayerData.name)
+      .find((player: PlayerData) => `${player.name} (You)` === localPlayerData.name)
+
     this.commandInterface.giveCommand({
       name: 'playAgain',
       params: {
