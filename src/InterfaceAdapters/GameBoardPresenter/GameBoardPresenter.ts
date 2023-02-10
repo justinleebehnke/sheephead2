@@ -163,7 +163,8 @@ class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
   }
 
   public getWaitingOnString(): string {
-    return `We are waiting on ${this.oxford(this.model.getPlayersNotReady(), 'and')}.`
+    const players = this.model.getPlayersNotReady()
+    return players.length === 4 ? '' : `We are waiting on ${this.oxford(players, 'and')}.`
   }
 
   public playAgain(): void {
