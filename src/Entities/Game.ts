@@ -17,8 +17,10 @@ class Game implements ISubscriber, IReadOnlyGameModel, IShuffleSeedManager, IHan
   private shuffleSeed: number
   private readonly idsOfPlayersThatAreReadyToPlayAgain: Set<string>
   private numHandsOfDoublesRemaining: number
+  private numCompletedHands: number
 
   public constructor(players: Player[], dealerIndex: number, shuffleSeed: number) {
+    this.numCompletedHands = 0
     this.numHandsOfDoublesRemaining = 0
     this.players = players
     this.currentDealer = dealerIndex
@@ -29,6 +31,10 @@ class Game implements ISubscriber, IReadOnlyGameModel, IShuffleSeedManager, IHan
     if (players.length === 4) {
       this.playRound()
     }
+  }
+
+  public getNumHandsCompleted(): number {
+   return this.numCompletedHands
   }
 
   public getPlayersNotReady(): string[] {
@@ -121,6 +127,7 @@ class Game implements ISubscriber, IReadOnlyGameModel, IShuffleSeedManager, IHan
     )
     this.currentRound.addSubscriber(this)
     this.notifySubscribers()
+    this.numCompletedHands++
   }
 
   private removeOneHandOfDoubles(): void {

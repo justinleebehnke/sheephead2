@@ -167,6 +167,10 @@ class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
     return players.length === 4 ? '' : `We are waiting on ${this.oxford(players, 'and')}.`
   }
 
+  public getNumHandsCompleted(): number {
+    return this.model.getNumHandsCompleted()
+  }
+
   public playAgain(): void {
     this.isLoading = true
     this.view?.update()

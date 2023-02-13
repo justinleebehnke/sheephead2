@@ -23,7 +23,9 @@ class GameBoardModel implements ISubscriber, IGameBoardModel {
   public getPlayersNotReady(): string[] {
     return this.game.getPlayersNotReady()
   }
-
+  public getNumHandsCompleted(): number {
+    return this.game.getNumHandsCompleted()
+  }
   public isHandOfDoubles(): boolean {
     return this.game.isHandOfDoubles()
   }
