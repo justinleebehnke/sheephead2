@@ -1,0 +1,10 @@
+#previous-trick-layout {
+  position: absolute;
+  height: 170px;
+  width: 40%;
+  top: 350px;
+  right: 425px;
+  display: grid;
+  grid-template-columns: 20% 20% 20% 20% 20%;
+  grid-template-rows: 20% 20% 20% 20% 20%;
+}

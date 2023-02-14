@@ -52,3 +52,7 @@ td.light {
   margin-top: 0.1em;
   position: absolute;
 }
+
+#game-board {
+  position: relative;
+}

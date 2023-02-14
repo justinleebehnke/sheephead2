@@ -1,4 +1,5 @@
 interface PlayerLayoutData {
+  lastCardPlayed: null | string
   cardPlayed: string
   isDealer: boolean
   isGoingAlone: boolean

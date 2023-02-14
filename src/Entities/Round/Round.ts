@@ -14,6 +14,7 @@ import ISubscriber from '../ISubscriber'
 import PickerHasNotBuriedState from './PickerHasNotBuriedState'
 import Player from '../Player'
 import Trick from '../Trick'
+import CardPlayedByData from '../DataStructures/CardPlayedByData'
 
 class Round implements IRoundState, IRound, IObservable, IReadOnlyRound {
   private players: Player[]
@@ -28,6 +29,7 @@ class Round implements IRoundState, IRound, IObservable, IReadOnlyRound {
   private _isOver: boolean
   private subscribers: ISubscriber[]
   private _pickerIsGoingAlone: boolean
+  private previousTrickCardData: CardPlayedByData[]
 
   constructor(
     players: Player[],
@@ -45,10 +47,15 @@ class Round implements IRoundState, IRound, IObservable, IReadOnlyRound {
     this.cardRanker = cardRanker
     this.context = new FindingPickerState(this)
     this.currentTrick = new Trick(-1)
+    this.previousTrickCardData = []
     this._isOver = false
     this.subscribers = []
     this._pickerIsGoingAlone = false
     this.deal()
+  }
+
+  public getPreviousTrickCardData(): CardPlayedByData[] {
+    return this.previousTrickCardData.slice()
   }
 
   public givePlayersTheirPay(): void {
@@ -129,6 +136,9 @@ class Round implements IRoundState, IRound, IObservable, IReadOnlyRound {
   }
 
   public setCurrentTrick(trick: Trick): void {
+    this.previousTrickCardData = this.currentTrick.getTrickData().cards.map((card) => {
+      return { ...card }
+    })
     this.currentTrick = trick
   }
 

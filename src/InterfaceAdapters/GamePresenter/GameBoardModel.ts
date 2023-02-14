@@ -156,7 +156,12 @@ class GameBoardModel implements ISubscriber, IGameBoardModel {
         .getTrickData()
         .cards.find((card) => card.playedByPlayerId === player.getId())?.cardId
 
+      const lastCard = round
+        .getPreviousTrickCardData()
+        .find((card) => card.playedByPlayerId === player.getId())?.cardId
+
       return {
+        lastCardPlayed: lastCard ?? null,
         name: player.getName(),
         isTurn: round.getIndexOfCurrentTurn() === index,
         isDealer: round.getIndexOfDealer() === index,
@@ -170,6 +175,7 @@ class GameBoardModel implements ISubscriber, IGameBoardModel {
       }
     }
     return {
+      lastCardPlayed: null,
       name: player.getName(),
       isTurn: false,
       isDealer: false,

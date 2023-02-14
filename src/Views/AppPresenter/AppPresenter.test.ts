@@ -1,6 +1,5 @@
 import AppPresenter from './AppPresenter'
 import GameData from '../../Entities/GameManager/GameData'
-import IGameManager from './IGameManager'
 import ILocalPlayerInfoManager from '../GameLobbyViews/LobbyEntranceView/ILocalPlayerInfoManager'
 import ISubscriber from '../../Entities/ISubscriber'
 import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
@@ -8,7 +7,7 @@ import UniqueIdentifier from '../../Utilities/UniqueIdentifier'
 describe('App Presenter', () => {
   let view: ISubscriber
   let appPresenter: AppPresenter
-  let gameManager: IGameManager
+  let gameManager: any
   let localPlayerInfoManager: ILocalPlayerInfoManager
   let localPlayerId: UniqueIdentifier
 

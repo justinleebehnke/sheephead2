@@ -93,6 +93,7 @@ describe('Game Board Model', () => {
       getCurrentTurnPlayer: jest.fn().mockReturnValue(mockPlayer2),
       isPickerHasNotBuriedState: jest.fn(),
       getEndOfRoundReport: jest.fn().mockReturnValue(null),
+      getPreviousTrickCardData: jest.fn().mockReturnValue([]),
     }
 
     mockReadOnlyGameModel = {
@@ -144,6 +145,9 @@ describe('Game Board Model', () => {
         }
       }),
       getCurrentRound: jest.fn().mockReturnValue(round),
+      getNumHandsCompleted: jest.fn(),
+      isHandOfDoubles: jest.fn(),
+      getPlayersNotReady: jest.fn(),
     }
 
     model = new GameBoardModel(localPlayerId, mockReadOnlyGameModel)
@@ -170,6 +174,7 @@ describe('Game Board Model', () => {
 
   it('Should figure out what to display for the player across from the local player', () => {
     const expectedAcross: PlayerLayoutData = {
+      lastCardPlayed: null,
       isGoingAlone: false,
       name: mockPlayer3.getName(),
       isTurn: false,
@@ -180,6 +185,7 @@ describe('Game Board Model', () => {
     expect(model.getDataForPlayerAcross()).toEqual(expectedAcross)
 
     const expectedToLeft: PlayerLayoutData = {
+      lastCardPlayed: null,
       isGoingAlone: false,
       name: mockPlayer2.getName(),
       isTurn: true,
@@ -190,6 +196,7 @@ describe('Game Board Model', () => {
     expect(model.getDataForPlayerToLeft()).toEqual(expectedToLeft)
 
     const expectedToRight: PlayerLayoutData = {
+      lastCardPlayed: null,
       isGoingAlone: false,
       name: mockPlayer4.getName(),
       isTurn: false,
@@ -199,6 +206,7 @@ describe('Game Board Model', () => {
     }
     expect(model.getDataForPlayerToRight()).toEqual(expectedToRight)
     const expectedLocal: PlayerLayoutData = {
+      lastCardPlayed: null,
       isGoingAlone: false,
       name: localPlayer.getName() + ' (You)',
       isTurn: false,

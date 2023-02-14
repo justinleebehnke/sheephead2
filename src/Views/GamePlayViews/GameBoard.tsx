@@ -6,6 +6,7 @@ import IGameBoardPresenter from './IGameBoardPresenter'
 import ISubscriber from '../../Entities/ISubscriber'
 import PassOrPick from './PassOrPick'
 import PlayerLayout from './PlayerLayout/PlayerLayout'
+import PreviousTrickLayout from './PreviousTrickLayout/PreviousTrickLayout'
 
 type Props = {
   presenter: IGameBoardPresenter
@@ -26,7 +27,7 @@ class GameBoard extends Component<Props> implements ISubscriber {
 
   private renderBoard(): ReactElement {
     return (
-      <div>
+      <div id='game-board'>
         {this.props.presenter.getGameBoardViewData().passOrPickViewData.isShowingPassOrPickForm && (
           <PassOrPick
             presenter={this.props.presenter}
@@ -41,6 +42,7 @@ class GameBoard extends Component<Props> implements ISubscriber {
           </h4>
         )}
         <PlayerLayout allPlayerData={this.props.presenter.getGameBoardViewData().allPlayerData} />
+        <PreviousTrickLayout allPlayerData={this.props.presenter.getGameBoardViewData().allPlayerData}/>
         <Hand
           presenter={this.props.presenter}
           data={this.props.presenter.getGameBoardViewData().handViewData}
@@ -52,8 +54,8 @@ class GameBoard extends Component<Props> implements ISubscriber {
   }
 
   private renderEndOfRoundReport(): ReactElement {
-    const endOfRoundReport = this.props.presenter.getGameBoardViewData().endOfRoundViewData
-      .endOfRoundReport
+    const endOfRoundReport =
+      this.props.presenter.getGameBoardViewData().endOfRoundViewData.endOfRoundReport
     if (!endOfRoundReport) {
       throw Error('Cannot render when there is no end of round report')
     }

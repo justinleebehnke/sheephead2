@@ -25,6 +25,7 @@ describe('Game Board Presenter', () => {
       update: jest.fn(),
     }
     localPlayerData = {
+      lastCardPlayed: null,
       isGoingAlone: false,
       cardPlayed: 'qc',
       isDealer: true,
@@ -33,6 +34,7 @@ describe('Game Board Presenter', () => {
       name: 'George (You)',
     }
     acrossPlayerData = {
+      lastCardPlayed: null,
       isGoingAlone: false,
       cardPlayed: 'none',
       isDealer: false,
@@ -91,6 +93,8 @@ describe('Game Board Presenter', () => {
       getPickerIndex: jest.fn().mockReturnValueOnce(0).mockReturnValueOnce(1).mockReturnValue(0),
       getEndOfRoundReport: jest.fn().mockReturnValue(undefined),
       isHandOfDoubles: jest.fn().mockReturnValue(false),
+      getNumHandsCompleted: jest.fn(),
+      getPlayersNotReady: jest.fn(),
     }
     commandInterface = {
       giveCommand: jest.fn(),
@@ -214,6 +218,7 @@ describe('Game Board Presenter', () => {
         let triggeringState: GameBoardViewData = {
           allPlayerData: {
             dataForLocalPlayer: {
+              lastCardPlayed: null,
               isGoingAlone: false,
               name: 'Luis (You)',
               isTurn: false,
@@ -222,6 +227,7 @@ describe('Game Board Presenter', () => {
               cardPlayed: 'qh',
             },
             dataForPlayerAcross: {
+              lastCardPlayed: null,
               isGoingAlone: false,
               name: 'Andres',
               isTurn: true,
@@ -230,6 +236,7 @@ describe('Game Board Presenter', () => {
               cardPlayed: 'js',
             },
             dataForPlayerToLeft: {
+              lastCardPlayed: null,
               isGoingAlone: false,
               name: 'Fernando',
               isTurn: false,
@@ -238,6 +245,7 @@ describe('Game Board Presenter', () => {
               cardPlayed: 'ac',
             },
             dataForPlayerToRight: {
+              lastCardPlayed: null,
               isGoingAlone: false,
               name: 'George',
               isTurn: false,
@@ -295,6 +303,7 @@ describe('Game Board Presenter', () => {
         let followingState: GameBoardViewData = {
           allPlayerData: {
             dataForLocalPlayer: {
+              lastCardPlayed: null,
               isGoingAlone: false,
               name: 'Luis (You)',
               isTurn: false,
@@ -303,6 +312,7 @@ describe('Game Board Presenter', () => {
               cardPlayed: 'none',
             },
             dataForPlayerAcross: {
+              lastCardPlayed: null,
               isGoingAlone: false,
               name: 'Andres',
               isTurn: false,
@@ -311,6 +321,7 @@ describe('Game Board Presenter', () => {
               cardPlayed: 'none',
             },
             dataForPlayerToLeft: {
+              lastCardPlayed: null,
               isGoingAlone: false,
               name: 'Fernando',
               isTurn: false,
@@ -319,6 +330,7 @@ describe('Game Board Presenter', () => {
               cardPlayed: 'none',
             },
             dataForPlayerToRight: {
+              lastCardPlayed: null,
               isGoingAlone: false,
               name: 'George',
               isTurn: true,
@@ -403,6 +415,8 @@ describe('Game Board Presenter', () => {
           getPickerIndex: jest.fn().mockReturnValue(1),
           getEndOfRoundReport: jest.fn().mockReturnValue(undefined),
           isHandOfDoubles: jest.fn().mockReturnValue(false),
+          getNumHandsCompleted: jest.fn(),
+          getPlayersNotReady: jest.fn(),
         }
         presenter = new GameBoardPresenter(commandInterface, model, pauseDurationAfterTrick)
         presenter.setView(view)
