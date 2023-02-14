@@ -167,9 +167,9 @@ describe('Quarters Player Payer', () => {
         expect(player3.giveCentsForRound).toHaveBeenCalledWith(-25)
         expect(player3.giveCentsForRound).toHaveBeenCalledWith(-25)
       })
-      it('Should pay two quarters to the picking team if the score is 30 to 90', () => {
-        teamOutcome.pickingTeamScore = 90
-        teamOutcome.oppositionTeamScore = 30
+      it('Should pay two quarters to the picking team if the score is 29 to 91', () => {
+        teamOutcome.pickingTeamScore = 91
+        teamOutcome.oppositionTeamScore = 29
         scoreOutcomeGetter = {
           getRoundTeamOutcome: jest.fn().mockReturnValue(teamOutcome),
         }
@@ -181,8 +181,8 @@ describe('Quarters Player Payer', () => {
         expect(player3.giveCentsForRound).toHaveBeenCalledWith(-50)
       })
       it('Should pay two quarters to the picking team if the score is 0 to 120 but they won a trick', () => {
-        teamOutcome.pickingTeamScore = 90
-        teamOutcome.oppositionTeamScore = 30
+        teamOutcome.pickingTeamScore = 91
+        teamOutcome.oppositionTeamScore = 29
         teamOutcome.oppositionTricksWon = 1
         teamOutcome.pickingTeamTricksWon = 5
         scoreOutcomeGetter = {
@@ -275,9 +275,9 @@ describe('Quarters Player Payer', () => {
         expect(player3.giveCentsForRound).toHaveBeenCalledWith(-75)
         expect(player3.giveCentsForRound).toHaveBeenCalledWith(-75)
       })
-      it('Should pay two quarters to the picking team if the score is 30 to 90', () => {
-        teamOutcome.pickingTeamScore = 90
-        teamOutcome.oppositionTeamScore = 30
+      it('Should pay two quarters to the picking team if the score is 29 to 91', () => {
+        teamOutcome.pickingTeamScore = 91
+        teamOutcome.oppositionTeamScore = 29
         scoreOutcomeGetter = {
           getRoundTeamOutcome: jest.fn().mockReturnValue(teamOutcome),
         }

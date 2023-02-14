@@ -56,7 +56,7 @@ class QuartersPlayerPayer implements IPlayerPayer {
     if (teamOutcome.oppositionTricksWon === 6) {
       return 150
     }
-    if (teamOutcome.oppositionTeamScore <= 30) {
+    if (teamOutcome.oppositionTeamScore < 30) {
       return -50
     }
     if (teamOutcome.oppositionTeamScore < 60) {
