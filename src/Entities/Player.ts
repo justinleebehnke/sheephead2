@@ -50,6 +50,10 @@ class Player implements IPayablePlayer {
     this.hand.addCard(card)
   }
 
+  public getCardsInHand(): string[] {
+    return this.hand.getAllCardIds()
+  }
+
   public removeCardFromHand(cardId: string): Card {
     return this.hand.removeCardFromHand(cardId)
   }

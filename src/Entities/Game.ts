@@ -33,8 +33,16 @@ class Game implements ISubscriber, IReadOnlyGameModel, IShuffleSeedManager, IHan
     }
   }
 
+  public getBuryCards(): string[] {
+    return (
+      this.getCurrentRound()
+        ?.getBury()
+        .map((card) => card.getCardId()) ?? []
+    )
+  }
+
   public getNumHandsCompleted(): number {
-   return this.numCompletedHands
+    return this.numCompletedHands
   }
 
   public getPlayersNotReady(): string[] {

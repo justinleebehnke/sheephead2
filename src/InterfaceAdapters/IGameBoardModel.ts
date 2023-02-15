@@ -18,6 +18,7 @@ interface IGameBoardModel extends IObservable {
   getEndOfRoundReport(): EndOfRoundData | undefined
   getPlayersNotReady(): string[]
   getNumHandsCompleted(): number
+  getBuryCards(): string[]
 }
 
 export default IGameBoardModel

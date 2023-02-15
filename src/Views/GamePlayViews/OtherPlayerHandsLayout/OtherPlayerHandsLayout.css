@@ -1,0 +1,34 @@
+#across-player-hand-layout {
+  top: 5px;
+  left: 485px;
+  position: absolute;
+  display: flex;
+  align-content: space-between;
+}
+
+#bury-layout {
+  top: 5px;
+  left: 150px;
+  position: absolute;
+  display: flex;
+  align-content: space-between;
+}
+
+#across-player-hand-layout .abbreviated-card,
+#left-player-hand-layout .abbreviated-card,
+#right-player-hand-layout .abbreviated-card,
+#bury-layout .abbreviated-card {
+  width: 48px;
+}
+
+#left-player-hand-layout {
+  top: 175px;
+  left: 5px;
+  position: absolute;
+}
+
+#right-player-hand-layout {
+  top: 175px;
+  right: 5px;
+  position: absolute;
+}

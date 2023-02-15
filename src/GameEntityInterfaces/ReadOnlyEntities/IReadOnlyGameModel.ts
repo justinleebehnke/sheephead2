@@ -13,6 +13,7 @@ interface IReadOnlyGameModel extends IObservable {
   updateSubscribers(): void
   getPlayersNotReady(): string[]
   getNumHandsCompleted(): number
+  getBuryCards(): string[]
 }
 
 export default IReadOnlyGameModel

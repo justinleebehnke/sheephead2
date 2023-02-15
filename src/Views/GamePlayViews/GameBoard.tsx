@@ -7,6 +7,9 @@ import ISubscriber from '../../Entities/ISubscriber'
 import PassOrPick from './PassOrPick'
 import PlayerLayout from './PlayerLayout/PlayerLayout'
 import PreviousTrickLayout from './PreviousTrickLayout/PreviousTrickLayout'
+import OtherPlayerHandsLayout from './OtherPlayerHandsLayout/OtherPlayerHandsLayout'
+
+const enableFaceUpMode = false
 
 type Props = {
   presenter: IGameBoardPresenter
@@ -42,7 +45,13 @@ class GameBoard extends Component<Props> implements ISubscriber {
           </h4>
         )}
         <PlayerLayout allPlayerData={this.props.presenter.getGameBoardViewData().allPlayerData} />
-        <PreviousTrickLayout allPlayerData={this.props.presenter.getGameBoardViewData().allPlayerData}/>
+        <PreviousTrickLayout
+          allPlayerData={this.props.presenter.getGameBoardViewData().allPlayerData}
+        />
+        {enableFaceUpMode && <OtherPlayerHandsLayout
+          allPlayerData={this.props.presenter.getGameBoardViewData().allPlayerData}
+          buryCards={this.props.presenter.getBuryCards()}
+        />}
         <Hand
           presenter={this.props.presenter}
           data={this.props.presenter.getGameBoardViewData().handViewData}

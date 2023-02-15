@@ -97,7 +97,7 @@ class Hand {
       .map((card) => card.getCardId())
   }
 
-  private getAllCardIds(): string[] {
+  public getAllCardIds(): string[] {
     return this.hand.map((card) => card.getCardId())
   }
 }

@@ -8,6 +8,7 @@ interface IGameBoardPresenter extends PassOrPickPresenter, HandPresenter, EndOfR
   getGameBoardViewData(): GameBoardViewData
   setView(view: ISubscriber): void
   unsetView(): void
+  getBuryCards(): string[]
 }
 
 export default IGameBoardPresenter

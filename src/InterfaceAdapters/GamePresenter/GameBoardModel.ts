@@ -20,6 +20,10 @@ class GameBoardModel implements ISubscriber, IGameBoardModel {
     this.game.addSubscriber(this)
   }
 
+  public getBuryCards(): string[] {
+    return this.game.getBuryCards()
+  }
+
   public getPlayersNotReady(): string[] {
     return this.game.getPlayersNotReady()
   }
@@ -172,6 +176,7 @@ class GameBoardModel implements ISubscriber, IGameBoardModel {
           : round.getIndexOfCurrentTurn() === index
           ? 'turn'
           : 'none',
+        cardsInHand: player.getCardsInHand(),
       }
     }
     return {
@@ -182,6 +187,7 @@ class GameBoardModel implements ISubscriber, IGameBoardModel {
       isPicker: false,
       cardPlayed: 'none',
       isGoingAlone: false,
+      cardsInHand: [],
     }
   }
 }

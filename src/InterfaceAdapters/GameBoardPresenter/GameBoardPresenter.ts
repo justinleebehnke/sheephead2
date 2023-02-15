@@ -20,6 +20,10 @@ class GameBoardPresenter implements IGameBoardPresenter, ISubscriber {
     this.isLoading = false
   }
 
+  public getBuryCards(): string[] {
+    return this.model.getBuryCards()
+  }
+
   public update(): void {
     this.isLoading = false
     this.view?.update()

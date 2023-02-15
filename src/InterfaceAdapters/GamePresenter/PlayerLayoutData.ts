@@ -6,6 +6,7 @@ interface PlayerLayoutData {
   isPicker: boolean
   isTurn: boolean
   name: string
+  cardsInHand: string[]
 }
 
 export default PlayerLayoutData
