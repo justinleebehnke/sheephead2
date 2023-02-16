@@ -9,7 +9,7 @@ import PlayerLayout from './PlayerLayout/PlayerLayout'
 import PreviousTrickLayout from './PreviousTrickLayout/PreviousTrickLayout'
 import OtherPlayerHandsLayout from './OtherPlayerHandsLayout/OtherPlayerHandsLayout'
 
-const enableFaceUpMode = true
+const enableFaceUpMode = false
 
 type Props = {
   presenter: IGameBoardPresenter

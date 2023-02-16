@@ -59,7 +59,7 @@ class App extends Component {
         <a id='rules-link' href='/SheepheadBellePlaineRules.pdf' download>
           How to Play (PDF)
         </a>
-        <h5 className='light'>v0.1.6</h5>
+        <h5 className='light'>v0.1.7</h5>
         </div>
         <section>
           {this.presenter.isShowingLobby && (
