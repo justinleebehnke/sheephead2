@@ -148,6 +148,7 @@ describe('Game Board Model', () => {
       getNumHandsCompleted: jest.fn(),
       isHandOfDoubles: jest.fn(),
       getPlayersNotReady: jest.fn(),
+      getBuryCards: jest.fn(),
     }
 
     model = new GameBoardModel(localPlayerId, mockReadOnlyGameModel)
@@ -175,6 +176,7 @@ describe('Game Board Model', () => {
   it('Should figure out what to display for the player across from the local player', () => {
     const expectedAcross: PlayerLayoutData = {
       lastCardPlayed: null,
+      cardsInHand: [],
       isGoingAlone: false,
       name: mockPlayer3.getName(),
       isTurn: false,
@@ -186,6 +188,7 @@ describe('Game Board Model', () => {
 
     const expectedToLeft: PlayerLayoutData = {
       lastCardPlayed: null,
+      cardsInHand: [],
       isGoingAlone: false,
       name: mockPlayer2.getName(),
       isTurn: true,
@@ -197,6 +200,7 @@ describe('Game Board Model', () => {
 
     const expectedToRight: PlayerLayoutData = {
       lastCardPlayed: null,
+      cardsInHand: [],
       isGoingAlone: false,
       name: mockPlayer4.getName(),
       isTurn: false,
@@ -207,6 +211,7 @@ describe('Game Board Model', () => {
     expect(model.getDataForPlayerToRight()).toEqual(expectedToRight)
     const expectedLocal: PlayerLayoutData = {
       lastCardPlayed: null,
+      cardsInHand: ['qc', '7d', 'qh', 'qd', 'jc', 'as'],
       isGoingAlone: false,
       name: localPlayer.getName() + ' (You)',
       isTurn: false,

@@ -23,15 +23,24 @@ const GAME_PATH = `${serverName}/game`
 
 class AppPresenter implements IAppPresenter, IGameManagerSubscriber {
   private view: ISubscriber | undefined
+  private activeGameBoardPresenter: IGameBoardPresenter | null
 
   constructor(
     private readonly gameManager: IGameManager,
     private readonly localPlayerInfoManager: ILocalPlayerInfoManager
   ) {
     this.gameManager.subscribe(this)
+    this.activeGameBoardPresenter = null
   }
 
   public getGamePresenter(): IGameBoardPresenter {
+    if (!this.activeGameBoardPresenter) {
+      this.activeGameBoardPresenter = this.constructGameBoardPresenter()
+    }
+    return this.activeGameBoardPresenter
+  }
+
+  private constructGameBoardPresenter(): IGameBoardPresenter {
     const gameData = this.gameManager.getGameByPlayerId(
       new UniqueIdentifier(this.localPlayerInfoManager.getPlayerId())
     )
