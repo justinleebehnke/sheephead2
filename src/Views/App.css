@@ -56,3 +56,13 @@ td.light {
 #game-board {
   position: relative;
 }
+
+.cheat-sheet-container {
+  background-color: white;
+  margin-top: 50vh;
+  color: gray;
+}
+
+.cheat-sheet-image {
+  height: 275px;
+}

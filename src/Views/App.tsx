@@ -56,10 +56,10 @@ class App extends Component {
     return (
       <Fragment>
         <div className='split'>
-        <a id='rules-link' href='/SheepheadBellePlaineRules.pdf' download>
-          How to Play (PDF)
-        </a>
-        <h5 className='light'>v0.1.7</h5>
+          <a id='rules-link' href='/SheepheadBellePlaineRules.pdf' download>
+            How to Play (PDF)
+          </a>
+          <h5 className='light'>v0.1.8</h5>
         </div>
         <section>
           {this.presenter.isShowingLobby && (
@@ -105,9 +105,22 @@ class App extends Component {
             <GameView presenter={this.presenter.getGamePresenter()} />
           )}
         </section>
-        <Button id='reset-button' variant='danger' onClick={() => this.hardReset()}>
-          Hard Reset Server (Destroy All Games)
-        </Button>
+        <div className='cheat-sheet-container'>
+          <h1>Quick Reference</h1>
+          <div className='split'>
+            <div>
+              <img className='cheat-sheet-image' src='CardRankings.png' alt='card rankings' />
+            </div>
+            <div>
+              <img className='cheat-sheet-image' src='PointValues.png' alt='card rankings' />
+            </div>
+          </div>
+        </div>
+        <div>
+          <Button id='reset-button' variant='danger' onClick={() => this.hardReset()}>
+            Hard Reset Server (Destroy All Games)
+          </Button>
+        </div>
       </Fragment>
     )
   }
